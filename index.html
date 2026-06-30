@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RivalRadar Dashboard</title>
+  <meta name="description" content="Live competitor price monitoring dashboard for RivalRadar." />
+  <link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@400,500,700,800&f[]=satoshi@400,500,700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root, [data-theme="light"] {
+      --color-bg: #ffffff;
+      --color-surface: #f8f8f8;
+      --color-surface-2: #f2f2f2;
+      --color-border: #e5e5e5;
+      --color-divider: #ebebeb;
+      --color-text: #111111;
+      --color-text-muted: #666666;
+      --color-text-faint: #aaaaaa;
+      --color-text-inverse: #ffffff;
+      --color-primary: #0f172a;
+      --color-primary-hover: #1e293b;
+      --color-primary-active: #020617;
+      --color-accent: #2563eb;
+      --color-accent-hover: #1d4ed8;
+      --color-accent-light: #eff6ff;
+      --color-down: #16a34a;
+      --color-down-bg: #f0fdf4;
+      --color-up: #dc2626;
+      --color-up-bg: #fef2f2;
+      --color-new: #7c3aed;
+      --color-new-bg: #f5f3ff;
+      --space-1: 0.25rem;
+      --space-2: 0.5rem;
+      --space-3: 0.75rem;
+      --space-4: 1rem;
+      --space-5: 1.25rem;
+      --space-6: 1.5rem;
+      --space-8: 2rem;
+      --space-10: 2.5rem;
+      --space-12: 3rem;
+      --space-16: 4rem;
+      --text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
+      --text-sm: clamp(0.875rem, 0.8rem + 0.35vw, 1rem);
+      --text-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+      --text-lg: clamp(1.125rem, 1rem + 0.75vw, 1.5rem);
+      --text-xl: clamp(1.5rem, 1.2rem + 1.25vw, 2.25rem);
+      --text-2xl: clamp(2rem, 1.2rem + 2.5vw, 3.5rem);
+      --font-display: 'Cabinet Grotesk', 'Helvetica Neue', sans-serif;
+      --font-body: 'Satoshi', 'Inter', sans-serif;
+      --radius-sm: 0.375rem;
+      --radius-md: 0.625rem;
+      --radius-lg: 1rem;
+      --radius-xl: 1.5rem;
+      --radius-full: 9999px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-md: 0 4px 16px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.04);
+      --shadow-lg: 0 16px 48px rgba(0,0,0,0.1), 0 4px 12px rgba(0,0,0,0.06);
+      --shadow-glow: 0 18px 40px rgba(37,99,235,0.08);
+      --transition: 180ms cubic-bezier(0.16, 1, 0.3, 1);
+      --color-surface-3: #fcfcfc;
+      --color-panel-glow: rgba(37, 99, 235, 0.08);
+      --content-default: 1200px;
+    }
+
+    [data-theme="dark"] {
+  --color-bg: #0a0a0a;
+  --color-surface: #141414;
+  --color-surface-2: #1a1a1a;
+  --color-border: #262626;
+  --color-divider: #1f1f1f;
+  --color-text: #f5f5f5;
+  --color-text-muted: #888888;
+  --color-text-faint: #444444;
+  --color-text-inverse: #0a0a0a;
+  --color-primary: #f5f5f5;
+  --color-primary-hover: #e5e5e5;
+  --color-primary-active: #d4d4d4;
+  --color-accent: #3b82f6;
+  --color-accent-hover: #2563eb;
+  --color-accent-light: #1e293b;
+  --color-down: #22c55e;
+  --color-down-bg: #052e16;
+  --color-up: #f87171;
+  --color-up-bg: #2d0a0a;
+  --color-new: #a78bfa;
+  --color-new-bg: #1e1030;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.4);
+  --shadow-lg: 0 16px 48px rgba(0,0,0,0.5);
+  --shadow-glow: 0 18px 40px rgba(59,130,246,0.12);
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  color: var(--color-text);
+  background:
+    radial-gradient(circle at top left, var(--color-panel-glow), transparent 28%),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-bg) 94%, var(--color-accent-light)) 0%,
+      var(--color-bg) 22%
+    );
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100dvh;
+      font-family: var(--font-body);
+      font-size: var(--text-base);
+      color: var(--color-text);
+      background:
+        radial-gradient(circle at top left, var(--color-panel-glow), transparent 28%),
+        linear-gradient(180deg, color-mix(in srgb, var(--color-bg) 94%, var(--color-accent-light)) 0%, var(--color-bg) 22%);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    h1,h2,h3 { font-family: var(--font-display); line-height: 1.1; margin: 0; }
+    p { margin: 0; color: var(--color-text-muted); }
+    a { color: inherit; text-decoration: none; }
+    button, input, select { font: inherit; color: inherit; }
+    button { cursor: pointer; }
+
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: color-mix(in srgb, var(--color-bg) 92%, transparent);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--color-divider);
+    }
+    .nav-inner, .container {
+      width: 100%;
+      max-width: var(--content-default);
+      margin-inline: auto;
+      padding-inline: clamp(var(--space-4), 4vw, var(--space-10));
+    }
+    .nav-inner {
+      min-height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-4);
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-family: var(--font-display);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+    .theme-toggle, .ghost-btn {
+      height: 40px;
+      padding: 0 var(--space-4);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-border);
+      background: var(--color-bg);
+      color: var(--color-text-muted);
+      transition: all var(--transition);
+    }
+    .theme-toggle {
+      width: 40px;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .theme-toggle:hover, .ghost-btn:hover {
+      background: var(--color-surface);
+      color: var(--color-text);
+    }
+    .primary-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-2);
+      min-height: 46px;
+      padding: 0 var(--space-5);
+      border-radius: var(--radius-md);
+      border: 2px solid var(--color-primary);
+      background: var(--color-primary);
+      color: var(--color-text-inverse);
+      font-family: var(--font-display);
+      font-weight: 700;
+      transition: all var(--transition);
+    }
+    .primary-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+      background: var(--color-primary-hover);
+      border-color: var(--color-primary-hover);
+    }
+
+    .page-hero { padding: var(--space-10) 0 var(--space-8); }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.25fr 0.9fr;
+      gap: var(--space-6);
+      align-items: stretch;
+    }
+    .hero-panel, .summary-card, .surface-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-sm);
+    }
+    .hero-panel { padding: clamp(var(--space-6), 5vw, var(--space-10)); }
+    .hero-panel { position: relative; overflow: hidden; }
+    .hero-panel::after {
+      content: '';
+      position: absolute;
+      inset: auto -10% -30% 45%;
+      height: 240px;
+      background: radial-gradient(circle, var(--color-panel-glow), transparent 70%);
+      pointer-events: none;
+    }
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      flex-wrap: wrap;
+      margin-bottom: var(--space-8);
+    }
+    .hero-caption {
+      font-size: var(--text-sm);
+      color: var(--color-text-faint);
+    }
+    .inline-statbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-3);
+      margin-top: var(--space-6);
+    }
+    .stat-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: 0.7rem 0.9rem;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--color-border);
+      background: color-mix(in srgb, var(--color-bg) 85%, transparent);
+      box-shadow: var(--shadow-sm);
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+    }
+    .stat-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--color-accent); }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: 0.35rem 0.8rem;
+      border-radius: var(--radius-full);
+      background: var(--color-accent-light);
+      color: var(--color-accent);
+      font-size: var(--text-xs);
+      font-family: var(--font-display);
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: var(--space-5);
+    }
+    .hero-title {
+      font-size: var(--text-2xl);
+      letter-spacing: -0.04em;
+      margin-bottom: var(--space-4);
+      max-width: 12ch;
+    }
+    .hero-sub { max-width: 52ch; margin-bottom: var(--space-8); }
+    .hero-meta {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: var(--space-4);
+    }
+    .metric {
+      padding: var(--space-4);
+      border-radius: var(--radius-lg);
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+    }
+    .metric-label {
+      display: block;
+      font-size: var(--text-xs);
+      color: var(--color-text-faint);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: var(--space-2);
+      font-family: var(--font-display);
+      font-weight: 700;
+    }
+    .metric-value { font-family: var(--font-display); font-size: var(--text-xl); letter-spacing: -0.04em; }
+    .metric-note { font-size: var(--text-sm); color: var(--color-text-muted); }
+    .summary-card {
+      padding: var(--space-6);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-5);
+      justify-content: space-between;
+      background: linear-gradient(180deg, color-mix(in srgb, var(--color-surface) 88%, var(--color-bg)), var(--color-surface));
+    }
+    .summary-title { font-size: var(--text-lg); letter-spacing: -0.03em; }
+    .status-stack { display: grid; gap: var(--space-3); }
+    .status-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-4);
+      padding: var(--space-4);
+      border-radius: var(--radius-lg);
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+    }
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.2rem 0.45rem;
+      border-radius: var(--radius-sm);
+      font-size: 10px;
+      font-family: var(--font-display);
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .tag-down { background: var(--color-down-bg); color: var(--color-down); }
+    .tag-up { background: var(--color-up-bg); color: var(--color-up); }
+    .tag-new { background: var(--color-new-bg); color: var(--color-new); }
+    .tag-neutral { background: var(--color-surface-2); color: var(--color-text-muted); }
+    .dashboard-section { padding: var(--space-3) 0 var(--space-12); }
+    .toolbar-strip {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0,1fr));
+      gap: var(--space-4);
+      margin-bottom: var(--space-6);
+    }
+    .toolbar-card {
+      padding: var(--space-5); /* slightly taller for text fit */
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--color-border);
+      background: color-mix(in srgb, var(--color-surface) 82%, var(--color-bg));
+      box-shadow: var(--shadow-sm);
+    }
+    .toolbar-label {
+      display: block;
+      font-size: var(--text-xs);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-family: var(--font-display);
+      color: var(--color-text-faint);
+      margin-bottom: var(--space-2);
+    }
+    .toolbar-value {
+      font-family: var(--font-display);
+      font-size: var(--text-lg);
+      letter-spacing: -0.03em;
+    }
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: var(--space-4);
+      margin-bottom: var(--space-6);
+    }
+    .section-title { font-size: var(--text-xl); letter-spacing: -0.03em; margin-bottom: var(--space-2); }
+    .filters {
+      display: grid;
+      grid-template-columns: 180px 180px minmax(180px, 1fr) auto;
+      gap: var(--space-3);
+      margin-bottom: var(--space-5);
+    }
+    .field, .search {
+      min-height: 46px;
+      width: 100%;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-border);
+      background: var(--color-bg);
+      padding: 0 var(--space-4);
+    }
+    .changes-shell {
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--color-border);
+      background: linear-gradient(180deg, color-mix(in srgb, var(--color-surface) 92%, var(--color-bg)), var(--color-surface));
+      box-shadow: var(--shadow-sm), var(--shadow-glow);
+      overflow: hidden;
+    }
+    .changes-shell-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-3);
+      padding: var(--space-4) var(--space-5);
+      border-bottom: 1px solid var(--color-divider);
+      background: color-mix(in srgb, var(--color-surface) 84%, var(--color-bg));
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+    }
+    .pager {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: 0.35rem 0.6rem;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--color-border);
+      background: color-mix(in srgb, var(--color-bg) 90%, transparent);
+    }
+    .pager-btn {
+      font-size: var(--text-xs);
+      padding: 0.25rem 0.6rem;
+      border-radius: var(--radius-full);
+      border: none;
+      background: transparent;
+      color: var(--color-text-muted);
+      cursor: pointer;
+      transition: background var(--transition), color var(--transition);
+    }
+    .pager-btn:hover:not(:disabled) {
+      background: color-mix(in srgb, var(--color-accent-light) 50%, transparent);
+      color: var(--color-text);
+    }
+    .pager-btn:disabled {
+      opacity: 0.4;
+      cursor: default;
+    }
+    .pager-label {
+      font-size: var(--text-xs);
+      color: var(--color-text-faint);
+    }
+    .changes-shell-title {
+      font-family: var(--font-display);
+      font-size: var(--text-base);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--color-text);
+    }
+    .changes-shell-note {
+      font-size: var(--text-xs);
+      color: var(--color-text-faint);
+    }
+    .table-shell {
+      max-height: 420px;
+      overflow: auto;
+    }
+    table { width: 100%; border-collapse: collapse; min-width: 920px; }
+    th, td {
+      text-align: left;
+      padding: 0.95rem 1rem;
+      border-bottom: 1px solid var(--color-divider);
+      vertical-align: middle;
+    }
+    th {
+      font-size: var(--text-xs);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-text-faint);
+      font-family: var(--font-display);
+      background: color-mix(in srgb, var(--color-surface) 84%, var(--color-bg));
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+    td { font-size: var(--text-sm); }
+    tbody tr { transition: background var(--transition), transform var(--transition); }
+    tbody tr:hover { background: color-mix(in srgb, var(--color-accent-light) 35%, var(--color-bg)); }
+    .table-shell::-webkit-scrollbar { width: 10px; height: 10px; }
+    .table-shell::-webkit-scrollbar-track { background: transparent; }
+    .table-shell::-webkit-scrollbar-thumb {
+      background: color-mix(in srgb, var(--color-text-faint) 55%, transparent);
+      border-radius: 999px;
+    }
+    .table-shell::-webkit-scrollbar-thumb:hover {
+      background: color-mix(in srgb, var(--color-text-muted) 80%, transparent);
+    }
+    .store-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.45rem 0.7rem;
+      border-radius: var(--radius-full);
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      white-space: nowrap;
+    }
+    .store-chip::before {
+      content: '';
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--color-accent);
+    }
+    .product-cell strong {
+      display: block;
+      font-weight: 700;
+      color: var(--color-text);
+      margin-bottom: 0.1rem;
+    }
+    .product-cell span {
+      color: var(--color-text-muted);
+      font-size: var(--text-xs);
+    }
+    .price-old { color: var(--color-text-faint); text-decoration: line-through; }
+    .price-new { font-weight: 700; color: var(--color-text); }
+    .price-down { color: var(--color-down); }
+    .price-up { color: var(--color-up); }
+    .surface-grid {
+      display: grid;
+      grid-template-columns: 1fr; /* single column now that connection details is gone */
+      gap: var(--space-6);
+      margin-top: var(--space-8);
+    }
+    .surface-card {
+      padding: var(--space-6);
+      background: linear-gradient(180deg, color-mix(in srgb, var(--color-surface) 88%, var(--color-bg)), var(--color-surface));
+    }
+    .list-stack { display: grid; gap: var(--space-3); margin-top: var(--space-4); }
+    .list-item {
+      display: flex;
+      align-items: start;
+      justify-content: space-between;
+      gap: var(--space-4);
+      padding: var(--space-4);
+      border-radius: var(--radius-lg);
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+    }
+    .list-item:hover {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-sm);
+      border-color: color-mix(in srgb, var(--color-accent) 18%, var(--color-border));
+    }
+    .mini-note { font-size: var(--text-xs); color: var(--color-text-faint); }
+    .empty-state, .loading-state {
+      padding: var(--space-12);
+      text-align: center;
+      color: var(--color-text-muted);
+    }
+    .error-box {
+      margin-top: var(--space-5);
+      padding: var(--space-4);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--color-up);
+      background: var(--color-up-bg);
+      color: var(--color-up);
+      display: none;
+      white-space: pre-wrap;
+    }
+    .footer {
+      padding: var(--space-8) 0;
+      border-top: 1px solid var(--color-divider);
+      color: var(--color-text-faint);
+      font-size: var(--text-xs);
+    }
+    code.inline {
+      font-size: 0.92em;
+      background: var(--color-surface-2);
+      border: 1px solid var(--color-border);
+      padding: 0.15rem 0.4rem;
+      border-radius: var(--radius-sm);
+      color: var(--color-text);
+    }
+    .hidden { display: none !important; }
+
+    @media (max-width: 980px) {
+      .hero-grid, .surface-grid, .toolbar-strip { grid-template-columns: 1fr; }
+      .filters { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 640px) {
+      .nav-inner { min-height: 68px; }
+      .nav-actions .ghost-btn { display: none; }
+      .filters { grid-template-columns: 1fr; }
+      .hero-meta { grid-template-columns: 1fr; }
+      .section-head { align-items: start; flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <header class="nav">
+    <div class="nav-inner">
+      <a href="#" class="logo" aria-label="RivalRadar home">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+          <circle cx="16" cy="16" r="3" fill="var(--color-primary)"/>
+          <circle cx="16" cy="16" r="7" stroke="var(--color-primary)" stroke-width="1.5" stroke-dasharray="3 2" fill="none" opacity="0.6"/>
+          <circle cx="16" cy="16" r="12" stroke="var(--color-primary)" stroke-width="1" stroke-dasharray="2 3" fill="none" opacity="0.3"/>
+          <path d="M22 10L26 6" stroke="var(--color-primary)" stroke-width="1.5" stroke-linecap="round"/>
+          <circle cx="27" cy="5" r="2" fill="var(--color-primary)" opacity="0.8"/>
+        </svg>
+        <span>RivalRadar</span>
+      </a>
+      <div class="nav-actions">
+        <button class="ghost-btn" id="refreshButton">Refresh data</button>
+        <button class="theme-toggle" data-theme-toggle aria-label="Toggle dark mode">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container hero-grid">
+        <div class="hero-panel">
+          <div class="eyebrow">Live competitor feed</div>
+          <h1 class="hero-title">See rival price movement the moment it matters.</h1>
+          <p class="hero-sub">Check which products changed price, where, and by how much without digging through exports or raw tables.</p>
+          <div class="hero-actions">
+            <button class="primary-btn" id="heroRefreshButton">Refresh live data</button>
+            <span class="hero-caption">Designed for founders and operators checking in a few times a day.</span>
+          </div>
+          <div class="hero-meta">
+            <div class="metric">
+              <span class="metric-label">Stores monitored</span>
+              <div class="metric-value" id="metricStores">—</div>
+              <div class="metric-note">Distinct store keys in the latest snapshot</div>
+            </div>
+            <div class="metric">
+              <span class="metric-label">Products tracked</span>
+              <div class="metric-value" id="metricRows">—</div>
+              <div class="metric-note">Active products currently under watch</div>
+            </div>
+            <div class="metric">
+              <span class="metric-label">Recent price changes</span>
+              <div class="metric-value" id="metricChanges">—</div>
+              <div class="metric-note">Updates included in this view</div>
+            </div>
+          </div>
+          <div class="inline-statbar">
+            <div class="stat-pill"><span class="stat-dot"></span>Live data from your Supabase project</div>
+            <div class="stat-pill"><span class="stat-dot"></span>Optimized for quick price checks</div>
+          </div>
+          <div class="error-box" id="errorBox"></div>
+        </div>
+        <aside class="summary-card">
+          <div>
+            <h2 class="summary-title">Snapshot overview</h2>
+            <p>See how many products you’re tracking per store and when each snapshot was last updated.</p>
+          </div>
+          <div class="status-stack" id="storeSummary">
+            <div class="loading-state">Loading live snapshot summary…</div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="dashboard-section">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2 class="section-title">Recent price changes</h2>
+            <p>Filter by store and search product names or variants to see what moved and when.</p>
+          </div>
+        </div>
+
+        <div class="toolbar-strip">
+          <div class="toolbar-card">
+            <span class="toolbar-label">Snapshot window</span>
+            <div class="toolbar-value">Today’s prices</div>
+            <p class="mini-note">Shows the most recent snapshot for each monitored product.</p>
+          </div>
+          <div class="toolbar-card">
+            <span class="toolbar-label">Change window</span>
+            <div class="toolbar-value">Last 24 hours</div>
+            <p class="mini-note">Focuses on changes detected in the last day by default.</p>
+          </div>
+          <div class="toolbar-card">
+            <span class="toolbar-label">Tracked products</span>
+            <div class="toolbar-value" id="toolbarTrackedProducts">—</div>
+            <p class="mini-note">Matches the total products currently in your snapshot.</p>
+          </div>
+          <div class="toolbar-card">
+            <span class="toolbar-label">Stores tracked</span>
+            <div class="toolbar-value" id="toolbarStoresTracked">—</div>
+            <p class="mini-note">Counts all stores included in this dashboard.</p>
+          </div>
+        </div>
+
+        <div class="filters">
+          <select class="field" id="storeFilter" aria-label="Select store">
+            <option value="all">All stores</option>
+          </select>
+          <select class="field" id="changeFilter" aria-label="Select change type">
+            <option value="all">All change types</option>
+            <option value="drop">Price drops</option>
+            <option value="increase">Price increases</option>
+            <option value="other">Other changes</option>
+          </select>
+          <input class="search" id="searchInput" type="search" placeholder="Search product or variant" aria-label="Search products" />
+          <button class="ghost-btn" id="clearFilters">Clear filters</button>
+        </div>
+
+        <div class="changes-shell">
+          <div class="changes-shell-header">
+            <div>
+              <div class="changes-shell-title">Compact changes feed</div>
+              <div class="changes-shell-note">See the most recent price changes in a single scrollable view.</div>
+            </div>
+            <div class="header-right">
+              <div class="mini-note" id="changesCountNote">Matching rows</div>
+              <div class="pager">
+                <button class="pager-btn" id="prevPageButton">Prev</button>
+                <span id="pageLabel" class="pager-label">Page 1 of 1</span>
+                <button class="pager-btn" id="nextPageButton">Next</button>
+              </div>
+            </div>
+          </div>
+          <div class="table-shell">
+            <table>
+              <thead>
+                <tr>
+                  <th>Store</th>
+                  <th>Product</th>
+                  <th>Change</th>
+                  <th>Previous price</th>
+                  <th>New price</th>
+                  <th>Price delta</th>
+                  <th>Changed at</th>
+                </tr>
+              </thead>
+              <tbody id="changesBody">
+                <tr><td colspan="7" class="loading-state">Loading recent changes…</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="surface-grid">
+          <section class="surface-card">
+            <h3>Latest catalog snapshot</h3>
+            <p>Current monitored products grouped by store, so you can see where most of your tracking is focused.</p>
+            <div class="list-stack" id="latestSnapshotCards">
+              <div class="loading-state">Loading current catalog rows…</div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">RivalRadar live dashboard — built for fast, low-noise competitor monitoring.</div>
+  </footer>
+
+  <script>
+    const SUPABASE_URL = "https://msmlwfnzeqndwkrkpipo.supabase.co";
+    const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_-xGGeAEyznCVT3efSmblvA_b92U2Crb";
+
+    const supabaseClient = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_PUBLISHABLE_KEY
+    );
+
+    const PAGE_SIZE = 100;
+
+    const state = {
+      latestRows: [],
+      changeRows: [],
+      filteredRows: [],
+      page: 1,
+      totalPages: 1
+    };
+
+    const metricStores = document.getElementById("metricStores");
+    const metricRows = document.getElementById("metricRows");
+    const metricChanges = document.getElementById("metricChanges");
+    const changesBody = document.getElementById("changesBody");
+    const latestSnapshotCards = document.getElementById("latestSnapshotCards");
+    const storeSummary = document.getElementById("storeSummary");
+    const errorBox = document.getElementById("errorBox");
+
+    const storeFilter = document.getElementById("storeFilter");
+    const changeFilter = document.getElementById("changeFilter");
+    const searchInput = document.getElementById("searchInput");
+    const clearFilters = document.getElementById("clearFilters");
+    const refreshButton = document.getElementById("refreshButton");
+    const heroRefreshButton = document.getElementById("heroRefreshButton");
+    const changesCountNote = document.getElementById("changesCountNote");
+    const pageLabel = document.getElementById("pageLabel");
+    const prevPageButton = document.getElementById("prevPageButton");
+    const nextPageButton = document.getElementById("nextPageButton");
+
+    const toolbarTrackedProducts = document.getElementById("toolbarTrackedProducts");
+    const toolbarStoresTracked = document.getElementById("toolbarStoresTracked");
+
+    function formatMoney(value) {
+      if (value === null || value === undefined || value === "") return "";
+      const number = Number(value);
+      if (Number.isNaN(number)) return String(value);
+      return new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD"
+      }).format(number);
+    }
+
+    function formatDate(value) {
+      if (!value) return "";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return value;
+      return new Intl.DateTimeFormat("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+        hour: "numeric",
+        minute: "2-digit"
+      }).format(date);
+    }
+
+    function cleanStoreLabel(storeKey) {
+      if (!storeKey) return "Unknown store";
+      return storeKey
+        .replaceAll("_", " ")
+        .replace(/\b\w/g, (c) => c.toUpperCase());
+    }
+
+    function inferChangeType(row) {
+      const oldPrice =
+        Number(row.oldprice ?? row.previousprice ?? row.priceold ?? row.fromprice);
+      const newPrice =
+        Number(row.newprice ?? row.currentprice ?? row.pricenew ?? row.toprice ?? row.price);
+
+      if (!Number.isNaN(oldPrice) && !Number.isNaN(newPrice)) {
+        if (newPrice < oldPrice) return "drop";
+        if (newPrice > oldPrice) return "increase";
+      }
+      return "other";
+    }
+
+    function changeTag(changeType) {
+      if (changeType === "drop") {
+        return `<span class="tag tag-down">Price drop</span>`;
+      }
+      if (changeType === "increase") {
+        return `<span class="tag tag-up">Price rise</span>`;
+      }
+      return `<span class="tag tag-new">Changed</span>`;
+    }
+
+    function renderStoreOptions() {
+      const stores = [...new Set(
+        state.latestRows.map((row) => row.store_key || row.storekey)
+      )]
+        .filter(Boolean)
+        .sort();
+
+      storeFilter.innerHTML =
+        `<option value="all">All stores</option>` +
+        stores
+          .map(
+            (store) =>
+              `<option value="${store}">${cleanStoreLabel(store)}</option>`
+          )
+          .join("");
+    }
+
+    function renderMetrics() {
+      const stores = new Set(
+        state.latestRows.map((row) => row.store_key || row.storekey)
+      ).size;
+      metricStores.textContent = stores || 0;
+      metricRows.textContent = state.latestRows.length.toLocaleString();
+      metricChanges.textContent = state.filteredRows.length.toLocaleString();
+
+      toolbarTrackedProducts.textContent = state.latestRows.length.toLocaleString();
+      toolbarStoresTracked.textContent = stores.toLocaleString();
+
+      state.totalPages = Math.max(
+        1,
+        Math.ceil(state.filteredRows.length / PAGE_SIZE)
+      );
+      if (state.page > state.totalPages) state.page = state.totalPages;
+
+      const start = (state.page - 1) * PAGE_SIZE;
+      const end = start + PAGE_SIZE;
+      const visible = state.filteredRows.slice(start, end);
+
+      renderTableBody(visible);
+
+      changesCountNote.textContent =
+        `${state.filteredRows.length.toLocaleString()} matching rows` +
+        (state.filteredRows.length > PAGE_SIZE
+          ? ` · page ${state.page} of ${state.totalPages}`
+          : "");
+
+      pageLabel.textContent = `Page ${state.page} of ${state.totalPages}`;
+      prevPageButton.disabled = state.page <= 1;
+      nextPageButton.disabled = state.page >= state.totalPages;
+    }
+
+    function renderStoreSummary() {
+      if (!state.latestRows.length) {
+        storeSummary.innerHTML =
+          `<div class="loading-state">No snapshot rows available.</div>`;
+        return;
+      }
+
+      const grouped = state.latestRows.reduce((acc, row) => {
+        const key = row.store_key || row.storekey || "unknown";
+        if (!acc[key]) {
+          acc[key] = { count: 0, latest: null };
+        }
+        acc[key].count += 1;
+        const dateValue =
+          row.snapshot_at ||
+          row.recordedat ||
+          row.createdat ||
+          row.updatedat ||
+          null;
+        if (dateValue) {
+          const date = new Date(dateValue);
+          if (!acc[key].latest || date > acc[key].latest) {
+            acc[key].latest = date;
+          }
+        }
+        return acc;
+      }, {});
+
+      storeSummary.innerHTML = Object.entries(grouped)
+        .sort(([a], [b]) => a.localeCompare(b))
+        .map(([store, info]) => {
+          return `
+            <div class="status-row">
+              <div>
+                <span class="tag tag-neutral">Snapshot live</span>
+                <div><strong>${cleanStoreLabel(store)}</strong></div>
+                <div class="mini-note">${info.count.toLocaleString()} products monitored</div>
+              </div>
+              <div class="mini-note">
+                ${info.latest ? `Updated ${formatDate(info.latest)}` : ""}
+              </div>
+            </div>
+          `;
+        })
+        .join("");
+    }
+
+    function renderLatestSnapshotCards() {
+      if (!state.latestRows.length) {
+        latestSnapshotCards.innerHTML =
+          `<div class="loading-state">No current rows found in your latest snapshot.</div>`;
+        return;
+      }
+
+      const grouped = state.latestRows.reduce((acc, row) => {
+        const key = row.store_key || row.storekey || "unknown";
+        if (!acc[key]) {
+          acc[key] = { count: 0, latest: null };
+        }
+        acc[key].count += 1;
+        const dateValue =
+          row.snapshot_at ||
+          row.recordedat ||
+          row.createdat ||
+          row.updatedat ||
+          null;
+        if (dateValue) {
+          const date = new Date(dateValue);
+          if (!acc[key].latest || date > acc[key].latest) {
+            acc[key].latest = date;
+          }
+        }
+        return acc;
+      }, {});
+
+      latestSnapshotCards.innerHTML = Object.entries(grouped)
+        .sort(([, a], [, b]) => b.count - a.count)
+        .map(([store, info]) => {
+          return `
+            <div class="list-item">
+              <div>
+                <strong>${cleanStoreLabel(store)}</strong>
+                <div class="mini-note">${info.count.toLocaleString()} monitored products</div>
+              </div>
+              <div class="mini-note">
+                ${info.latest ? `Updated ${formatDate(info.latest)} · Live snapshot` : ""}
+              </div>
+            </div>
+          `;
+        })
+        .join("");
+    }
+
+    function renderTableBody(rows) {
+      if (!rows.length) {
+        changesBody.innerHTML =
+          `<tr><td colspan="7" class="empty-state">No matching price changes found.</td></tr>`;
+        return;
+      }
+
+      changesBody.innerHTML = rows
+        .map((row) => {
+          const store = cleanStoreLabel(
+            row.store_key ||
+            row.storekey ||
+            row.store ||
+            row.storename
+          );
+
+          const product =
+            row.product_name ||
+            row.producttitle ||
+            row.title ||
+            row.productname ||
+            row.product_handle ||
+            "Untitled product";
+
+          const variant =
+            row.variant_name ||
+            row.variantname ||
+            row.varianttitle ||
+            row.variant ||
+            "Default product";
+
+          const oldPriceRaw =
+            row.prev_price ??
+            row.oldprice ??
+            row.previousprice ??
+            row.priceold ??
+            row.fromprice;
+
+          const newPriceRaw =
+            row.new_price ??
+            row.newprice ??
+            row.currentprice ??
+            row.pricenew ??
+            row.toprice ??
+            row.price;
+
+          const oldPrice = Number(oldPriceRaw);
+          const newPrice = Number(newPriceRaw);
+
+          const changeType = inferChangeType({
+            oldprice: oldPriceRaw,
+            previousprice: oldPriceRaw,
+            priceold: oldPriceRaw,
+            fromprice: oldPriceRaw,
+            newprice: newPriceRaw,
+            currentprice: newPriceRaw,
+            pricenew: newPriceRaw,
+            toprice: newPriceRaw,
+            price: newPriceRaw
+          });
+
+          const delta =
+            !Number.isNaN(oldPrice) && !Number.isNaN(newPrice)
+              ? newPrice - oldPrice
+              : null;
+
+          const deltaClass =
+            delta === null
+              ? ""
+              : delta < 0
+              ? "price-down"
+              : delta > 0
+              ? "price-up"
+              : "";
+
+          const changedAt =
+            row.snapshot_at ||
+            row.changed_at ||
+            row.changedat ||
+            row.recordedat ||
+            row.createdat ||
+            row.snapshottime ||
+            row.date;
+
+          return `
+            <tr>
+              <td>${store}</td>
+              <td class="product-cell">
+                <strong>${product}</strong>
+                <span>${variant}</span>
+              </td>
+              <td>${changeTag(changeType)}</td>
+              <td class="price-old">${formatMoney(oldPriceRaw)}</td>
+              <td class="price-new ${
+                changeType === "drop"
+                  ? "price-down"
+                  : changeType === "increase"
+                  ? "price-up"
+                  : ""
+              }">
+                ${formatMoney(newPriceRaw)}
+              </td>
+              <td class="${deltaClass}">
+                ${delta === null ? "" : formatMoney(delta)}
+              </td>
+              <td>${formatDate(changedAt)}</td>
+            </tr>
+          `;
+        })
+        .join("");
+    }
+
+    function applyFilters() {
+      const selectedStore = storeFilter.value;
+      const selectedChange = changeFilter.value;
+      const searchTerm = searchInput.value.trim().toLowerCase();
+
+      state.filteredRows = state.changeRows.filter((row) => {
+        const storeKey = (
+          row.store_key ||
+          row.storekey ||
+          row.store ||
+          row.storename ||
+          ""
+        ).toLowerCase();
+
+        const product = (
+          row.product_name ||
+          row.producttitle ||
+          row.title ||
+          row.productname ||
+          row.product_handle ||
+          ""
+        ).toLowerCase();
+
+        const variant = (
+          row.variant_name ||
+          row.variantname ||
+          row.varianttitle ||
+          row.variant ||
+          ""
+        ).toLowerCase();
+
+        const type = inferChangeType({
+          oldprice: row.prev_price,
+          previousprice: row.prev_price,
+          priceold: row.prev_price,
+          fromprice: row.prev_price,
+          newprice: row.new_price,
+          currentprice: row.new_price,
+          pricenew: row.new_price,
+          toprice: row.new_price,
+          price: row.new_price
+        });
+
+        const storeMatch =
+          selectedStore === "all" ||
+          storeKey === selectedStore.toLowerCase();
+
+        const typeMatch =
+          selectedChange === "all" || type === selectedChange;
+
+        const searchMatch =
+          !searchTerm ||
+          product.includes(searchTerm) ||
+          variant.includes(searchTerm) ||
+          storeKey.includes(searchTerm);
+
+        return storeMatch && typeMatch && searchMatch;
+      });
+
+      state.page = 1;
+
+      renderMetrics();
+    }
+
+    async function loadLatestPrices() {
+      const { data, error } = await supabaseClient
+        .from("latest_product_prices")
+        .select("*")
+        .limit(5000);
+
+      if (error) {
+        throw new Error(`latest_product_prices: ${error.message}`);
+      }
+
+      state.latestRows = data || [];
+      renderStoreOptions();
+      renderStoreSummary();
+      renderLatestSnapshotCards();
+      renderMetrics();
+    }
+
+    async function loadRecentChanges() {
+      const { data, error } = await supabaseClient
+        .from("product_price_changes")
+        .select("*")
+        .order("changedat", { ascending: false, nullsFirst: false })
+        .limit(500);
+
+      if (error) {
+        const fallback = await supabaseClient
+          .from("product_price_changes")
+          .select("*")
+          .limit(500);
+
+        if (fallback.error) {
+          throw new Error(`product_price_changes: ${fallback.error.message}`);
+        }
+
+        state.changeRows = fallback.data || [];
+      } else {
+        state.changeRows = data || [];
+      }
+
+      state.filteredRows = [...state.changeRows];
+      state.page = 1;
+      renderMetrics();
+    }
+
+    async function loadDashboard() {
+      errorBox.style.display = "none";
+      try {
+        await Promise.all([loadLatestPrices(), loadRecentChanges()]);
+      } catch (error) {
+        console.error(error);
+        errorBox.textContent =
+          "Could not load live Supabase data.\n\nMost likely causes:\n1. RLS is not enabled or policies do not allow reads.\n2. The view column names differ from the expected ones.\n3. The publishable key does not have permission to read these views.\n\nTechnical detail: " +
+          error.message;
+        errorBox.style.display = "block";
+
+        changesBody.innerHTML =
+          `<tr><td colspan="7" class="empty-state">Unable to load recent changes.</td></tr>`;
+        latestSnapshotCards.innerHTML =
+          `<div class="empty-state">Unable to load snapshot data.</div>`;
+        storeSummary.innerHTML =
+          `<div class="empty-state">Unable to load store summary.</div>`;
+      }
+    }
+
+    storeFilter.addEventListener("change", applyFilters);
+    changeFilter.addEventListener("change", applyFilters);
+    searchInput.addEventListener("input", applyFilters);
+
+    clearFilters.addEventListener("click", () => {
+      storeFilter.value = "all";
+      changeFilter.value = "all";
+      searchInput.value = "";
+      applyFilters();
+    });
+
+    refreshButton.addEventListener("click", () => {
+      state.page = 1;
+      loadDashboard();
+    });
+
+    heroRefreshButton.addEventListener("click", () => {
+      state.page = 1;
+      loadDashboard();
+    });
+
+    prevPageButton.addEventListener("click", () => {
+      if (state.page > 1) {
+        state.page -= 1;
+        renderMetrics();
+      }
+    });
+
+    nextPageButton.addEventListener("click", () => {
+      if (state.page < state.totalPages) {
+        state.page += 1;
+        renderMetrics();
+      }
+    });
+
+    (function setupThemeToggle() {
+      const button = document.querySelector("[data-theme-toggle]");
+      const root = document.documentElement;
+      let theme = window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light";
+
+      root.setAttribute("data-theme", theme);
+
+      function renderIcon(mode) {
+        button.innerHTML =
+          mode === "dark"
+            ? `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>`
+            : `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
+      }
+
+      renderIcon(theme);
+
+      button.addEventListener("click", () => {
+        theme = theme === "dark" ? "light" : "dark";
+        root.setAttribute("data-theme", theme);
+        renderIcon(theme);
+      });
+    })();
+
+    loadDashboard();
+  </script>
+</body>
+</html>
