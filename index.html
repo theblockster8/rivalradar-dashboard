@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
-  <!-- v8: fix logo redirect + refresh button loading state -->
+  <!-- DEMO dashboard: mirrors the client's 4-tab layout with static sample data (anonymized). For demonstration only. -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RivalRadar Dashboard</title>
-  <meta name="description" content="Live competitor price monitoring dashboard for RivalRadar." />
+  <title>Demo Dashboard – RivalRadar</title>
+  <meta name="description" content="Interactive demo of the RivalRadar competitor price monitoring dashboard." />
   <link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@400,500,700,800&f[]=satoshi@400,500,700&display=swap" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root, [data-theme="light"] {
       --color-bg: #ffffff;
@@ -31,6 +30,12 @@
       --color-up-bg: #fef2f2;
       --color-new: #7c3aed;
       --color-new-bg: #f5f3ff;
+      --color-warn: #d97706;
+      --color-warn-bg: #fffbeb;
+      --color-error: #dc2626;
+      --color-error-bg: #fef2f2;
+      --color-success: #16a34a;
+      --color-success-bg: #f0fdf4;
       --color-live: #22c55e;
       --color-live-bg: #f0fdf4;
       --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem; --space-4: 1rem;
@@ -63,9 +68,13 @@
       --color-accent: #3b82f6; --color-accent-hover: #2563eb; --color-accent-light: #1e293b;
       --color-down: #22c55e; --color-down-bg: #052e16; --color-up: #f87171; --color-up-bg: #2d0a0a;
       --color-new: #a78bfa; --color-new-bg: #1e1030;
+      --color-warn: #fbbf24; --color-warn-bg: #1a1200;
+      --color-error: #f87171; --color-error-bg: #2d0a0a;
+      --color-success: #22c55e; --color-success-bg: #052e16;
       --color-live: #4ade80; --color-live-bg: #052e16;
       --shadow-sm: 0 1px 3px rgba(0,0,0,0.3); --shadow-md: 0 4px 16px rgba(0,0,0,0.4);
       --shadow-lg: 0 16px 48px rgba(0,0,0,0.5); --shadow-glow: 0 18px 40px rgba(59,130,246,0.12);
+      --color-panel-glow: rgba(59, 130, 246, 0.10);
     }
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
@@ -76,7 +85,7 @@
         linear-gradient(180deg, color-mix(in srgb, var(--color-bg) 94%, var(--color-accent-light)) 0%, var(--color-bg) 22%);
       line-height: 1.6; -webkit-font-smoothing: antialiased;
     }
-    h1,h2,h3 { font-family: var(--font-display); line-height: 1.1; margin: 0; }
+    h1,h2,h3,h4 { font-family: var(--font-display); line-height: 1.1; margin: 0; }
     p { margin: 0; color: var(--color-text-muted); }
     a { color: inherit; text-decoration: none; }
     button, input, select { font: inherit; color: inherit; }
@@ -99,6 +108,8 @@
       background: var(--color-live); flex-shrink: 0;
       animation: livePulse 1.8s ease-in-out infinite;
     }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner { width: 14px; height: 14px; border-radius: 50%; border: 2px solid currentColor; border-top-color: transparent; animation: spin 0.6s linear infinite; flex-shrink: 0; }
 
     .nav {
       position: sticky; top: 0; z-index: 50;
@@ -119,10 +130,12 @@
       color: var(--color-text); text-decoration: none;
     }
     .nav-actions { display: flex; align-items: center; gap: var(--space-3); }
+    .user-email { font-size: var(--text-xs); color: var(--color-text-faint); }
     .theme-toggle, .ghost-btn {
       height: 40px; padding: 0 var(--space-4); border-radius: var(--radius-md);
       border: 1px solid var(--color-border); background: var(--color-bg);
       color: var(--color-text-muted); transition: all var(--transition);
+      font-family: var(--font-body);
     }
     .theme-toggle {
       width: 40px; padding: 0; display: inline-flex;
@@ -142,8 +155,10 @@
       background: var(--color-primary-hover); border-color: var(--color-primary-hover);
     }
     .primary-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+
     .page-hero { padding: var(--space-10) 0 var(--space-8); }
     .hero-grid { display: grid; grid-template-columns: 1.25fr 0.9fr; gap: var(--space-6); align-items: stretch; }
+    .hero-side { display: flex; flex-direction: column; gap: var(--space-6); }
     .hero-panel, .summary-card, .surface-card {
       background: var(--color-surface); border: 1px solid var(--color-border);
       border-radius: var(--radius-xl); box-shadow: var(--shadow-sm);
@@ -171,7 +186,7 @@
       font-size: var(--text-xs); font-family: var(--font-display); font-weight: 700;
       letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: var(--space-5);
     }
-    .hero-title { font-size: var(--text-2xl); letter-spacing: -0.04em; margin-bottom: var(--space-4); max-width: 12ch; }
+    .hero-title { font-size: var(--text-2xl); letter-spacing: -0.04em; margin-bottom: var(--space-4); max-width: 14ch; }
     .hero-sub { max-width: 52ch; margin-bottom: var(--space-8); }
     .hero-meta { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: var(--space-4); }
     .metric {
@@ -197,6 +212,14 @@
       gap: var(--space-4); padding: var(--space-4); border-radius: var(--radius-lg);
       background: var(--color-bg); border: 1px solid var(--color-border);
     }
+    .account-chip {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      padding: 0.35rem 0.7rem; border-radius: var(--radius-full);
+      font-size: var(--text-xs); font-family: var(--font-display); font-weight: 700;
+    }
+    .account-chip.active { background: var(--color-success-bg); color: var(--color-success); border: 1px solid color-mix(in srgb, var(--color-success) 35%, transparent); }
+    .account-chip.inactive { background: var(--color-warn-bg); color: var(--color-warn); border: 1px solid color-mix(in srgb, var(--color-warn) 35%, transparent); }
+
     .tag {
       display: inline-flex; align-items: center; padding: 0.2rem 0.45rem;
       border-radius: var(--radius-sm); font-size: 10px; font-family: var(--font-display);
@@ -206,6 +229,20 @@
     .tag-up { background: var(--color-up-bg); color: var(--color-up); }
     .tag-new { background: var(--color-new-bg); color: var(--color-new); }
     .tag-neutral { background: var(--color-surface-2); color: var(--color-text-muted); }
+
+    .status-banner { padding: 0.75rem 1.25rem; border-radius: var(--radius-lg); font-size: var(--text-sm); margin-bottom: var(--space-5); display: none; align-items: center; gap: 0.5rem; }
+    .status-banner.inactive { background: var(--color-warn-bg); color: var(--color-warn); border: 1px solid var(--color-warn); display: flex; }
+    .status-banner.active { background: var(--color-success-bg); color: var(--color-success); border: 1px solid var(--color-success); display: flex; }
+    .status-banner a { text-decoration: underline; }
+    .demo-disclaimer { margin-top: var(--space-6); padding: 0.85rem 1.25rem; border-radius: var(--radius-lg); font-size: var(--text-sm); background: var(--color-surface-2); color: var(--color-text-muted); border: 1px dashed var(--color-border); display: flex; flex-wrap: wrap; gap: 0.35rem; align-items: center; }
+    .demo-disclaimer a { color: var(--color-accent); font-weight: 600; text-decoration: none; }
+    .demo-disclaimer a:hover { text-decoration: underline; }
+    .demo-badge { display:inline-block; font-size: var(--text-xs); font-weight:700; letter-spacing:0.02em; padding:0.15rem 0.5rem; border-radius:999px; background: var(--color-surface-2); color: var(--color-text-muted); border:1px solid var(--color-border); }
+    .refresh-banner { padding: 0.75rem 1.25rem; border-radius: var(--radius-lg); font-size: var(--text-sm); margin-bottom: var(--space-5); display: none; align-items: center; gap: 0.5rem; }
+    .refresh-banner.running { background: var(--color-accent-light); color: var(--color-accent); border: 1px solid var(--color-accent); display: flex; }
+    .refresh-banner.done { background: var(--color-success-bg); color: var(--color-success); border: 1px solid var(--color-success); display: flex; }
+    .refresh-banner.error { background: var(--color-error-bg); color: var(--color-error); border: 1px solid var(--color-error); display: flex; }
+
     .dashboard-section { padding: var(--space-3) 0 var(--space-12); }
     .toolbar-strip { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: var(--space-4); margin-bottom: var(--space-6); }
     .toolbar-card {
@@ -227,7 +264,7 @@
     .section-title { font-size: var(--text-xl); letter-spacing: -0.03em; margin-bottom: var(--space-2); }
     .tabs {
       display: flex; gap: 0; border-bottom: 2px solid var(--color-divider);
-      margin-bottom: var(--space-5);
+      margin-bottom: var(--space-5); flex-wrap: wrap;
     }
     .tab-btn {
       padding: 0.6rem 1.2rem; border: none; background: transparent;
@@ -246,11 +283,14 @@
     .field, .search {
       min-height: 46px; width: 100%; border-radius: var(--radius-md);
       border: 1px solid var(--color-border); background: var(--color-bg); padding: 0 var(--space-4);
+      outline: none; transition: border-color var(--transition), box-shadow var(--transition);
     }
+    .field:focus, .search:focus { border-color: var(--color-accent); box-shadow: 0 0 0 3px rgba(37,99,235,0.12); }
+
     .changes-shell, .wow-shell, .catalog-shell {
       border-radius: var(--radius-xl); border: 1px solid var(--color-border);
       background: linear-gradient(180deg, color-mix(in srgb, var(--color-surface) 92%, var(--color-bg)), var(--color-surface));
-      box-shadow: var(--shadow-sm), var(--shadow-glow); overflow: hidden;
+      box-shadow: var(--shadow-sm), var(--shadow-glow); overflow: hidden; margin-bottom: var(--space-6);
     }
     .changes-shell-header {
       display: flex; align-items: center; justify-content: space-between;
@@ -285,7 +325,7 @@
     .changes-shell-note { font-size: var(--text-xs); color: var(--color-text-faint); }
     .table-shell { max-height: 520px; overflow: auto; }
     .catalog-shell .table-shell, .wow-shell .table-shell { max-height: 600px; }
-    table { width: 100%; border-collapse: collapse; min-width: 900px; }
+    table { width: 100%; border-collapse: collapse; min-width: 760px; }
     th, td {
       text-align: left; padding: 0.85rem 1rem;
       border-bottom: 1px solid var(--color-divider); vertical-align: middle;
@@ -294,7 +334,7 @@
       font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.05em;
       color: var(--color-text-faint); font-family: var(--font-display);
       background: color-mix(in srgb, var(--color-surface) 84%, var(--color-bg));
-      position: sticky; top: 0; z-index: 1;
+      position: sticky; top: 0; z-index: 1; white-space: nowrap;
     }
     td { font-size: var(--text-sm); }
     tbody tr { transition: background var(--transition); }
@@ -335,21 +375,48 @@
     .mini-note { font-size: var(--text-xs); color: var(--color-text-faint); }
     .empty-state, .loading-state { padding: var(--space-12); text-align: center; color: var(--color-text-muted); }
     .error-box {
-      margin-top: var(--space-5); padding: var(--space-4); border-radius: var(--radius-lg);
+      margin-bottom: var(--space-5); padding: var(--space-4); border-radius: var(--radius-lg);
       border: 1px solid var(--color-up); background: var(--color-up-bg); color: var(--color-up);
       display: none; white-space: pre-wrap; font-size: var(--text-sm);
     }
+
+    /* Average price cards */
+    .avg-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap: var(--space-4); margin-bottom: var(--space-6); }
+    .avg-card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: var(--space-4) var(--space-5); }
+    .avg-store { font-family: var(--font-display); font-weight: 800; font-size: 0.9rem; margin-bottom: 0.2rem; }
+    .avg-price { font-family: var(--font-display); font-size: 1.5rem; font-weight: 800; letter-spacing: -0.04em; }
+    .avg-note { font-size: var(--text-xs); color: var(--color-text-faint); margin-top: 0.15rem; }
+    .avg-vs { font-size: var(--text-xs); font-weight: 700; margin-top: 0.35rem; }
+    .avg-vs.cheaper { color: var(--color-down); } .avg-vs.pricier { color: var(--color-up); }
+
+    /* Rivals management */
+    .rivals-grid { display: grid; gap: var(--space-3); margin-bottom: var(--space-6); }
+    .rival-row { display: flex; align-items: center; justify-content: space-between; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: 0.9rem 1.25rem; gap: 1rem; }
+    .rival-name { font-family: var(--font-display); font-weight: 700; font-size: 0.95rem; }
+    .rival-url { font-size: var(--text-xs); color: var(--color-text-faint); margin-top: 0.15rem; }
+    .rival-delete { width: 32px; height: 32px; border-radius: var(--radius-sm); border: 1px solid var(--color-border); background: transparent; color: var(--color-text-faint); font-size: 1.1rem; display: flex; align-items: center; justify-content: center; transition: all var(--transition); flex-shrink: 0; }
+    .rival-delete:hover { background: var(--color-up-bg); color: var(--color-up); border-color: var(--color-up); }
+    .add-rival-card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-xl); padding: var(--space-5) var(--space-6); box-shadow: var(--shadow-sm); }
+    .add-rival-form { display: flex; gap: var(--space-3); flex-wrap: wrap; }
+    .add-rival-form input { flex: 1 1 200px; min-height: 46px; padding: 0 var(--space-4); border-radius: var(--radius-md); border: 1px solid var(--color-border); background: var(--color-bg); font-size: var(--text-sm); outline: none; transition: border-color var(--transition), box-shadow var(--transition); }
+    .add-rival-form input:focus { border-color: var(--color-accent); box-shadow: 0 0 0 3px rgba(37,99,235,0.12); }
+    .msg { padding: 0.6rem 1rem; border-radius: var(--radius-md); font-size: var(--text-sm); margin-bottom: var(--space-3); display: none; }
+    .msg.error { background: var(--color-error-bg); color: var(--color-error); border: 1px solid var(--color-error); display: block; }
+    .msg.success { background: var(--color-success-bg); color: var(--color-success); border: 1px solid var(--color-success); display: block; }
+
     .footer {
       padding: var(--space-8) 0; border-top: 1px solid var(--color-divider);
       color: var(--color-text-faint); font-size: var(--text-xs);
     }
+    .footer a { text-decoration: underline; opacity: 0.6; }
+
     @media (max-width: 980px) {
       .hero-grid, .toolbar-strip { grid-template-columns: 1fr; }
       .filters { grid-template-columns: 1fr 1fr; }
     }
     @media (max-width: 640px) {
       .nav-inner { min-height: 68px; }
-      .nav-actions .ghost-btn { display: none; }
+      .user-email { display: none; }
       .filters { grid-template-columns: 1fr; }
       .hero-meta { grid-template-columns: 1fr; }
       .section-head { align-items: start; flex-direction: column; }
@@ -370,8 +437,10 @@
         <span>RivalRadar</span>
       </a>
       <div class="nav-actions">
-        <button class="ghost-btn" id="refreshButton">🔄 Refresh data</button>
-        <button class="theme-toggle" data-theme-toggle aria-label="Toggle dark mode">
+        <span class="user-email" id="user-email">Demo mode</span>
+        <button class="ghost-btn" id="refresh-btn" onclick="triggerRefresh()">🔄 Refresh data</button>
+        <a class="ghost-btn" href="https://www.rival-radar.online/">Sign up</a>
+        <button class="theme-toggle" id="theme-btn" aria-label="Toggle dark mode">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
         </button>
       </div>
@@ -379,57 +448,92 @@
   </header>
 
   <main>
+    <div class="container">
+      <div class="demo-disclaimer">🧪 This is a live product demo. Competitor names are anonymized and figures shown are sample data for demonstration purposes only. <a href="https://www.rival-radar.online/">Start monitoring your real rivals →</a></div>
+    </div>
     <section class="page-hero">
       <div class="container hero-grid">
         <div class="hero-panel">
-          <div class="eyebrow">Live competitor feed</div>
+          <div class="eyebrow">Sample competitor feed</div>
           <h1 class="hero-title">See rival price movement the moment it matters.</h1>
-          <p class="hero-sub">Check which products changed price, where, and by how much — without digging through exports or raw tables.</p>
+          <p class="hero-sub">This demo shows how RivalRadar tracks competitor prices, spots week-over-week movement, and surfaces alerts — using anonymized sample data.</p>
           <div class="hero-actions">
-            <button class="primary-btn" id="heroRefreshButton">🔄 Refresh live data</button>
-            <span class="hero-caption">Designed for founders and operators checking in a few times a day.</span>
+            <button class="primary-btn" id="hero-refresh-btn" onclick="triggerRefresh()">🔄 Run live scrape</button>
+            <span class="hero-caption">In the live product, we email you when a rival changes a price.</span>
           </div>
           <div class="hero-meta">
             <div class="metric">
-              <span class="metric-label">Competitors monitored</span>
-              <div class="metric-value" id="metricStores">—</div>
-              <div class="metric-note">Distinct competitors in snapshot</div>
+              <span class="metric-label">Rivals monitored</span>
+              <div class="metric-value" id="stat-rivals">—</div>
+              <div class="metric-note">Stores under watch</div>
             </div>
             <div class="metric">
               <span class="metric-label">Products tracked</span>
-              <div class="metric-value" id="metricRows">—</div>
-              <div class="metric-note">Active products under watch</div>
+              <div class="metric-value" id="stat-products">—</div>
+              <div class="metric-note">Active products in catalog</div>
             </div>
             <div class="metric">
               <span class="metric-label">Price changes</span>
-              <div class="metric-value" id="metricChanges">—</div>
+              <div class="metric-value" id="stat-changes">—</div>
               <div class="metric-note">Detected from history</div>
             </div>
           </div>
           <div class="inline-statbar">
-            <div class="stat-pill"><span class="stat-dot"></span>Live from Supabase</div>
-            <div class="stat-pill"><span class="stat-dot"></span>Optimized for quick price checks</div>
+            <div class="stat-pill"><span class="stat-dot"></span>Sample data</div>
+            <div class="stat-pill"><span class="stat-dot"></span>Anonymized competitors</div>
           </div>
-          <div class="error-box" id="errorBox"></div>
         </div>
-        <aside class="summary-card">
-          <div>
-            <h2 class="summary-title">Snapshot overview</h2>
-            <p>Products tracked per competitor with last snapshot time.</p>
-          </div>
-          <div class="status-stack" id="storeSummary">
-            <div class="loading-state">Loading…</div>
-          </div>
-        </aside>
+        <div class="hero-side">
+          <aside class="summary-card">
+            <div>
+              <h2 class="summary-title">Account overview <span class="demo-badge">Demo</span></h2>
+              <p>Example of what your account panel looks like.</p>
+            </div>
+            <div class="status-stack">
+              <div class="status-row">
+                <div>
+                  <div class="mini-note">Account status</div>
+                  <div id="account-chip" class="account-chip active">● Active</div>
+                </div>
+                <div class="mini-note" id="account-note">Monitoring live</div>
+              </div>
+              <div class="status-row">
+                <div>
+                  <div class="mini-note">Signed in as</div>
+                  <div><strong id="account-email">demo@rival-radar.online</strong></div>
+                </div>
+              </div>
+            </div>
+          </aside>
+          <aside class="summary-card">
+            <div>
+              <h2 class="summary-title">Snapshot overview</h2>
+              <p>Products tracked per competitor with last snapshot time.</p>
+            </div>
+            <div class="status-stack" id="store-summary">
+              <div class="loading-state">Loading…</div>
+            </div>
+          </aside>
+        </div>
       </div>
     </section>
 
     <section class="dashboard-section">
       <div class="container">
+        <div id="status-banner" class="status-banner active">
+          <span id="status-icon">🧪</span>
+          <span id="status-text">Demo dashboard — showing anonymized sample data. <a href="https://www.rival-radar.online/">Sign up to monitor your real rivals →</a></span>
+        </div>
+        <div id="refresh-banner" class="refresh-banner">
+          <div class="spinner" id="refresh-spinner"></div>
+          <span id="refresh-text"></span>
+        </div>
+        <div id="data-error" class="error-box"></div>
+
         <div class="section-head">
           <div>
             <h2 class="section-title">Price intelligence</h2>
-            <p>Switch tabs to explore recent changes, week-over-week movement, or the full catalog.</p>
+            <p>Switch tabs to review alerts, browse live prices, track week-over-week movement, or manage rivals — all shown with sample data in this demo.</p>
           </div>
         </div>
 
@@ -442,65 +546,90 @@
           <div class="toolbar-card">
             <span class="toolbar-label">Change detection</span>
             <div class="toolbar-value">From history</div>
-            <p class="mini-note">Derived from product_snapshot_history.</p>
+            <p class="mini-note">Derived from snapshot history.</p>
           </div>
           <div class="toolbar-card">
             <span class="toolbar-label">Tracked products</span>
-            <div class="toolbar-value" id="toolbarTrackedProducts">—</div>
-            <p class="mini-note">Total in product_snapshots.</p>
+            <div class="toolbar-value" id="toolbar-products">—</div>
+            <p class="mini-note">Total across sample competitors.</p>
           </div>
           <div class="toolbar-card">
-            <span class="toolbar-label">Competitors tracked</span>
-            <div class="toolbar-value" id="toolbarStoresTracked">—</div>
-            <p class="mini-note">All competitors in this dashboard.</p>
+            <span class="toolbar-label">Rivals tracked</span>
+            <div class="toolbar-value" id="toolbar-rivals">—</div>
+            <p class="mini-note">Competitors in this demo.</p>
           </div>
         </div>
 
         <nav class="tabs" role="tablist">
-          <button class="tab-btn active" data-tab="changes" role="tab">📉 Recent Changes</button>
-          <button class="tab-btn" data-tab="wow" role="tab">📊 Week over Week</button>
-          <button class="tab-btn" data-tab="catalog" role="tab">📦 Full Catalog</button>
+          <button class="tab-btn active" data-tab="alerts" role="tab">🔔 Alerts</button>
+          <button class="tab-btn" data-tab="prices" role="tab">💰 Live Prices</button>
+          <button class="tab-btn" data-tab="wow" role="tab">📈 Week over Week</button>
+          <button class="tab-btn" data-tab="rivals" role="tab">🏪 Rivals</button>
         </nav>
 
-        <!-- RECENT CHANGES -->
-        <div class="tab-panel active" id="tab-changes">
-          <div class="filters">
-            <select class="field" id="storeFilter"><option value="all">All competitors</option></select>
-            <select class="field" id="changeFilter">
-              <option value="all">All change types</option>
-              <option value="drop">Price drops</option>
-              <option value="increase">Price increases</option>
-            </select>
-            <input class="search" id="searchInput" type="search" placeholder="Search product or variant" />
-            <button class="ghost-btn" id="clearFilters">Clear</button>
-          </div>
+        <!-- ALERTS -->
+        <div class="tab-panel active" id="tab-alerts">
           <div class="changes-shell">
             <div class="changes-shell-header">
               <div class="changes-shell-header-left">
                 <div>
-                  <div class="changes-shell-title">Price changes feed</div>
-                  <div class="changes-shell-note">Products where price changed between two consecutive snapshots.</div>
+                  <div class="changes-shell-title">Price alerts</div>
+                  <div class="changes-shell-note">Sample price drops, rises, new products, and stock changes across competitors.</div>
+                </div>
+                <span class="live-badge"><span class="live-dot"></span>Connected to Live Web Scrapers (Updating Daily)</span>
+              </div>
+            </div>
+            <div class="table-shell" id="alerts-container">
+              <div class="loading-state">Loading…</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- LIVE PRICES -->
+        <div class="tab-panel" id="tab-prices">
+          <div class="section-head">
+            <div>
+              <h3 class="section-title" style="font-size:var(--text-lg)">Average price by store</h3>
+              <p class="mini-note">Where each rival sits versus the market average.</p>
+            </div>
+          </div>
+          <div id="avg-grid" class="avg-grid"><div class="loading-state">Loading…</div></div>
+
+          <div class="filters">
+            <select class="field" id="price-store-filter"><option value="all">All stores</option></select>
+            <select class="field" id="price-sort">
+              <option value="name">Sort: Product A–Z</option>
+              <option value="price_asc">Sort: Price low–high</option>
+              <option value="price_desc">Sort: Price high–low</option>
+              <option value="store">Sort: Store A–Z</option>
+            </select>
+            <input class="search" id="price-search" type="search" placeholder="Search product or variant" />
+            <button class="ghost-btn" id="price-clear">Clear</button>
+          </div>
+          <div class="catalog-shell">
+            <div class="changes-shell-header">
+              <div class="changes-shell-header-left">
+                <div>
+                  <div class="changes-shell-title">All tracked products</div>
+                  <div class="changes-shell-note" id="prices-note">Latest snapshot per product.</div>
                 </div>
                 <span class="live-badge"><span class="live-dot"></span>Connected to Live Web Scrapers (Updating Daily)</span>
               </div>
               <div class="header-right">
-                <div class="mini-note" id="changesCountNote">—</div>
                 <div class="pager">
-                  <button class="pager-btn" id="prevPageButton">Prev</button>
-                  <span id="pageLabel" class="pager-label">Page 1 of 1</span>
-                  <button class="pager-btn" id="nextPageButton">Next</button>
+                  <button class="pager-btn" id="price-prev">Prev</button>
+                  <span class="pager-label" id="price-page-label">Page 1 of 1</span>
+                  <button class="pager-btn" id="price-next">Next</button>
                 </div>
               </div>
             </div>
             <div class="table-shell">
               <table>
                 <thead><tr>
-                  <th>Competitor</th><th>Product</th><th>Variant</th><th>Change</th>
-                  <th>Prev price</th><th>New price</th><th>Delta</th><th>Trend</th><th>Detected at</th>
+                  <th>Store</th><th>Product</th><th>Variant</th>
+                  <th>Price</th><th>Compare at</th><th>Last seen</th>
                 </tr></thead>
-                <tbody id="changesBody">
-                  <tr><td colspan="9" class="loading-state">Loading…</td></tr>
-                </tbody>
+                <tbody id="prices-body"><tr><td colspan="6" class="loading-state">Loading…</td></tr></tbody>
               </table>
             </div>
           </div>
@@ -509,15 +638,15 @@
         <!-- WEEK OVER WEEK -->
         <div class="tab-panel" id="tab-wow">
           <div class="filters">
-            <select class="field" id="wowStoreFilter"><option value="all">All competitors</option></select>
-            <select class="field" id="wowDirFilter">
+            <select class="field" id="wow-store-filter"><option value="all">All stores</option></select>
+            <select class="field" id="wow-dir-filter">
               <option value="all">All movements</option>
               <option value="drop">Price drops only</option>
               <option value="increase">Price increases only</option>
               <option value="flat">Flat / no change</option>
             </select>
-            <input class="search" id="wowSearchInput" type="search" placeholder="Search product or variant" />
-            <button class="ghost-btn" id="wowClearFilters">Clear</button>
+            <input class="search" id="wow-search" type="search" placeholder="Search product or variant" />
+            <button class="ghost-btn" id="wow-clear">Clear</button>
           </div>
           <div class="wow-shell">
             <div class="changes-shell-header">
@@ -529,70 +658,44 @@
                 <span class="live-badge"><span class="live-dot"></span>Connected to Live Web Scrapers (Updating Daily)</span>
               </div>
               <div class="header-right">
-                <div class="mini-note" id="wowCountNote">—</div>
+                <div class="mini-note" id="wow-count-note">—</div>
                 <div class="pager">
-                  <button class="pager-btn" id="wowPrevPage">Prev</button>
-                  <span id="wowPageLabel" class="pager-label">Page 1 of 1</span>
-                  <button class="pager-btn" id="wowNextPage">Next</button>
+                  <button class="pager-btn" id="wow-prev">Prev</button>
+                  <span class="pager-label" id="wow-page-label">Page 1 of 1</span>
+                  <button class="pager-btn" id="wow-next">Next</button>
                 </div>
               </div>
             </div>
             <div class="table-shell">
               <table>
                 <thead><tr>
-                  <th>Competitor</th><th>Product</th><th>Variant</th>
+                  <th>Store</th><th>Product</th><th>Variant</th>
                   <th>Current price</th><th>First recorded</th><th>Change</th><th>%</th><th>Trend</th>
                 </tr></thead>
-                <tbody id="wowBody">
-                  <tr><td colspan="8" class="loading-state">Loading…</td></tr>
-                </tbody>
+                <tbody id="wow-body"><tr><td colspan="8" class="loading-state">Loading…</td></tr></tbody>
               </table>
             </div>
           </div>
         </div>
 
-        <!-- FULL CATALOG -->
-        <div class="tab-panel" id="tab-catalog">
-          <div class="filters">
-            <select class="field" id="catStoreFilter"><option value="all">All competitors</option></select>
-            <select class="field" id="catSortField">
-              <option value="store">Sort: Competitor A–Z</option>
-              <option value="price_asc">Sort: Price low–high</option>
-              <option value="price_desc">Sort: Price high–low</option>
-              <option value="product">Sort: Product A–Z</option>
-            </select>
-            <input class="search" id="catSearchInput" type="search" placeholder="Search product or variant" />
-            <button class="ghost-btn" id="catClearFilters">Clear</button>
+        <!-- RIVALS -->
+        <div class="tab-panel" id="tab-rivals">
+          <div class="section-head">
+            <div>
+              <h3 class="section-title" style="font-size:var(--text-lg)">Monitored rivals <span class="demo-badge">Demo</span></h3>
+              <p class="mini-note">Example of the competitor stores RivalRadar monitors for an account.</p>
+            </div>
           </div>
-          <div class="catalog-shell">
-            <div class="changes-shell-header">
-              <div class="changes-shell-header-left">
-                <div>
-                  <div class="changes-shell-title">Full product catalog</div>
-                  <div class="changes-shell-note">All rows from product_snapshots. 500 per page.</div>
-                </div>
-                <span class="live-badge"><span class="live-dot"></span>Connected to Live Web Scrapers (Updating Daily)</span>
-              </div>
-              <div class="header-right">
-                <div class="mini-note" id="catCountNote">—</div>
-                <div class="pager">
-                  <button class="pager-btn" id="catPrevPage">Prev</button>
-                  <span id="catPageLabel" class="pager-label">Page 1 of 1</span>
-                  <button class="pager-btn" id="catNextPage">Next</button>
-                </div>
-              </div>
+          <div id="rivals-list" class="rivals-grid"><div class="loading-state">Loading…</div></div>
+          <div class="add-rival-card">
+            <span class="toolbar-label" style="margin-bottom:var(--space-3)">Add a rival</span>
+            <div id="rival-msg" class="msg"></div>
+            <div class="add-rival-form">
+              <input type="text" id="rival-name" placeholder="Store name (e.g. Gymshark)" disabled />
+              <input type="url" id="rival-url" placeholder="https://gymshark.com" disabled />
+              <button class="primary-btn" onclick="triggerRefresh()">+ Add rival</button>
             </div>
-            <div class="table-shell">
-              <table>
-                <thead><tr>
-                  <th>Competitor</th><th>Product</th><th>Variant</th>
-                  <th>Price</th><th>Compare at</th><th>Last seen</th>
-                </tr></thead>
-                <tbody id="catalogBody">
-                  <tr><td colspan="6" class="loading-state">Loading…</td></tr>
-                </tbody>
-              </table>
-            </div>
+            <p class="mini-note" style="margin-top:var(--space-3)">Adding rivals is available in the full product. <a href="https://www.rival-radar.online/" style="color:var(--color-accent);font-weight:600;">Sign up →</a></p>
           </div>
         </div>
       </div>
@@ -600,423 +703,330 @@
   </main>
 
   <footer class="footer">
-    <div class="container">RivalRadar — live competitor price monitoring. <a href="https://www.rival-radar.online/" style="text-decoration:underline;opacity:0.6;">Back to site →</a></div>
+    <div class="container">RivalRadar — live competitor price monitoring. <a href="https://www.rival-radar.online/">Back to site →</a></div>
   </footer>
 
   <script>
-    const SUPABASE_URL = "https://msmlwfnzeqndwkrkpipo.supabase.co";
-    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1zbWx3Zm56ZXFuZHdrcmtwaXBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI3NjE2NzksImV4cCI6MjA5ODMzNzY3OX0.bU0F3glkH4LMukxkDrLEgerjUqNIGVI77zCm9c_n6ac";
-    const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  /* ============================================================
+     DEMO DASHBOARD LOGIC — static sample data, no auth/Supabase.
+     Mirrors the client dashboard's 4-tab layout (Alerts, Live Prices,
+     Week over Week, Rivals). All figures are fabricated for demo only.
+     Competitor names are ANONYMIZED (Competitor A/B/C...).
+     ============================================================ */
 
-    const PAGE_SIZE = 100;
-    const PAGE_SIZE_CATALOG = 500;
-    const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  // ---------- helpers ----------
+  function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+  function fmt$(v){const n=Number(v);if(v===null||v===undefined||v===''||Number.isNaN(n))return'—';return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(n);}
+  function fmtDate(v){if(!v)return'—';const d=new Date(v);if(Number.isNaN(d.getTime()))return v;return new Intl.DateTimeFormat('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}).format(d);}
+  function daysAgo(n){const d=new Date();d.setDate(d.getDate()-n);return d.toISOString();}
+  function hoursAgo(n){const d=new Date();d.setHours(d.getHours()-n);return d.toISOString();}
 
-    let storeAliasMap = {};
-    let storeAliasKeys = {};
-
-    function buildAliasMap(storeKeys) {
-      storeAliasMap = {}; storeAliasKeys = {};
-      [...storeKeys].sort().forEach((k, i) => {
-        const letter = LETTERS[i] || String(i + 1);
-        const alias = `Competitor ${letter} (Live Feed)`;
-        storeAliasMap[k] = alias;
-        storeAliasKeys[alias] = k;
-      });
-    }
-    function anonStore(rawKey) {
-      return storeAliasMap[rawKey] || 'Competitor ? (Live Feed)';
-    }
-
-    const state = {
-      snapshots: [],
-      history: [],
-      historyMap: {},
-      changeRows: [],
-      filteredChanges: [],
-      changePage: 1, changeTotalPages: 1,
-      wowRows: [],
-      filteredWow: [],
-      wowPage: 1, wowTotalPages: 1,
-      filteredCatalog: [],
-      catPage: 1, catTotalPages: 1,
-    };
-
-    function setRefreshLoading(loading) {
-      const navBtn = document.getElementById('refreshButton');
-      const heroBtn = document.getElementById('heroRefreshButton');
-      if (loading) {
-        navBtn.disabled = true;  navBtn.textContent = '⏳ Loading…';
-        heroBtn.disabled = true; heroBtn.textContent = '⏳ Loading…';
-      } else {
-        navBtn.disabled = false;  navBtn.textContent = '🔄 Refresh data';
-        heroBtn.disabled = false; heroBtn.textContent = '🔄 Refresh live data';
-      }
-    }
-
-    function fmt$(v) {
-      const n = Number(v);
-      if (v === null || v === undefined || v === '' || Number.isNaN(n)) return '—';
-      return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(n);
-    }
-    function fmtDate(v) {
-      if (!v) return '';
-      const d = new Date(v);
-      if (Number.isNaN(d.getTime())) return v;
-      return new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' }).format(d);
-    }
-    function rowKey(store_key, product_handle, variant_name) {
-      return `${store_key||''}||${product_handle||''}||${variant_name||''}`;
-    }
-    function changeTag(ct) {
-      if (ct === 'drop') return '<span class="tag tag-down">Drop</span>';
-      if (ct === 'increase') return '<span class="tag tag-up">Rise</span>';
-      return '<span class="tag tag-new">Changed</span>';
-    }
-
-    let _gid = 0;
-    function sparkline(points, ct) {
-      if (!points || points.length < 2) return '<span class="sparkline-no-data">Collecting…</span>';
-      const W = 80, H = 28, P = 2;
-      const prices = points.map(p => Number(p.price));
-      const mn = Math.min(...prices), mx = Math.max(...prices), rng = mx - mn || 1;
-      const xs = points.map((_, i) => P + (i / (points.length - 1)) * (W - P * 2));
-      const ys = prices.map(p => H - P - ((p - mn) / rng) * (H - P * 2));
-      const col = ct === 'drop' ? 'var(--color-down)' : ct === 'increase' ? 'var(--color-up)' : 'var(--color-accent)';
-      const poly = xs.map((x, i) => `${x.toFixed(1)},${ys[i].toFixed(1)}`).join(' ');
-      const fillPath = `M${xs[0].toFixed(1)},${H} ` + xs.map((x, i) => `L${x.toFixed(1)},${ys[i].toFixed(1)}`).join(' ') + ` L${xs[xs.length-1].toFixed(1)},${H} Z`;
-      const gid = 'sg' + (++_gid);
-      return `<div class="sparkline-wrap">
-        <svg class="sparkline-svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
-          <defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="${col}" stop-opacity="0.18"/>
-            <stop offset="100%" stop-color="${col}" stop-opacity="0"/>
-          </linearGradient></defs>
-          <path d="${fillPath}" fill="url(#${gid})"/>
-          <polyline points="${poly}" fill="none" stroke="${col}" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
-          <circle cx="${xs[xs.length-1].toFixed(1)}" cy="${ys[ys.length-1].toFixed(1)}" r="2.5" fill="${col}"/>
-        </svg>
-        <span class="sparkline-label">${points.length}pt</span>
-      </div>`;
-    }
-
-    function setStoreOptions(storeKeys, ...ids) {
-      const opts = '<option value="all">All competitors</option>' +
-        storeKeys.map(s => `<option value="${s}">${anonStore(s)}</option>`).join('');
-      ids.forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = opts; });
-    }
-
-    function buildChangesFromHistory() {
-      const changes = [];
-      for (const [key, pts] of Object.entries(state.historyMap)) {
-        if (pts.length < 2) continue;
-        for (let i = 1; i < pts.length; i++) {
-          const prev = pts[i - 1], curr = pts[i];
-          if (Number(prev.price) !== Number(curr.price)) {
-            const [store_key, product_handle, variant_name] = key.split('||');
-            const ct = Number(curr.price) < Number(prev.price) ? 'drop' : 'increase';
-            changes.push({ store_key, product_handle, variant_name,
-              product_name: curr.product_name || prev.product_name || '',
-              prev_price: prev.price, new_price: curr.price,
-              snapshot_at: curr.snapshot_at, change_type: ct });
-          }
-        }
-      }
-      changes.sort((a, b) => new Date(b.snapshot_at) - new Date(a.snapshot_at));
-      return changes;
-    }
-
-    function renderMetrics() {
-      const stores = new Set(state.snapshots.map(r => r.store_key)).size;
-      document.getElementById('metricStores').textContent = stores || 0;
-      document.getElementById('metricRows').textContent = state.snapshots.length.toLocaleString();
-      document.getElementById('metricChanges').textContent = state.changeRows.length.toLocaleString();
-      document.getElementById('toolbarTrackedProducts').textContent = state.snapshots.length.toLocaleString();
-      document.getElementById('toolbarStoresTracked').textContent = String(stores);
-    }
-
-    function renderStoreSummary() {
-      const el = document.getElementById('storeSummary');
-      if (!state.snapshots.length) { el.innerHTML = '<div class="loading-state">No data.</div>'; return; }
-      const grouped = state.snapshots.reduce((acc, r) => {
-        const k = r.store_key || 'unknown';
-        if (!acc[k]) acc[k] = { count: 0, latest: null };
-        acc[k].count++;
-        const d = r.created_at ? new Date(r.created_at) : null;
-        if (d && (!acc[k].latest || d > acc[k].latest)) acc[k].latest = d;
-        return acc;
-      }, {});
-      el.innerHTML = Object.entries(grouped).sort(([a],[b]) => a.localeCompare(b)).map(([store, info]) =>
-        `<div class="status-row">
-          <div><span class="tag tag-neutral">Live</span>
-            <div><strong>${anonStore(store)}</strong></div>
-            <div class="mini-note">${info.count.toLocaleString()} products</div>
-          </div>
-          <div class="mini-note">${info.latest ? fmtDate(info.latest) : ''}</div>
-        </div>`).join('');
-    }
-
-    function applyChangesFilters() {
-      const store = document.getElementById('storeFilter').value;
-      const type = document.getElementById('changeFilter').value;
-      const q = document.getElementById('searchInput').value.trim().toLowerCase();
-      state.filteredChanges = state.changeRows.filter(r => {
-        const prod = (r.product_name || r.product_handle || '').toLowerCase();
-        const vari = (r.variant_name || '').toLowerCase();
-        const alias = anonStore(r.store_key || '').toLowerCase();
-        return (store === 'all' || r.store_key === store)
-          && (type === 'all' || r.change_type === type)
-          && (!q || prod.includes(q) || vari.includes(q) || alias.includes(q));
-      });
-      state.changePage = 1;
-      renderChangesTable();
-      renderMetrics();
-    }
-    function renderChangesTable() {
-      state.changeTotalPages = Math.max(1, Math.ceil(state.filteredChanges.length / PAGE_SIZE));
-      const rows = state.filteredChanges.slice((state.changePage - 1) * PAGE_SIZE, state.changePage * PAGE_SIZE);
-      const body = document.getElementById('changesBody');
-      if (!rows.length) {
-        body.innerHTML = '<tr><td colspan="9" class="empty-state">No price changes detected yet.</td></tr>';
-      } else {
-        body.innerHTML = rows.map(r => {
-          const delta = Number(r.new_price) - Number(r.prev_price);
-          const hKey = rowKey(r.store_key, r.product_handle, r.variant_name);
-          const spark = sparkline(state.historyMap[hKey] || [], r.change_type);
-          return `<tr>
-            <td><span class="store-chip">${anonStore(r.store_key)}</span></td>
-            <td class="product-cell"><strong>${r.product_name || r.product_handle || 'Untitled'}</strong></td>
-            <td>${r.variant_name || '—'}</td>
-            <td>${changeTag(r.change_type)}</td>
-            <td class="price-old">${fmt$(r.prev_price)}</td>
-            <td class="price-new ${r.change_type==='drop'?'price-down':r.change_type==='increase'?'price-up':''}">${fmt$(r.new_price)}</td>
-            <td class="${delta<0?'price-down':delta>0?'price-up':''}">${fmt$(delta)}</td>
-            <td class="sparkline-cell">${spark}</td>
-            <td class="mini-note">${fmtDate(r.snapshot_at)}</td>
-          </tr>`;
-        }).join('');
-      }
-      document.getElementById('changesCountNote').textContent = `${state.filteredChanges.length.toLocaleString()} changes`;
-      document.getElementById('pageLabel').textContent = `Page ${state.changePage} of ${state.changeTotalPages}`;
-      document.getElementById('prevPageButton').disabled = state.changePage <= 1;
-      document.getElementById('nextPageButton').disabled = state.changePage >= state.changeTotalPages;
-    }
-
-    function buildWowRows() {
-      return state.snapshots.map(snap => {
-        const hKey = rowKey(snap.store_key, snap.product_handle, snap.variant_name);
-        const hist = state.historyMap[hKey] || [];
-        const currentPrice = Number(snap.price);
-        const firstPrice = hist.length >= 1 ? Number(hist[0].price) : null;
-        return { snap, hist, currentPrice, firstPrice };
-      });
-    }
-    function applyWowFilters() {
-      const store = document.getElementById('wowStoreFilter').value;
-      const dir = document.getElementById('wowDirFilter').value;
-      const q = document.getElementById('wowSearchInput').value.trim().toLowerCase();
-      state.filteredWow = state.wowRows.filter(w => {
-        const prod = (w.snap.product_name || w.snap.product_handle || '').toLowerCase();
-        const vari = (w.snap.variant_name || '').toLowerCase();
-        const alias = anonStore(w.snap.store_key || '').toLowerCase();
-        let direction = 'flat';
-        if (w.firstPrice !== null) {
-          if (w.currentPrice < w.firstPrice) direction = 'drop';
-          else if (w.currentPrice > w.firstPrice) direction = 'increase';
-        }
-        return (store === 'all' || w.snap.store_key === store)
-          && (dir === 'all' || direction === dir)
-          && (!q || prod.includes(q) || vari.includes(q) || alias.includes(q));
-      });
-      state.wowPage = 1;
-      renderWowTable();
-    }
-    function renderWowTable() {
-      state.wowTotalPages = Math.max(1, Math.ceil(state.filteredWow.length / PAGE_SIZE));
-      const rows = state.filteredWow.slice((state.wowPage - 1) * PAGE_SIZE, state.wowPage * PAGE_SIZE);
-      const body = document.getElementById('wowBody');
-      if (!rows.length) {
-        body.innerHTML = '<tr><td colspan="8" class="empty-state">No data yet.</td></tr>';
-      } else {
-        body.innerHTML = rows.map(w => {
-          const delta = w.firstPrice !== null ? w.currentPrice - w.firstPrice : null;
-          const pct = delta !== null && w.firstPrice ? ((delta / w.firstPrice) * 100).toFixed(1) : null;
-          let direction = 'flat';
-          if (delta !== null) { if (delta < 0) direction = 'drop'; else if (delta > 0) direction = 'increase'; }
-          const spark = sparkline(w.hist, direction);
-          const pill = delta === null ? '<span class="wow-delta-pill flat">No history</span>'
-            : delta === 0 ? '<span class="wow-delta-pill flat">No change</span>'
-            : `<span class="wow-delta-pill ${direction==='drop'?'down':'up'}">${direction==='drop'?'▼':'▲'} ${fmt$(Math.abs(delta))}</span>`;
-          return `<tr>
-            <td><span class="store-chip">${anonStore(w.snap.store_key)}</span></td>
-            <td class="product-cell"><strong>${w.snap.product_name || w.snap.product_handle || 'Untitled'}</strong></td>
-            <td>${w.snap.variant_name || '—'}</td>
-            <td class="price-new">${fmt$(w.currentPrice)}</td>
-            <td class="price-old">${w.firstPrice !== null ? fmt$(w.firstPrice) : '—'}</td>
-            <td>${pill}</td>
-            <td class="${direction==='drop'?'price-down':direction==='increase'?'price-up':''}">${pct !== null ? (direction==='drop'?'-':direction==='increase'?'+':'')+Math.abs(pct)+'%' : '—'}</td>
-            <td class="sparkline-cell">${spark}</td>
-          </tr>`;
-        }).join('');
-      }
-      document.getElementById('wowCountNote').textContent = `${state.filteredWow.length.toLocaleString()} products`;
-      document.getElementById('wowPageLabel').textContent = `Page ${state.wowPage} of ${state.wowTotalPages}`;
-      document.getElementById('wowPrevPage').disabled = state.wowPage <= 1;
-      document.getElementById('wowNextPage').disabled = state.wowPage >= state.wowTotalPages;
-    }
-
-    function applyCatalogFilters() {
-      const store = document.getElementById('catStoreFilter').value;
-      const sort = document.getElementById('catSortField').value;
-      const q = document.getElementById('catSearchInput').value.trim().toLowerCase();
-      let rows = state.snapshots.filter(r => {
-        const prod = (r.product_name || r.product_handle || '').toLowerCase();
-        const vari = (r.variant_name || '').toLowerCase();
-        const alias = anonStore(r.store_key || '').toLowerCase();
-        return (store === 'all' || r.store_key === store)
-          && (!q || prod.includes(q) || vari.includes(q) || alias.includes(q));
-      });
-      if (sort === 'price_asc') rows.sort((a,b) => Number(a.price||0) - Number(b.price||0));
-      else if (sort === 'price_desc') rows.sort((a,b) => Number(b.price||0) - Number(a.price||0));
-      else if (sort === 'product') rows.sort((a,b) => (a.product_name||a.product_handle||'').localeCompare(b.product_name||b.product_handle||''));
-      else rows.sort((a,b) => anonStore(a.store_key||'').localeCompare(anonStore(b.store_key||'')));
-      state.filteredCatalog = rows;
-      state.catPage = 1;
-      renderCatalogTable();
-    }
-    function renderCatalogTable() {
-      state.catTotalPages = Math.max(1, Math.ceil(state.filteredCatalog.length / PAGE_SIZE_CATALOG));
-      const rows = state.filteredCatalog.slice((state.catPage - 1) * PAGE_SIZE_CATALOG, state.catPage * PAGE_SIZE_CATALOG);
-      const body = document.getElementById('catalogBody');
-      if (!rows.length) {
-        body.innerHTML = '<tr><td colspan="6" class="empty-state">No products found.</td></tr>';
-      } else {
-        body.innerHTML = rows.map(r =>
-          `<tr>
-            <td><span class="store-chip">${anonStore(r.store_key)}</span></td>
-            <td class="product-cell"><strong>${r.product_name || r.product_handle || 'Untitled'}</strong></td>
-            <td>${r.variant_name || '—'}</td>
-            <td class="price-new">${fmt$(r.price)}</td>
-            <td class="price-old">${fmt$(r.compare_at_price)}</td>
-            <td class="mini-note">${fmtDate(r.created_at)}</td>
-          </tr>`).join('');
-      }
-      document.getElementById('catCountNote').textContent = `${state.filteredCatalog.length.toLocaleString()} products`;
-      document.getElementById('catPageLabel').textContent = `Page ${state.catPage} of ${state.catTotalPages}`;
-      document.getElementById('catPrevPage').disabled = state.catPage <= 1;
-      document.getElementById('catNextPage').disabled = state.catPage >= state.catTotalPages;
-    }
-
-    async function loadSnapshots() {
-      const { data, error } = await sb.from('product_snapshots').select('*').limit(5000);
-      if (error) throw new Error('product_snapshots: ' + error.message);
-      state.snapshots = data || [];
-    }
-    async function loadHistory() {
-      const { data, error } = await sb
-        .from('product_snapshot_history')
-        .select('store_key, product_handle, product_name, variant_name, price, snapshot_at')
-        .order('snapshot_at', { ascending: true })
-        .limit(10000);
-      if (error) throw new Error('product_snapshot_history: ' + error.message);
-      const map = {};
-      for (const row of (data || [])) {
-        const key = rowKey(row.store_key, row.product_handle, row.variant_name);
-        if (!map[key]) map[key] = [];
-        map[key].push({ price: Number(row.price), snapshot_at: row.snapshot_at, product_name: row.product_name });
-      }
-      state.historyMap = map;
-    }
-
-    async function loadDashboard() {
-      setRefreshLoading(true);
-      const errorBox = document.getElementById('errorBox');
-      errorBox.style.display = 'none';
-      ['changesBody','wowBody','catalogBody'].forEach(id => {
-        document.getElementById(id).innerHTML = `<tr><td colspan="9" class="loading-state">Loading…</td></tr>`;
-      });
-      try {
-        await Promise.all([loadSnapshots(), loadHistory()]);
-        const storeKeys = [...new Set(state.snapshots.map(r => r.store_key).filter(Boolean))].sort();
-        buildAliasMap(storeKeys);
-        setStoreOptions(storeKeys, 'storeFilter', 'wowStoreFilter', 'catStoreFilter');
-        state.changeRows = buildChangesFromHistory();
-        state.filteredChanges = [...state.changeRows];
-        state.wowRows = buildWowRows();
-        state.filteredWow = [...state.wowRows];
-        state.filteredCatalog = [...state.snapshots];
-        renderStoreSummary();
-        renderChangesTable();
-        renderWowTable();
-        renderCatalogTable();
-        renderMetrics();
-      } catch (err) {
-        console.error(err);
-        errorBox.textContent = 'Could not load data.\n\n' + err.message
-          + '\n\nMake sure RLS policies are set in Supabase SQL Editor.';
-        errorBox.style.display = 'block';
-      } finally {
-        setRefreshLoading(false);
-      }
-    }
-
-    document.querySelectorAll('.tab-btn').forEach(btn =>
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-        btn.classList.add('active');
-        document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
-      })
-    );
-    document.getElementById('storeFilter').addEventListener('change', applyChangesFilters);
-    document.getElementById('changeFilter').addEventListener('change', applyChangesFilters);
-    document.getElementById('searchInput').addEventListener('input', applyChangesFilters);
-    document.getElementById('clearFilters').addEventListener('click', () => {
-      ['storeFilter','changeFilter'].forEach(id => document.getElementById(id).value = 'all');
-      document.getElementById('searchInput').value = '';
-      applyChangesFilters();
+  // ---------- theme toggle ----------
+  (function(){
+    const btn=document.getElementById('theme-btn');
+    const root=document.documentElement;
+    const saved=localStorage.getItem('rr-theme');
+    if(saved)root.setAttribute('data-theme',saved);
+    if(btn)btn.addEventListener('click',()=>{
+      const next=root.getAttribute('data-theme')==='dark'?'light':'dark';
+      root.setAttribute('data-theme',next);localStorage.setItem('rr-theme',next);
     });
-    document.getElementById('prevPageButton').addEventListener('click', () => { if (state.changePage > 1) { state.changePage--; renderChangesTable(); } });
-    document.getElementById('nextPageButton').addEventListener('click', () => { if (state.changePage < state.changeTotalPages) { state.changePage++; renderChangesTable(); } });
-    document.getElementById('wowStoreFilter').addEventListener('change', applyWowFilters);
-    document.getElementById('wowDirFilter').addEventListener('change', applyWowFilters);
-    document.getElementById('wowSearchInput').addEventListener('input', applyWowFilters);
-    document.getElementById('wowClearFilters').addEventListener('click', () => {
-      ['wowStoreFilter','wowDirFilter'].forEach(id => document.getElementById(id).value = 'all');
-      document.getElementById('wowSearchInput').value = '';
-      applyWowFilters();
-    });
-    document.getElementById('wowPrevPage').addEventListener('click', () => { if (state.wowPage > 1) { state.wowPage--; renderWowTable(); } });
-    document.getElementById('wowNextPage').addEventListener('click', () => { if (state.wowPage < state.wowTotalPages) { state.wowPage++; renderWowTable(); } });
-    document.getElementById('catStoreFilter').addEventListener('change', applyCatalogFilters);
-    document.getElementById('catSortField').addEventListener('change', applyCatalogFilters);
-    document.getElementById('catSearchInput').addEventListener('input', applyCatalogFilters);
-    document.getElementById('catClearFilters').addEventListener('click', () => {
-      document.getElementById('catStoreFilter').value = 'all';
-      document.getElementById('catSortField').value = 'store';
-      document.getElementById('catSearchInput').value = '';
-      applyCatalogFilters();
-    });
-    document.getElementById('catPrevPage').addEventListener('click', () => { if (state.catPage > 1) { state.catPage--; renderCatalogTable(); } });
-    document.getElementById('catNextPage').addEventListener('click', () => { if (state.catPage < state.catTotalPages) { state.catPage++; renderCatalogTable(); } });
-    document.getElementById('refreshButton').addEventListener('click', loadDashboard);
-    document.getElementById('heroRefreshButton').addEventListener('click', loadDashboard);
+  })();
 
-    (function setupTheme() {
-      const btn = document.querySelector('[data-theme-toggle]');
-      const root = document.documentElement;
-      let theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-      root.setAttribute('data-theme', theme);
-      function icon(m) {
-        btn.innerHTML = m === 'dark'
-          ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>'
-          : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>';
-      }
-      icon(theme);
-      btn.addEventListener('click', () => { theme = theme === 'dark' ? 'light' : 'dark'; root.setAttribute('data-theme', theme); icon(theme); });
-    })();
+  // ---------- static demo dataset (anonymized competitors) ----------
+  const STORES=['Competitor A','Competitor B','Competitor C','Competitor D'];
+  const PRODUCTS=[
+    'Whey Protein Isolate','Pre-Workout Powder','Creatine Monohydrate','BCAA Recovery',
+    'Training Shorts','Performance Tee','Compression Leggings','Lifting Straps',
+    'Shaker Bottle','Resistance Bands','Gym Duffel Bag','Weight Belt',
+    'Electrolyte Mix','Vegan Protein','Mass Gainer','Fat Burner',
+    'Ankle Wraps','Wrist Wraps','Knee Sleeves','Grip Chalk'
+  ];
+  const VARIANTS=['Default','2 lb','5 lb','Small','Medium','Large','Chocolate','Vanilla','Black','Blue'];
 
-    loadDashboard();
+  // Deterministic pseudo-random so the demo is stable
+  let _seed=42;
+  function rnd(){_seed=(_seed*1103515245+12345)&0x7fffffff;return _seed/0x7fffffff;}
+  function pick(arr){return arr[Math.floor(rnd()*arr.length)];}
+  function round2(n){return Math.round(n*100)/100;}
+
+  // Build a catalog: ~48 products per store
+  const catalog=[];
+  STORES.forEach((store,si)=>{
+    const base=18+si*6; // each store sits at a different average price point
+    for(let i=0;i<48;i++){
+      const name=PRODUCTS[i%PRODUCTS.length]+(i>=PRODUCTS.length?' '+(Math.floor(i/PRODUCTS.length)+1):'');
+      const variant=pick(VARIANTS);
+      const price=round2(base+rnd()*40);
+      const hasCompare=rnd()>0.7;
+      catalog.push({
+        store, product:name, variant, price,
+        compare_at: hasCompare? round2(price*(1.1+rnd()*0.25)):null,
+        last_seen: hoursAgo(Math.floor(rnd()*20)),
+        // week-over-week: earliest recorded price
+        first_price: round2(price*(0.85+rnd()*0.35)),
+        // a small trend series for sparkline
+        trend: null
+      });
+    }
+  });
+  // Most products haven't changed recently: only ~35% differ from their first recorded price.
+  catalog.forEach(r=>{ if(rnd()>0.35){ r.first_price=r.price; } });
+  // Attach trend series (5 points) per product from first_price -> price
+  catalog.forEach(r=>{
+    const pts=[];for(let k=0;k<5;k++){const t=k/4;pts.push(round2(r.first_price+(r.price-r.first_price)*t+(rnd()-0.5)*2));}
+    pts[0]=r.first_price;pts[pts.length-1]=r.price;r.trend=pts;
+  });
+
+  // Alerts: sample recent changes
+  const CHANGE_TYPES=[
+    {type:'price_drop',label:'Price drop',tag:'tag-down'},
+    {type:'price_increase',label:'Price increase',tag:'tag-up'},
+    {type:'new_product',label:'New product',tag:'tag-new'},
+    {type:'back_in_stock',label:'Back in stock',tag:'tag-neutral'}
+  ];
+  const alerts=[];
+  for(let i=0;i<14;i++){
+    const r=catalog[Math.floor(rnd()*catalog.length)];
+    const ct=CHANGE_TYPES[Math.floor(rnd()*CHANGE_TYPES.length)];
+    let oldP=r.price, newP=r.price;
+    if(ct.type==='price_drop'){oldP=round2(r.price*(1.05+rnd()*0.2));newP=r.price;}
+    else if(ct.type==='price_increase'){oldP=round2(r.price*(0.8+rnd()*0.15));newP=r.price;}
+    else {oldP=null;newP=r.price;}
+    alerts.push({store:r.store,product:r.product,variant:r.variant,type:ct.type,label:ct.label,tag:ct.tag,old:oldP,new:newP,detected:hoursAgo(i*7+2)});
+  }
+
+  // ---------- anonymization (already anonymized names, keep as-is) ----------
+  function anonStore(s){return s;}
+
+  // ---------- tab switching ----------
+  document.querySelectorAll('.tab-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
+    });
+  });
+
+  // ---------- refresh button (demo no-op with toast) ----------
+  function triggerRefresh(){
+    const banner=document.getElementById('refresh-banner');
+    const txt=document.getElementById('refresh-text');
+    banner.className='refresh-banner running';
+    txt.textContent='This is a demo — connect your account to run a live scrape.';
+    setTimeout(()=>{banner.className='refresh-banner done';txt.textContent='Demo data refreshed. Sign up to monitor your real rivals.';},1200);
+    setTimeout(()=>{banner.className='refresh-banner';},4500);
+  }
+  window.triggerRefresh=triggerRefresh;
+
+  // ---------- sparkline ----------
+  function sparkline(pts){
+    if(!pts||pts.length<2)return'';
+    const w=90,h=26,min=Math.min(...pts),max=Math.max(...pts),range=(max-min)||1;
+    const step=w/(pts.length-1);
+    const d=pts.map((p,i)=>`${i===0?'M':'L'}${(i*step).toFixed(1)},${(h-((p-min)/range)*h).toFixed(1)}`).join(' ');
+    const up=pts[pts.length-1]>=pts[0];
+    const col=up?'var(--color-up)':'var(--color-down)';
+    return `<svg class="sparkline" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><path d="${d}" fill="none" stroke="${col}" stroke-width="1.5"/></svg>`;
+  }
+
+  // ---------- render: stats + toolbar ----------
+  function renderStats(){
+    const stores=new Set(catalog.map(r=>r.store)).size;
+    document.getElementById('stat-rivals').textContent=stores;
+    document.getElementById('toolbar-rivals').textContent=stores;
+    document.getElementById('stat-products').textContent=catalog.length.toLocaleString();
+    document.getElementById('toolbar-products').textContent=catalog.length.toLocaleString();
+    // changes = number of catalog rows whose price differs from first recorded
+    const changes=catalog.filter(r=>r.price!==r.first_price).length;
+    document.getElementById('stat-changes').textContent=changes.toLocaleString();
+  }
+
+  // ---------- render: snapshot overview ----------
+  function renderStoreSummary(){
+    const el=document.getElementById('store-summary');
+    const grouped=catalog.reduce((acc,r)=>{
+      if(!acc[r.store])acc[r.store]={count:0,latest:null};
+      acc[r.store].count++;
+      const d=new Date(r.last_seen);
+      if(!acc[r.store].latest||d>acc[r.store].latest)acc[r.store].latest=d;
+      return acc;
+    },{});
+    el.innerHTML=Object.entries(grouped).sort(([a],[b])=>a.localeCompare(b)).map(([store,info])=>
+      `<div class="status-row">
+        <div><span class="tag tag-neutral">Live</span>
+          <div><strong>${esc(anonStore(store))}</strong></div>
+          <div class="mini-note">${info.count.toLocaleString()} products</div>
+        </div>
+        <div class="mini-note">${info.latest?fmtDate(info.latest):''}</div>
+      </div>`).join('');
+  }
+
+  // ---------- render: alerts ----------
+  function renderAlerts(){
+    const c=document.getElementById('alerts-container');
+    if(!alerts.length){c.innerHTML='<div class="empty-state"><p>No alerts yet.</p></div>';return;}
+    c.innerHTML=`<table><thead><tr>
+      <th>Store</th><th>Product</th><th>Change</th><th>Old</th><th>New</th><th>Detected</th>
+    </tr></thead><tbody>${alerts.map(a=>`<tr>
+      <td><span class="store-chip">${esc(anonStore(a.store))}</span></td>
+      <td class="product-cell"><strong>${esc(a.product)}</strong><div class="mini-note">${esc(a.variant)}</div></td>
+      <td><span class="tag ${a.tag}">${esc(a.label)}</span></td>
+      <td>${a.old!=null?fmt$(a.old):'—'}</td>
+      <td class="price-new">${fmt$(a.new)}</td>
+      <td class="mini-note">${fmtDate(a.detected)}</td>
+    </tr>`).join('')}</tbody></table>`;
+  }
+
+  // ---------- render: average price cards ----------
+  function renderAvgCards(){
+    const grid=document.getElementById('avg-grid');
+    const byStore={};
+    catalog.forEach(r=>{(byStore[r.store]=byStore[r.store]||[]).push(r.price);});
+    const avgs=Object.entries(byStore).map(([s,ps])=>({s,avg:ps.reduce((a,b)=>a+b,0)/ps.length,count:ps.length})).sort((a,b)=>a.avg-b.avg);
+    const global=avgs.reduce((sum,x)=>sum+x.avg,0)/(avgs.length||1);
+    grid.innerHTML=avgs.map(({s,avg,count})=>{
+      const diff=avg-global;const pct=global?((diff/global)*100).toFixed(1):0;
+      const cl=diff<-0.5?'cheaper':diff>0.5?'pricier':'';
+      const label=diff<-0.5?`↓ ${Math.abs(pct)}% below avg`:diff>0.5?`↑ ${pct}% above avg`:'≈ At market avg';
+      return `<div class="avg-card"><div class="avg-store">${esc(anonStore(s))}</div><div class="avg-price">${fmt$(avg)}</div><div class="avg-note">${count} products</div><div class="avg-vs ${cl}">${label}</div></div>`;
+    }).join('');
+  }
+
+  // ---------- render: live prices table (with filters + paging) ----------
+  const PAGE=25;
+  let pricePage=1, filteredPrices=[...catalog];
+  function applyPriceFilters(){
+    const store=document.getElementById('price-store-filter').value;
+    const sort=document.getElementById('price-sort').value;
+    const q=(document.getElementById('price-search').value||'').toLowerCase();
+    filteredPrices=catalog.filter(r=>(store==='all'||r.store===store)&&(!q||r.product.toLowerCase().includes(q)||r.variant.toLowerCase().includes(q)));
+    if(sort==='price_asc')filteredPrices.sort((a,b)=>a.price-b.price);
+    else if(sort==='price_desc')filteredPrices.sort((a,b)=>b.price-a.price);
+    else if(sort==='store')filteredPrices.sort((a,b)=>a.store.localeCompare(b.store));
+    else filteredPrices.sort((a,b)=>a.product.localeCompare(b.product));
+    pricePage=1;renderPricesTable();
+  }
+  function renderPricesTable(){
+    const total=Math.max(1,Math.ceil(filteredPrices.length/PAGE));
+    if(pricePage>total)pricePage=total;
+    const rows=filteredPrices.slice((pricePage-1)*PAGE,pricePage*PAGE);
+    const body=document.getElementById('prices-body');
+    document.getElementById('prices-note').textContent=filteredPrices.length.toLocaleString()+' products (sample data)';
+    document.getElementById('price-page-label').textContent=`Page ${pricePage} of ${total}`;
+    if(!rows.length){body.innerHTML='<tr><td colspan="6" class="empty-state">No products found.</td></tr>';return;}
+    body.innerHTML=rows.map(r=>`<tr>
+      <td><span class="store-chip">${esc(anonStore(r.store))}</span></td>
+      <td class="product-cell"><strong>${esc(r.product)}</strong></td>
+      <td>${esc(r.variant)}</td>
+      <td class="price-new">${fmt$(r.price)}</td>
+      <td>${r.compare_at?fmt$(r.compare_at):'—'}</td>
+      <td class="mini-note">${fmtDate(r.last_seen)}</td>
+    </tr>`).join('');
+  }
+
+  // ---------- render: week over week (with filters + paging) ----------
+  let wowPage=1, filteredWow=[];
+  function buildWow(){
+    filteredWow=catalog.map(r=>{
+      const cur=r.price, first=r.first_price, diff=round2(cur-first), pct=first?round2((diff/first)*100):0;
+      return {store:r.store,product:r.product,variant:r.variant,cur,first,diff,pct,trend:r.trend};
+    });
+    applyWowFilters();
+  }
+  function applyWowFilters(){
+    const store=document.getElementById('wow-store-filter').value;
+    const dir=document.getElementById('wow-dir-filter').value;
+    const q=(document.getElementById('wow-search').value||'').toLowerCase();
+    filteredWow=catalog.map(r=>{
+      const cur=r.price, first=r.first_price, diff=round2(cur-first), pct=first?round2((diff/first)*100):0;
+      return {store:r.store,product:r.product,variant:r.variant,cur,first,diff,pct,trend:r.trend};
+    }).filter(r=>{
+      if(store!=='all'&&r.store!==store)return false;
+      if(q&&!(r.product.toLowerCase().includes(q)||r.variant.toLowerCase().includes(q)))return false;
+      if(dir==='drop'&&r.diff>=0)return false;
+      if(dir==='increase'&&r.diff<=0)return false;
+      if(dir==='flat'&&r.diff!==0)return false;
+      return true;
+    }).sort((a,b)=>Math.abs(b.diff)-Math.abs(a.diff));
+    wowPage=1;renderWowTable();
+  }
+  function renderWowTable(){
+    const total=Math.max(1,Math.ceil(filteredWow.length/PAGE));
+    if(wowPage>total)wowPage=total;
+    const rows=filteredWow.slice((wowPage-1)*PAGE,wowPage*PAGE);
+    const body=document.getElementById('wow-body');
+    document.getElementById('wow-count-note').textContent=filteredWow.length.toLocaleString()+' products';
+    document.getElementById('wow-page-label').textContent=`Page ${wowPage} of ${total}`;
+    if(!rows.length){body.innerHTML='<tr><td colspan="8" class="empty-state">No products found.</td></tr>';return;}
+    body.innerHTML=rows.map(r=>{
+      const cl=r.diff<0?'price-down':r.diff>0?'price-up':'';
+      const arrow=r.diff<0?'↓':r.diff>0?'↑':'≈';
+      return `<tr>
+        <td><span class="store-chip">${esc(anonStore(r.store))}</span></td>
+        <td class="product-cell"><strong>${esc(r.product)}</strong></td>
+        <td>${esc(r.variant)}</td>
+        <td class="price-new">${fmt$(r.cur)}</td>
+        <td>${fmt$(r.first)}</td>
+        <td class="${cl}">${arrow} ${fmt$(Math.abs(r.diff))}</td>
+        <td class="${cl}">${r.pct>0?'+':''}${r.pct}%</td>
+        <td>${sparkline(r.trend)}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  // ---------- render: rivals ----------
+  function renderRivals(){
+    const container=document.getElementById('rivals-list');
+    const stores=[...new Set(catalog.map(r=>r.store))].sort();
+    container.innerHTML=stores.map((s,i)=>`
+      <div class="rival-row">
+        <div><div class="rival-name">${esc(anonStore(s))}</div><div class="rival-url">competitor-${i+1}.example.com</div></div>
+        <button class="rival-delete" onclick="triggerRefresh()" title="Remove (demo)">×</button>
+      </div>`).join('');
+  }
+
+  // ---------- populate store filter dropdowns ----------
+  function populateFilters(){
+    const stores=[...new Set(catalog.map(r=>r.store))].sort();
+    const opts='<option value="all">All stores</option>'+stores.map(s=>`<option value="${esc(s)}">${esc(anonStore(s))}</option>`).join('');
+    ['price-store-filter','wow-store-filter'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=opts;});
+  }
+
+  // ---------- wire filter controls ----------
+  function wireControls(){
+    ['price-store-filter','price-sort'].forEach(id=>document.getElementById(id).addEventListener('change',applyPriceFilters));
+    document.getElementById('price-search').addEventListener('input',applyPriceFilters);
+    document.getElementById('price-clear').addEventListener('click',()=>{
+      document.getElementById('price-store-filter').value='all';
+      document.getElementById('price-sort').value='name';
+      document.getElementById('price-search').value='';applyPriceFilters();
+    });
+    document.getElementById('price-prev').addEventListener('click',()=>{if(pricePage>1){pricePage--;renderPricesTable();}});
+    document.getElementById('price-next').addEventListener('click',()=>{const t=Math.ceil(filteredPrices.length/PAGE);if(pricePage<t){pricePage++;renderPricesTable();}});
+
+    ['wow-store-filter','wow-dir-filter'].forEach(id=>document.getElementById(id).addEventListener('change',applyWowFilters));
+    document.getElementById('wow-search').addEventListener('input',applyWowFilters);
+    document.getElementById('wow-clear').addEventListener('click',()=>{
+      document.getElementById('wow-store-filter').value='all';
+      document.getElementById('wow-dir-filter').value='all';
+      document.getElementById('wow-search').value='';applyWowFilters();
+    });
+    document.getElementById('wow-prev').addEventListener('click',()=>{if(wowPage>1){wowPage--;renderWowTable();}});
+    document.getElementById('wow-next').addEventListener('click',()=>{const t=Math.ceil(filteredWow.length/PAGE);if(wowPage<t){wowPage++;renderWowTable();}});
+  }
+
+  // ---------- init ----------
+  renderStats();
+  renderStoreSummary();
+  renderAlerts();
+  renderAvgCards();
+  populateFilters();
+  applyPriceFilters();
+  buildWow();
+  renderRivals();
+  wireControls();
   </script>
 </body>
 </html>
