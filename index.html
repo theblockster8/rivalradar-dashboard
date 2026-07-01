@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
-  <!-- v5: fix store name prefix + sparkline -->
+  <!-- v6: fix anon key so product_snapshots RLS works -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>RivalRadar Dashboard</title>
@@ -566,7 +566,7 @@
 
   <script>
     const SUPABASE_URL = "https://msmlwfnzeqndwkrkpipo.supabase.co";
-    const SUPABASE_KEY = "sb_publishable_-xGGeAEyznCVT3efSmblvA_b92U2Crb";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1zbWx3Zm56ZXFuZHdrcmtwaXBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI3NjE2NzksImV4cCI6MjA5ODMzNzY3OX0.bU0F3glkH4LMukxkDrLEgerjUqNIGVI77zCm9c_n6ac";
     const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     const PAGE_SIZE = 100;
@@ -599,11 +599,8 @@
     }
     function cleanStore(k) {
       if (!k) return 'Unknown';
-      // Strip leading hex UUID prefix: 8 hex chars followed by any separator (space, dash, underscore)
       let name = k.replace(/^[0-9a-f]{8}[\s_-]+/i, '');
-      // Also handle longer hex prefixes just in case
       name = name.replace(/^[0-9a-f]{6,}[\s_-]+/i, '');
-      // Replace remaining underscores/dashes with spaces and title-case
       name = name.replaceAll('_', ' ').replaceAll('-', ' ');
       name = name.replace(/\b\w/g, c => c.toUpperCase()).trim();
       return name || k;
