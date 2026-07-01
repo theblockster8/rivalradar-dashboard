@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
+  <!-- v2 -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>RivalRadar Dashboard</title>
@@ -681,13 +682,11 @@
       if (Number.isNaN(d.getTime())) return value;
       return new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" }).format(d);
     }
-    // Strip UUID-style prefix (8hex-4hex-4hex-... pattern at start) from store keys
     function cleanStoreLabel(storeKey) {
       if (!storeKey) return "Unknown store";
-      // Remove leading UUID/hash prefix: e.g. "2f013f9d " or "abc123_"
       let label = storeKey
-        .replace(/^[0-9a-f]{8}[-_\s]/, "")   // 8-char hex prefix
-        .replace(/^[0-9a-f]{6,}[-_\s]/, "")   // longer hex prefix
+        .replace(/^[0-9a-f]{8}[-_\s]/, "")
+        .replace(/^[0-9a-f]{6,}[-_\s]/, "")
         .replaceAll("_", " ")
         .replace(/\b\w/g, (c) => c.toUpperCase())
         .trim();
@@ -831,7 +830,6 @@
 
     // ---- WoW tab ----
     function buildWowRows() {
-      // Build WoW from latestRows + historyMap: compare latest price to price from ~7 days ago
       const result = [];
       for (const row of state.latestRows) {
         const sk = row.store_key || row.storekey || "";
@@ -842,7 +840,6 @@
         const currentPrice = Number(row.price || row.currentprice || row.pricenew || 0);
         let prevPrice = null;
         if (hist.length >= 2) {
-          // second-to-last = last week's benchmark
           prevPrice = hist[hist.length - 2].price;
         }
         result.push({ row, sk, handle, variant, currentPrice, prevPrice, hist });
@@ -993,11 +990,9 @@
       try {
         await Promise.all([loadLatestPrices(), loadRecentChanges(), loadPriceHistory()]);
         renderChangesTable();
-        // Build WoW rows from latestRows + historyMap
         state.wowRows = buildWowRows();
         state.wowFilteredRows = [...state.wowRows];
         renderWowTable();
-        // Catalog
         state.catFilteredRows = [...state.latestRows];
         renderCatalogTable();
         renderMetrics();
@@ -1012,7 +1007,6 @@
     }
 
     // ---- Event listeners ----
-    // Tabs
     document.querySelectorAll(".tab-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
@@ -1021,7 +1015,6 @@
         document.getElementById("tab-" + btn.dataset.tab).classList.add("active");
       });
     });
-    // Changes filters
     document.getElementById("storeFilter").addEventListener("change", applyChangesFilters);
     document.getElementById("changeFilter").addEventListener("change", applyChangesFilters);
     document.getElementById("searchInput").addEventListener("input", applyChangesFilters);
@@ -1033,7 +1026,6 @@
     });
     document.getElementById("prevPageButton").addEventListener("click", () => { if (state.page > 1) { state.page--; renderChangesTable(); } });
     document.getElementById("nextPageButton").addEventListener("click", () => { if (state.page < state.totalPages) { state.page++; renderChangesTable(); } });
-    // WoW filters
     document.getElementById("wowStoreFilter").addEventListener("change", applyWowFilters);
     document.getElementById("wowDirFilter").addEventListener("change", applyWowFilters);
     document.getElementById("wowSearchInput").addEventListener("input", applyWowFilters);
@@ -1045,7 +1037,6 @@
     });
     document.getElementById("wowPrevPage").addEventListener("click", () => { if (state.wowPage > 1) { state.wowPage--; renderWowTable(); } });
     document.getElementById("wowNextPage").addEventListener("click", () => { if (state.wowPage < state.wowTotalPages) { state.wowPage++; renderWowTable(); } });
-    // Catalog filters
     document.getElementById("catStoreFilter").addEventListener("change", applyCatalogFilters);
     document.getElementById("catSortField").addEventListener("change", applyCatalogFilters);
     document.getElementById("catSearchInput").addEventListener("input", applyCatalogFilters);
@@ -1057,11 +1048,9 @@
     });
     document.getElementById("catPrevPage").addEventListener("click", () => { if (state.catPage > 1) { state.catPage--; renderCatalogTable(); } });
     document.getElementById("catNextPage").addEventListener("click", () => { if (state.catPage < state.catTotalPages) { state.catPage++; renderCatalogTable(); } });
-    // Refresh
     document.getElementById("refreshButton").addEventListener("click", loadDashboard);
     document.getElementById("heroRefreshButton").addEventListener("click", loadDashboard);
 
-    // Theme toggle
     (function setupThemeToggle() {
       const button = document.querySelector("[data-theme-toggle]");
       const root = document.documentElement;
