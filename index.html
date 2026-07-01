@@ -30,16 +30,9 @@
       --color-up-bg: #fef2f2;
       --color-new: #7c3aed;
       --color-new-bg: #f5f3ff;
-      --space-1: 0.25rem;
-      --space-2: 0.5rem;
-      --space-3: 0.75rem;
-      --space-4: 1rem;
-      --space-5: 1.25rem;
-      --space-6: 1.5rem;
-      --space-8: 2rem;
-      --space-10: 2.5rem;
-      --space-12: 3rem;
-      --space-16: 4rem;
+      --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem; --space-4: 1rem;
+      --space-5: 1.25rem; --space-6: 1.5rem; --space-8: 2rem; --space-10: 2.5rem;
+      --space-12: 3rem; --space-16: 4rem;
       --text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
       --text-sm: clamp(0.875rem, 0.8rem + 0.35vw, 1rem);
       --text-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
@@ -48,11 +41,8 @@
       --text-2xl: clamp(2rem, 1.2rem + 2.5vw, 3.5rem);
       --font-display: 'Cabinet Grotesk', 'Helvetica Neue', sans-serif;
       --font-body: 'Satoshi', 'Inter', sans-serif;
-      --radius-sm: 0.375rem;
-      --radius-md: 0.625rem;
-      --radius-lg: 1rem;
-      --radius-xl: 1.5rem;
-      --radius-full: 9999px;
+      --radius-sm: 0.375rem; --radius-md: 0.625rem; --radius-lg: 1rem;
+      --radius-xl: 1.5rem; --radius-full: 9999px;
       --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
       --shadow-md: 0 4px 16px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.04);
       --shadow-lg: 0 16px 48px rgba(0,0,0,0.1), 0 4px 12px rgba(0,0,0,0.06);
@@ -62,48 +52,25 @@
       --color-panel-glow: rgba(37, 99, 235, 0.08);
       --content-default: 1200px;
     }
-
     [data-theme="dark"] {
-      --color-bg: #0a0a0a;
-      --color-surface: #141414;
-      --color-surface-2: #1a1a1a;
-      --color-border: #262626;
-      --color-divider: #1f1f1f;
-      --color-text: #f5f5f5;
-      --color-text-muted: #888888;
-      --color-text-faint: #444444;
-      --color-text-inverse: #0a0a0a;
-      --color-primary: #f5f5f5;
-      --color-primary-hover: #e5e5e5;
-      --color-primary-active: #d4d4d4;
-      --color-accent: #3b82f6;
-      --color-accent-hover: #2563eb;
-      --color-accent-light: #1e293b;
-      --color-down: #22c55e;
-      --color-down-bg: #052e16;
-      --color-up: #f87171;
-      --color-up-bg: #2d0a0a;
-      --color-new: #a78bfa;
-      --color-new-bg: #1e1030;
-      --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
-      --shadow-md: 0 4px 16px rgba(0,0,0,0.4);
-      --shadow-lg: 0 16px 48px rgba(0,0,0,0.5);
-      --shadow-glow: 0 18px 40px rgba(59,130,246,0.12);
+      --color-bg: #0a0a0a; --color-surface: #141414; --color-surface-2: #1a1a1a;
+      --color-border: #262626; --color-divider: #1f1f1f; --color-text: #f5f5f5;
+      --color-text-muted: #888888; --color-text-faint: #444444; --color-text-inverse: #0a0a0a;
+      --color-primary: #f5f5f5; --color-primary-hover: #e5e5e5; --color-primary-active: #d4d4d4;
+      --color-accent: #3b82f6; --color-accent-hover: #2563eb; --color-accent-light: #1e293b;
+      --color-down: #22c55e; --color-down-bg: #052e16; --color-up: #f87171; --color-up-bg: #2d0a0a;
+      --color-new: #a78bfa; --color-new-bg: #1e1030;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.3); --shadow-md: 0 4px 16px rgba(0,0,0,0.4);
+      --shadow-lg: 0 16px 48px rgba(0,0,0,0.5); --shadow-glow: 0 18px 40px rgba(59,130,246,0.12);
     }
-
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
-      margin: 0;
-      min-height: 100dvh;
-      font-family: var(--font-body);
-      font-size: var(--text-base);
-      color: var(--color-text);
-      background:
-        radial-gradient(circle at top left, var(--color-panel-glow), transparent 28%),
+      margin: 0; min-height: 100dvh; font-family: var(--font-body);
+      font-size: var(--text-base); color: var(--color-text);
+      background: radial-gradient(circle at top left, var(--color-panel-glow), transparent 28%),
         linear-gradient(180deg, color-mix(in srgb, var(--color-bg) 94%, var(--color-accent-light)) 0%, var(--color-bg) 22%);
-      line-height: 1.6;
-      -webkit-font-smoothing: antialiased;
+      line-height: 1.6; -webkit-font-smoothing: antialiased;
     }
     h1,h2,h3 { font-family: var(--font-display); line-height: 1.1; margin: 0; }
     p { margin: 0; color: var(--color-text-muted); }
@@ -112,365 +79,221 @@
     button { cursor: pointer; }
 
     .nav {
-      position: sticky;
-      top: 0;
-      z-index: 50;
+      position: sticky; top: 0; z-index: 50;
       background: color-mix(in srgb, var(--color-bg) 92%, transparent);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--color-divider);
+      backdrop-filter: blur(12px); border-bottom: 1px solid var(--color-divider);
     }
     .nav-inner, .container {
-      width: 100%;
-      max-width: var(--content-default);
-      margin-inline: auto;
+      width: 100%; max-width: var(--content-default); margin-inline: auto;
       padding-inline: clamp(var(--space-4), 4vw, var(--space-10));
     }
     .nav-inner {
-      min-height: 76px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: var(--space-4);
+      min-height: 76px; display: flex; align-items: center;
+      justify-content: space-between; gap: var(--space-4);
     }
     .logo {
-      display: flex;
-      align-items: center;
-      gap: var(--space-2);
-      font-family: var(--font-display);
-      font-weight: 800;
-      letter-spacing: -0.03em;
+      display: flex; align-items: center; gap: var(--space-2);
+      font-family: var(--font-display); font-weight: 800; letter-spacing: -0.03em;
     }
-    .nav-actions {
-      display: flex;
-      align-items: center;
-      gap: var(--space-3);
-    }
+    .nav-actions { display: flex; align-items: center; gap: var(--space-3); }
     .theme-toggle, .ghost-btn {
-      height: 40px;
-      padding: 0 var(--space-4);
-      border-radius: var(--radius-md);
-      border: 1px solid var(--color-border);
-      background: var(--color-bg);
-      color: var(--color-text-muted);
-      transition: all var(--transition);
+      height: 40px; padding: 0 var(--space-4); border-radius: var(--radius-md);
+      border: 1px solid var(--color-border); background: var(--color-bg);
+      color: var(--color-text-muted); transition: all var(--transition);
     }
     .theme-toggle {
-      width: 40px;
-      padding: 0;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
+      width: 40px; padding: 0; display: inline-flex;
+      align-items: center; justify-content: center;
     }
-    .theme-toggle:hover, .ghost-btn:hover {
-      background: var(--color-surface);
-      color: var(--color-text);
-    }
+    .theme-toggle:hover, .ghost-btn:hover { background: var(--color-surface); color: var(--color-text); }
     .primary-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: var(--space-2);
-      min-height: 46px;
-      padding: 0 var(--space-5);
-      border-radius: var(--radius-md);
-      border: 2px solid var(--color-primary);
-      background: var(--color-primary);
-      color: var(--color-text-inverse);
-      font-family: var(--font-display);
-      font-weight: 700;
-      transition: all var(--transition);
+      display: inline-flex; align-items: center; justify-content: center;
+      gap: var(--space-2); min-height: 46px; padding: 0 var(--space-5);
+      border-radius: var(--radius-md); border: 2px solid var(--color-primary);
+      background: var(--color-primary); color: var(--color-text-inverse);
+      font-family: var(--font-display); font-weight: 700; transition: all var(--transition);
     }
     .primary-btn:hover {
-      transform: translateY(-1px);
-      box-shadow: var(--shadow-md);
-      background: var(--color-primary-hover);
-      border-color: var(--color-primary-hover);
+      transform: translateY(-1px); box-shadow: var(--shadow-md);
+      background: var(--color-primary-hover); border-color: var(--color-primary-hover);
     }
 
+    /* Hero */
     .page-hero { padding: var(--space-10) 0 var(--space-8); }
-    .hero-grid {
-      display: grid;
-      grid-template-columns: 1.25fr 0.9fr;
-      gap: var(--space-6);
-      align-items: stretch;
-    }
+    .hero-grid { display: grid; grid-template-columns: 1.25fr 0.9fr; gap: var(--space-6); align-items: stretch; }
     .hero-panel, .summary-card, .surface-card {
-      background: var(--color-surface);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-xl);
-      box-shadow: var(--shadow-sm);
+      background: var(--color-surface); border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl); box-shadow: var(--shadow-sm);
     }
-    .hero-panel { padding: clamp(var(--space-6), 5vw, var(--space-10)); }
-    .hero-panel { position: relative; overflow: hidden; }
+    .hero-panel { padding: clamp(var(--space-6), 5vw, var(--space-10)); position: relative; overflow: hidden; }
     .hero-panel::after {
-      content: '';
-      position: absolute;
-      inset: auto -10% -30% 45%;
-      height: 240px;
-      background: radial-gradient(circle, var(--color-panel-glow), transparent 70%);
-      pointer-events: none;
+      content: ''; position: absolute; inset: auto -10% -30% 45%; height: 240px;
+      background: radial-gradient(circle, var(--color-panel-glow), transparent 70%); pointer-events: none;
     }
-    .hero-actions {
-      display: flex;
-      align-items: center;
-      gap: var(--space-3);
-      flex-wrap: wrap;
-      margin-bottom: var(--space-8);
-    }
-    .hero-caption {
-      font-size: var(--text-sm);
-      color: var(--color-text-faint);
-    }
-    .inline-statbar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: var(--space-3);
-      margin-top: var(--space-6);
-    }
+    .hero-actions { display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap; margin-bottom: var(--space-8); }
+    .hero-caption { font-size: var(--text-sm); color: var(--color-text-faint); }
+    .inline-statbar { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-6); }
     .stat-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: var(--space-2);
-      padding: 0.7rem 0.9rem;
-      border-radius: var(--radius-full);
+      display: inline-flex; align-items: center; gap: var(--space-2);
+      padding: 0.7rem 0.9rem; border-radius: var(--radius-full);
       border: 1px solid var(--color-border);
       background: color-mix(in srgb, var(--color-bg) 85%, transparent);
-      box-shadow: var(--shadow-sm);
-      font-size: var(--text-sm);
-      color: var(--color-text-muted);
+      box-shadow: var(--shadow-sm); font-size: var(--text-sm); color: var(--color-text-muted);
     }
     .stat-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--color-accent); }
     .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: var(--space-2);
-      padding: 0.35rem 0.8rem;
-      border-radius: var(--radius-full);
-      background: var(--color-accent-light);
-      color: var(--color-accent);
-      font-size: var(--text-xs);
-      font-family: var(--font-display);
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      margin-bottom: var(--space-5);
+      display: inline-flex; align-items: center; gap: var(--space-2);
+      padding: 0.35rem 0.8rem; border-radius: var(--radius-full);
+      background: var(--color-accent-light); color: var(--color-accent);
+      font-size: var(--text-xs); font-family: var(--font-display); font-weight: 700;
+      letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: var(--space-5);
     }
-    .hero-title {
-      font-size: var(--text-2xl);
-      letter-spacing: -0.04em;
-      margin-bottom: var(--space-4);
-      max-width: 12ch;
-    }
+    .hero-title { font-size: var(--text-2xl); letter-spacing: -0.04em; margin-bottom: var(--space-4); max-width: 12ch; }
     .hero-sub { max-width: 52ch; margin-bottom: var(--space-8); }
-    .hero-meta {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0,1fr));
-      gap: var(--space-4);
-    }
+    .hero-meta { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: var(--space-4); }
     .metric {
-      padding: var(--space-4);
-      border-radius: var(--radius-lg);
-      background: var(--color-bg);
-      border: 1px solid var(--color-border);
+      padding: var(--space-4); border-radius: var(--radius-lg);
+      background: var(--color-bg); border: 1px solid var(--color-border);
     }
     .metric-label {
-      display: block;
-      font-size: var(--text-xs);
-      color: var(--color-text-faint);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: var(--space-2);
-      font-family: var(--font-display);
-      font-weight: 700;
+      display: block; font-size: var(--text-xs); color: var(--color-text-faint);
+      text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-2);
+      font-family: var(--font-display); font-weight: 700;
     }
     .metric-value { font-family: var(--font-display); font-size: var(--text-xl); letter-spacing: -0.04em; }
     .metric-note { font-size: var(--text-sm); color: var(--color-text-muted); }
     .summary-card {
-      padding: var(--space-6);
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-5);
-      justify-content: space-between;
+      padding: var(--space-6); display: flex; flex-direction: column;
+      gap: var(--space-5); justify-content: space-between;
       background: linear-gradient(180deg, color-mix(in srgb, var(--color-surface) 88%, var(--color-bg)), var(--color-surface));
     }
     .summary-title { font-size: var(--text-lg); letter-spacing: -0.03em; }
     .status-stack { display: grid; gap: var(--space-3); }
     .status-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: var(--space-4);
-      padding: var(--space-4);
-      border-radius: var(--radius-lg);
-      background: var(--color-bg);
-      border: 1px solid var(--color-border);
+      display: flex; align-items: center; justify-content: space-between;
+      gap: var(--space-4); padding: var(--space-4); border-radius: var(--radius-lg);
+      background: var(--color-bg); border: 1px solid var(--color-border);
     }
     .tag {
-      display: inline-flex;
-      align-items: center;
-      padding: 0.2rem 0.45rem;
-      border-radius: var(--radius-sm);
-      font-size: 10px;
-      font-family: var(--font-display);
-      font-weight: 800;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
+      display: inline-flex; align-items: center; padding: 0.2rem 0.45rem;
+      border-radius: var(--radius-sm); font-size: 10px; font-family: var(--font-display);
+      font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase;
     }
     .tag-down { background: var(--color-down-bg); color: var(--color-down); }
     .tag-up { background: var(--color-up-bg); color: var(--color-up); }
     .tag-new { background: var(--color-new-bg); color: var(--color-new); }
     .tag-neutral { background: var(--color-surface-2); color: var(--color-text-muted); }
+
+    /* Dashboard section */
     .dashboard-section { padding: var(--space-3) 0 var(--space-12); }
-    .toolbar-strip {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0,1fr));
-      gap: var(--space-4);
-      margin-bottom: var(--space-6);
-    }
+    .toolbar-strip { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: var(--space-4); margin-bottom: var(--space-6); }
     .toolbar-card {
-      padding: var(--space-5);
-      border-radius: var(--radius-lg);
+      padding: var(--space-5); border-radius: var(--radius-lg);
       border: 1px solid var(--color-border);
       background: color-mix(in srgb, var(--color-surface) 82%, var(--color-bg));
       box-shadow: var(--shadow-sm);
     }
     .toolbar-label {
-      display: block;
-      font-size: var(--text-xs);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      font-family: var(--font-display);
-      color: var(--color-text-faint);
-      margin-bottom: var(--space-2);
+      display: block; font-size: var(--text-xs); text-transform: uppercase;
+      letter-spacing: 0.05em; font-family: var(--font-display);
+      color: var(--color-text-faint); margin-bottom: var(--space-2);
     }
-    .toolbar-value {
-      font-family: var(--font-display);
-      font-size: var(--text-lg);
-      letter-spacing: -0.03em;
-    }
+    .toolbar-value { font-family: var(--font-display); font-size: var(--text-lg); letter-spacing: -0.03em; }
     .section-head {
-      display: flex;
-      align-items: end;
-      justify-content: space-between;
-      gap: var(--space-4);
-      margin-bottom: var(--space-6);
+      display: flex; align-items: end; justify-content: space-between;
+      gap: var(--space-4); margin-bottom: var(--space-6);
     }
     .section-title { font-size: var(--text-xl); letter-spacing: -0.03em; margin-bottom: var(--space-2); }
-    .filters {
-      display: grid;
-      grid-template-columns: 180px 180px minmax(180px, 1fr) auto;
-      gap: var(--space-3);
+
+    /* Tabs */
+    .tabs {
+      display: flex; gap: 0; border-bottom: 2px solid var(--color-divider);
       margin-bottom: var(--space-5);
     }
-    .field, .search {
-      min-height: 46px;
-      width: 100%;
-      border-radius: var(--radius-md);
-      border: 1px solid var(--color-border);
-      background: var(--color-bg);
-      padding: 0 var(--space-4);
+    .tab-btn {
+      padding: 0.6rem 1.2rem; border: none; background: transparent;
+      font-family: var(--font-display); font-size: var(--text-sm); font-weight: 700;
+      color: var(--color-text-faint); border-bottom: 2px solid transparent;
+      margin-bottom: -2px; cursor: pointer; transition: color var(--transition), border-color var(--transition);
     }
+    .tab-btn:hover { color: var(--color-text-muted); }
+    .tab-btn.active { color: var(--color-accent); border-bottom-color: var(--color-accent); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* Filters */
+    .filters {
+      display: grid; grid-template-columns: 180px 180px minmax(180px, 1fr) auto;
+      gap: var(--space-3); margin-bottom: var(--space-5);
+    }
+    .field, .search {
+      min-height: 46px; width: 100%; border-radius: var(--radius-md);
+      border: 1px solid var(--color-border); background: var(--color-bg); padding: 0 var(--space-4);
+    }
+
+    /* Changes shell */
     .changes-shell {
-      border-radius: var(--radius-xl);
-      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl); border: 1px solid var(--color-border);
       background: linear-gradient(180deg, color-mix(in srgb, var(--color-surface) 92%, var(--color-bg)), var(--color-surface));
-      box-shadow: var(--shadow-sm), var(--shadow-glow);
-      overflow: hidden;
+      box-shadow: var(--shadow-sm), var(--shadow-glow); overflow: hidden;
     }
     .changes-shell-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: var(--space-3);
-      padding: var(--space-4) var(--space-5);
+      display: flex; align-items: center; justify-content: space-between;
+      gap: var(--space-3); padding: var(--space-4) var(--space-5);
       border-bottom: 1px solid var(--color-divider);
       background: color-mix(in srgb, var(--color-surface) 84%, var(--color-bg));
     }
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: var(--space-4);
-    }
+    .header-right { display: flex; align-items: center; gap: var(--space-4); }
     .pager {
-      display: inline-flex;
-      align-items: center;
-      gap: var(--space-2);
-      padding: 0.35rem 0.6rem;
-      border-radius: var(--radius-full);
+      display: inline-flex; align-items: center; gap: var(--space-2);
+      padding: 0.35rem 0.6rem; border-radius: var(--radius-full);
       border: 1px solid var(--color-border);
       background: color-mix(in srgb, var(--color-bg) 90%, transparent);
     }
     .pager-btn {
-      font-size: var(--text-xs);
-      padding: 0.25rem 0.6rem;
-      border-radius: var(--radius-full);
-      border: none;
-      background: transparent;
-      color: var(--color-text-muted);
-      cursor: pointer;
+      font-size: var(--text-xs); padding: 0.25rem 0.6rem;
+      border-radius: var(--radius-full); border: none; background: transparent;
+      color: var(--color-text-muted); cursor: pointer;
       transition: background var(--transition), color var(--transition);
     }
     .pager-btn:hover:not(:disabled) {
-      background: color-mix(in srgb, var(--color-accent-light) 50%, transparent);
-      color: var(--color-text);
+      background: color-mix(in srgb, var(--color-accent-light) 50%, transparent); color: var(--color-text);
     }
     .pager-btn:disabled { opacity: 0.4; cursor: default; }
     .pager-label { font-size: var(--text-xs); color: var(--color-text-faint); }
     .changes-shell-title {
-      font-family: var(--font-display);
-      font-size: var(--text-base);
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      color: var(--color-text);
+      font-family: var(--font-display); font-size: var(--text-base);
+      font-weight: 700; letter-spacing: -0.02em; color: var(--color-text);
     }
     .changes-shell-note { font-size: var(--text-xs); color: var(--color-text-faint); }
-    .table-shell { max-height: 420px; overflow: auto; }
+    .table-shell { max-height: 480px; overflow: auto; }
     table { width: 100%; border-collapse: collapse; min-width: 1060px; }
     th, td {
-      text-align: left;
-      padding: 0.95rem 1rem;
-      border-bottom: 1px solid var(--color-divider);
-      vertical-align: middle;
+      text-align: left; padding: 0.85rem 1rem;
+      border-bottom: 1px solid var(--color-divider); vertical-align: middle;
     }
     th {
-      font-size: var(--text-xs);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--color-text-faint);
-      font-family: var(--font-display);
+      font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.05em;
+      color: var(--color-text-faint); font-family: var(--font-display);
       background: color-mix(in srgb, var(--color-surface) 84%, var(--color-bg));
-      position: sticky;
-      top: 0;
-      z-index: 1;
+      position: sticky; top: 0; z-index: 1;
     }
     td { font-size: var(--text-sm); }
-    tbody tr { transition: background var(--transition), transform var(--transition); }
+    tbody tr { transition: background var(--transition); }
     tbody tr:hover { background: color-mix(in srgb, var(--color-accent-light) 35%, var(--color-bg)); }
-    .table-shell::-webkit-scrollbar { width: 10px; height: 10px; }
+    .table-shell::-webkit-scrollbar { width: 8px; height: 8px; }
     .table-shell::-webkit-scrollbar-track { background: transparent; }
     .table-shell::-webkit-scrollbar-thumb {
-      background: color-mix(in srgb, var(--color-text-faint) 55%, transparent);
-      border-radius: 999px;
-    }
-    .table-shell::-webkit-scrollbar-thumb:hover {
-      background: color-mix(in srgb, var(--color-text-muted) 80%, transparent);
+      background: color-mix(in srgb, var(--color-text-faint) 55%, transparent); border-radius: 999px;
     }
     .store-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.45rem 0.7rem;
-      border-radius: var(--radius-full);
-      background: var(--color-bg);
-      border: 1px solid var(--color-border);
-      white-space: nowrap;
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.45rem 0.7rem; border-radius: var(--radius-full);
+      background: var(--color-bg); border: 1px solid var(--color-border); white-space: nowrap;
     }
     .store-chip::before {
-      content: '';
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--color-accent);
+      content: ''; width: 7px; height: 7px;
+      border-radius: 50%; background: var(--color-accent);
     }
     .product-cell strong { display: block; font-weight: 700; color: var(--color-text); margin-bottom: 0.1rem; }
     .product-cell span { color: var(--color-text-muted); font-size: var(--text-xs); }
@@ -479,83 +302,66 @@
     .price-down { color: var(--color-down); }
     .price-up { color: var(--color-up); }
 
-    /* Sparkline styles */
+    /* Sparkline */
     .sparkline-cell { width: 120px; }
-    .sparkline-wrap {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .sparkline-svg {
-      display: block;
-      overflow: visible;
-    }
-    .sparkline-no-data {
-      font-size: var(--text-xs);
-      color: var(--color-text-faint);
-      font-style: italic;
-    }
-    .sparkline-label {
-      font-size: 10px;
-      color: var(--color-text-faint);
-      white-space: nowrap;
-    }
+    .sparkline-wrap { display: flex; align-items: center; gap: 6px; }
+    .sparkline-svg { display: block; overflow: visible; }
+    .sparkline-no-data { font-size: var(--text-xs); color: var(--color-text-faint); font-style: italic; }
+    .sparkline-label { font-size: 10px; color: var(--color-text-faint); white-space: nowrap; }
 
-    .surface-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: var(--space-6);
-      margin-top: var(--space-8);
+    /* Catalog tab */
+    .catalog-shell {
+      border-radius: var(--radius-xl); border: 1px solid var(--color-border);
+      background: linear-gradient(180deg, color-mix(in srgb, var(--color-surface) 92%, var(--color-bg)), var(--color-surface));
+      box-shadow: var(--shadow-sm), var(--shadow-glow); overflow: hidden;
     }
+    .catalog-shell .table-shell { max-height: 600px; }
+    .catalog-table { min-width: 780px; }
+
+    /* WoW tab */
+    .wow-shell {
+      border-radius: var(--radius-xl); border: 1px solid var(--color-border);
+      background: linear-gradient(180deg, color-mix(in srgb, var(--color-surface) 92%, var(--color-bg)), var(--color-surface));
+      box-shadow: var(--shadow-sm), var(--shadow-glow); overflow: hidden;
+    }
+    .wow-shell .table-shell { max-height: 600px; }
+    .wow-delta-pill {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 0.2rem 0.55rem; border-radius: var(--radius-full);
+      font-size: 12px; font-weight: 700; font-family: var(--font-display);
+    }
+    .wow-delta-pill.down { background: var(--color-down-bg); color: var(--color-down); }
+    .wow-delta-pill.up { background: var(--color-up-bg); color: var(--color-up); }
+    .wow-delta-pill.flat { background: var(--color-surface-2); color: var(--color-text-faint); }
+
+    .surface-grid { display: grid; grid-template-columns: 1fr; gap: var(--space-6); margin-top: var(--space-8); }
     .surface-card {
       padding: var(--space-6);
       background: linear-gradient(180deg, color-mix(in srgb, var(--color-surface) 88%, var(--color-bg)), var(--color-surface));
     }
     .list-stack { display: grid; gap: var(--space-3); margin-top: var(--space-4); }
     .list-item {
-      display: flex;
-      align-items: start;
-      justify-content: space-between;
-      gap: var(--space-4);
-      padding: var(--space-4);
-      border-radius: var(--radius-lg);
-      background: var(--color-bg);
-      border: 1px solid var(--color-border);
+      display: flex; align-items: start; justify-content: space-between;
+      gap: var(--space-4); padding: var(--space-4); border-radius: var(--radius-lg);
+      background: var(--color-bg); border: 1px solid var(--color-border);
       transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
     }
     .list-item:hover {
-      transform: translateY(-1px);
-      box-shadow: var(--shadow-sm);
+      transform: translateY(-1px); box-shadow: var(--shadow-sm);
       border-color: color-mix(in srgb, var(--color-accent) 18%, var(--color-border));
     }
     .mini-note { font-size: var(--text-xs); color: var(--color-text-faint); }
     .empty-state, .loading-state { padding: var(--space-12); text-align: center; color: var(--color-text-muted); }
     .error-box {
-      margin-top: var(--space-5);
-      padding: var(--space-4);
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--color-up);
-      background: var(--color-up-bg);
-      color: var(--color-up);
-      display: none;
-      white-space: pre-wrap;
+      margin-top: var(--space-5); padding: var(--space-4); border-radius: var(--radius-lg);
+      border: 1px solid var(--color-up); background: var(--color-up-bg); color: var(--color-up);
+      display: none; white-space: pre-wrap;
     }
     .footer {
-      padding: var(--space-8) 0;
-      border-top: 1px solid var(--color-divider);
-      color: var(--color-text-faint);
-      font-size: var(--text-xs);
-    }
-    code.inline {
-      font-size: 0.92em;
-      background: var(--color-surface-2);
-      border: 1px solid var(--color-border);
-      padding: 0.15rem 0.4rem;
-      border-radius: var(--radius-sm);
-      color: var(--color-text);
+      padding: var(--space-8) 0; border-top: 1px solid var(--color-divider);
+      color: var(--color-text-faint); font-size: var(--text-xs);
     }
     .hidden { display: none !important; }
-
     @media (max-width: 980px) {
       .hero-grid, .surface-grid, .toolbar-strip { grid-template-columns: 1fr; }
       .filters { grid-template-columns: 1fr 1fr; }
@@ -606,7 +412,7 @@
             <div class="metric">
               <span class="metric-label">Stores monitored</span>
               <div class="metric-value" id="metricStores">—</div>
-              <div class="metric-note">Distinct store keys in the latest snapshot</div>
+              <div class="metric-note">Distinct stores in the latest snapshot</div>
             </div>
             <div class="metric">
               <span class="metric-label">Products tracked</span>
@@ -641,8 +447,8 @@
       <div class="container">
         <div class="section-head">
           <div>
-            <h2 class="section-title">Recent price changes</h2>
-            <p>Filter by store and search product names or variants to see what moved and when.</p>
+            <h2 class="section-title">Price intelligence</h2>
+            <p>Switch tabs to explore recent price changes, week-over-week movement, or the full product catalog.</p>
           </div>
         </div>
 
@@ -650,84 +456,185 @@
           <div class="toolbar-card">
             <span class="toolbar-label">Snapshot window</span>
             <div class="toolbar-value">Today's prices</div>
-            <p class="mini-note">Shows the most recent snapshot for each monitored product.</p>
+            <p class="mini-note">Most recent snapshot for each product.</p>
           </div>
           <div class="toolbar-card">
             <span class="toolbar-label">Change window</span>
             <div class="toolbar-value">Week over week</div>
-            <p class="mini-note">Compares current price to the weekly benchmark snapshot.</p>
+            <p class="mini-note">Compares current price to weekly benchmark.</p>
           </div>
           <div class="toolbar-card">
             <span class="toolbar-label">Tracked products</span>
             <div class="toolbar-value" id="toolbarTrackedProducts">—</div>
-            <p class="mini-note">Matches the total products currently in your snapshot.</p>
+            <p class="mini-note">Total products in your snapshot.</p>
           </div>
           <div class="toolbar-card">
             <span class="toolbar-label">Stores tracked</span>
             <div class="toolbar-value" id="toolbarStoresTracked">—</div>
-            <p class="mini-note">Counts all stores included in this dashboard.</p>
+            <p class="mini-note">All stores included in this dashboard.</p>
           </div>
         </div>
 
-        <div class="filters">
-          <select class="field" id="storeFilter" aria-label="Select store">
-            <option value="all">All stores</option>
-          </select>
-          <select class="field" id="changeFilter" aria-label="Select change type">
-            <option value="all">All change types</option>
-            <option value="drop">Price drops</option>
-            <option value="increase">Price increases</option>
-            <option value="other">Other changes</option>
-          </select>
-          <input class="search" id="searchInput" type="search" placeholder="Search product or variant" aria-label="Search products" />
-          <button class="ghost-btn" id="clearFilters">Clear filters</button>
-        </div>
+        <!-- TABS -->
+        <nav class="tabs" role="tablist">
+          <button class="tab-btn active" data-tab="changes" role="tab">📉 Recent Changes</button>
+          <button class="tab-btn" data-tab="wow" role="tab">📊 Week over Week</button>
+          <button class="tab-btn" data-tab="catalog" role="tab">📦 Full Catalog</button>
+        </nav>
 
-        <div class="changes-shell">
-          <div class="changes-shell-header">
-            <div>
-              <div class="changes-shell-title">Compact changes feed</div>
-              <div class="changes-shell-note">Week-over-week price movements with sparkline trend.</div>
-            </div>
-            <div class="header-right">
-              <div class="mini-note" id="changesCountNote">Matching rows</div>
-              <div class="pager">
-                <button class="pager-btn" id="prevPageButton">Prev</button>
-                <span id="pageLabel" class="pager-label">Page 1 of 1</span>
-                <button class="pager-btn" id="nextPageButton">Next</button>
+        <!-- TAB: Recent Changes -->
+        <div class="tab-panel active" id="tab-changes">
+          <div class="filters">
+            <select class="field" id="storeFilter" aria-label="Select store">
+              <option value="all">All stores</option>
+            </select>
+            <select class="field" id="changeFilter" aria-label="Select change type">
+              <option value="all">All change types</option>
+              <option value="drop">Price drops</option>
+              <option value="increase">Price increases</option>
+              <option value="other">Other changes</option>
+            </select>
+            <input class="search" id="searchInput" type="search" placeholder="Search product or variant" aria-label="Search products" />
+            <button class="ghost-btn" id="clearFilters">Clear filters</button>
+          </div>
+          <div class="changes-shell">
+            <div class="changes-shell-header">
+              <div>
+                <div class="changes-shell-title">Compact changes feed</div>
+                <div class="changes-shell-note">Week-over-week price movements with sparkline trend.</div>
+              </div>
+              <div class="header-right">
+                <div class="mini-note" id="changesCountNote">Matching rows</div>
+                <div class="pager">
+                  <button class="pager-btn" id="prevPageButton">Prev</button>
+                  <span id="pageLabel" class="pager-label">Page 1 of 1</span>
+                  <button class="pager-btn" id="nextPageButton">Next</button>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="table-shell">
-            <table>
-              <thead>
-                <tr>
-                  <th>Store</th>
-                  <th>Product</th>
-                  <th>Change</th>
-                  <th>Prev price</th>
-                  <th>New price</th>
-                  <th>Delta</th>
-                  <th>12-week trend</th>
-                  <th>Changed at</th>
-                </tr>
-              </thead>
-              <tbody id="changesBody">
-                <tr><td colspan="8" class="loading-state">Loading recent changes…</td></tr>
-              </tbody>
-            </table>
+            <div class="table-shell">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Store</th>
+                    <th>Product</th>
+                    <th>Change</th>
+                    <th>Prev price</th>
+                    <th>New price</th>
+                    <th>Delta</th>
+                    <th>12-week trend</th>
+                    <th>Changed at</th>
+                  </tr>
+                </thead>
+                <tbody id="changesBody">
+                  <tr><td colspan="8" class="loading-state">Loading recent changes…</td></tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
 
-        <div class="surface-grid">
-          <section class="surface-card">
-            <h3>Latest catalog snapshot</h3>
-            <p>Current monitored products grouped by store, so you can see where most of your tracking is focused.</p>
-            <div class="list-stack" id="latestSnapshotCards">
-              <div class="loading-state">Loading current catalog rows…</div>
+        <!-- TAB: Week over Week -->
+        <div class="tab-panel" id="tab-wow">
+          <div class="filters">
+            <select class="field" id="wowStoreFilter" aria-label="Filter WoW by store">
+              <option value="all">All stores</option>
+            </select>
+            <select class="field" id="wowDirFilter" aria-label="Filter by direction">
+              <option value="all">All movements</option>
+              <option value="drop">Price drops only</option>
+              <option value="increase">Price increases only</option>
+              <option value="flat">Flat / no change</option>
+            </select>
+            <input class="search" id="wowSearchInput" type="search" placeholder="Search product or variant" aria-label="Search WoW" />
+            <button class="ghost-btn" id="wowClearFilters">Clear filters</button>
+          </div>
+          <div class="wow-shell">
+            <div class="changes-shell-header">
+              <div>
+                <div class="changes-shell-title">Week-over-week price movement</div>
+                <div class="changes-shell-note">Current price vs. same product one week ago. Sparkline shows 12-week trend.</div>
+              </div>
+              <div class="header-right">
+                <div class="mini-note" id="wowCountNote">Matching rows</div>
+                <div class="pager">
+                  <button class="pager-btn" id="wowPrevPage">Prev</button>
+                  <span id="wowPageLabel" class="pager-label">Page 1 of 1</span>
+                  <button class="pager-btn" id="wowNextPage">Next</button>
+                </div>
+              </div>
             </div>
-          </section>
+            <div class="table-shell">
+              <table class="catalog-table">
+                <thead>
+                  <tr>
+                    <th>Store</th>
+                    <th>Product</th>
+                    <th>This week</th>
+                    <th>Last week</th>
+                    <th>WoW change</th>
+                    <th>WoW %</th>
+                    <th>Trend</th>
+                  </tr>
+                </thead>
+                <tbody id="wowBody">
+                  <tr><td colspan="7" class="loading-state">Loading week-over-week data…</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
+
+        <!-- TAB: Full Catalog -->
+        <div class="tab-panel" id="tab-catalog">
+          <div class="filters">
+            <select class="field" id="catStoreFilter" aria-label="Filter catalog by store">
+              <option value="all">All stores</option>
+            </select>
+            <select class="field" id="catSortField" aria-label="Sort catalog">
+              <option value="store">Sort: Store A–Z</option>
+              <option value="price_asc">Sort: Price low–high</option>
+              <option value="price_desc">Sort: Price high–low</option>
+              <option value="product">Sort: Product A–Z</option>
+            </select>
+            <input class="search" id="catSearchInput" type="search" placeholder="Search product or variant" aria-label="Search catalog" />
+            <button class="ghost-btn" id="catClearFilters">Clear filters</button>
+          </div>
+          <div class="catalog-shell">
+            <div class="changes-shell-header">
+              <div>
+                <div class="changes-shell-title">Full product catalog</div>
+                <div class="changes-shell-note">All tracked products from the latest snapshot. 500 per page.</div>
+              </div>
+              <div class="header-right">
+                <div class="mini-note" id="catCountNote">Loading…</div>
+                <div class="pager">
+                  <button class="pager-btn" id="catPrevPage">Prev</button>
+                  <span id="catPageLabel" class="pager-label">Page 1 of 1</span>
+                  <button class="pager-btn" id="catNextPage">Next</button>
+                </div>
+              </div>
+            </div>
+            <div class="table-shell">
+              <table class="catalog-table">
+                <thead>
+                  <tr>
+                    <th>Store</th>
+                    <th>Product</th>
+                    <th>Variant</th>
+                    <th>Price</th>
+                    <th>In stock</th>
+                    <th>Last seen</th>
+                  </tr>
+                </thead>
+                <tbody id="catalogBody">
+                  <tr><td colspan="6" class="loading-state">Loading catalog…</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
       </div>
     </section>
   </main>
@@ -739,376 +646,422 @@
   <script>
     const SUPABASE_URL = "https://msmlwfnzeqndwkrkpipo.supabase.co";
     const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_-xGGeAEyznCVT3efSmblvA_b92U2Crb";
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
-    const supabaseClient = window.supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_PUBLISHABLE_KEY
-    );
-
-    const PAGE_SIZE = 100;
+    const PAGE_SIZE_CHANGES = 100;
+    const PAGE_SIZE_CATALOG = 500;
+    const PAGE_SIZE_WOW = 500;
 
     const state = {
       latestRows: [],
       changeRows: [],
       filteredRows: [],
-      historyMap: {},   // key: "store|handle|variant" -> [{price, snapshot_at}]
+      historyMap: {},
       page: 1,
-      totalPages: 1
+      totalPages: 1,
+      catFilteredRows: [],
+      catPage: 1,
+      catTotalPages: 1,
+      wowRows: [],
+      wowFilteredRows: [],
+      wowPage: 1,
+      wowTotalPages: 1,
     };
 
-    const metricStores = document.getElementById("metricStores");
-    const metricRows = document.getElementById("metricRows");
-    const metricChanges = document.getElementById("metricChanges");
-    const changesBody = document.getElementById("changesBody");
-    const latestSnapshotCards = document.getElementById("latestSnapshotCards");
-    const storeSummary = document.getElementById("storeSummary");
-    const errorBox = document.getElementById("errorBox");
-
-    const storeFilter = document.getElementById("storeFilter");
-    const changeFilter = document.getElementById("changeFilter");
-    const searchInput = document.getElementById("searchInput");
-    const clearFilters = document.getElementById("clearFilters");
-    const refreshButton = document.getElementById("refreshButton");
-    const heroRefreshButton = document.getElementById("heroRefreshButton");
-    const changesCountNote = document.getElementById("changesCountNote");
-    const pageLabel = document.getElementById("pageLabel");
-    const prevPageButton = document.getElementById("prevPageButton");
-    const nextPageButton = document.getElementById("nextPageButton");
-    const toolbarTrackedProducts = document.getElementById("toolbarTrackedProducts");
-    const toolbarStoresTracked = document.getElementById("toolbarStoresTracked");
-
+    // ---- Helpers ----
     function formatMoney(value) {
       if (value === null || value === undefined || value === "") return "";
-      const number = Number(value);
-      if (Number.isNaN(number)) return String(value);
-      return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(number);
+      const n = Number(value);
+      if (Number.isNaN(n)) return String(value);
+      return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(n);
     }
-
     function formatDate(value) {
       if (!value) return "";
-      const date = new Date(value);
-      if (Number.isNaN(date.getTime())) return value;
-      return new Intl.DateTimeFormat("en-US", {
-        month: "short", day: "numeric", year: "numeric",
-        hour: "numeric", minute: "2-digit"
-      }).format(date);
+      const d = new Date(value);
+      if (Number.isNaN(d.getTime())) return value;
+      return new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" }).format(d);
     }
-
+    // Strip UUID-style prefix (8hex-4hex-4hex-... pattern at start) from store keys
     function cleanStoreLabel(storeKey) {
       if (!storeKey) return "Unknown store";
-      return storeKey.replaceAll("_", " ").replace(/\b\w/g, (c) => c.toUpperCase());
+      // Remove leading UUID/hash prefix: e.g. "2f013f9d " or "abc123_"
+      let label = storeKey
+        .replace(/^[0-9a-f]{8}[-_\s]/, "")   // 8-char hex prefix
+        .replace(/^[0-9a-f]{6,}[-_\s]/, "")   // longer hex prefix
+        .replaceAll("_", " ")
+        .replace(/\b\w/g, (c) => c.toUpperCase())
+        .trim();
+      return label || storeKey.replaceAll("_", " ").replace(/\b\w/g, (c) => c.toUpperCase());
     }
-
-    function inferChangeType(row) {
-      const oldPrice = Number(row.oldprice ?? row.previousprice ?? row.priceold ?? row.fromprice);
-      const newPrice = Number(row.newprice ?? row.currentprice ?? row.pricenew ?? row.toprice ?? row.price);
-      if (!Number.isNaN(oldPrice) && !Number.isNaN(newPrice)) {
-        if (newPrice < oldPrice) return "drop";
-        if (newPrice > oldPrice) return "increase";
+    function inferChangeType(oldPriceRaw, newPriceRaw) {
+      const o = Number(oldPriceRaw), n = Number(newPriceRaw);
+      if (!Number.isNaN(o) && !Number.isNaN(n)) {
+        if (n < o) return "drop";
+        if (n > o) return "increase";
       }
       return "other";
     }
-
     function changeTag(changeType) {
       if (changeType === "drop") return `<span class="tag tag-down">Price drop</span>`;
       if (changeType === "increase") return `<span class="tag tag-up">Price rise</span>`;
       return `<span class="tag tag-new">Changed</span>`;
     }
 
-    // --- Sparkline renderer ---
+    // ---- Sparkline ----
+    let sparkGradId = 0;
     function buildSparkline(points, changeType) {
-      if (!points || points.length < 2) {
-        return `<span class="sparkline-no-data">Collecting…</span>`;
-      }
-
+      if (!points || points.length < 2) return `<span class="sparkline-no-data">Collecting…</span>`;
       const W = 80, H = 28, PAD = 2;
       const prices = points.map(p => p.price);
-      const minP = Math.min(...prices);
-      const maxP = Math.max(...prices);
+      const minP = Math.min(...prices), maxP = Math.max(...prices);
       const range = maxP - minP || 1;
-
       const xs = points.map((_, i) => PAD + (i / (points.length - 1)) * (W - PAD * 2));
       const ys = prices.map(p => H - PAD - ((p - minP) / range) * (H - PAD * 2));
-
-      const lineColor = changeType === "drop"
-        ? "var(--color-down)"
-        : changeType === "increase"
-        ? "var(--color-up)"
-        : "var(--color-accent)";
-
+      const lineColor = changeType === "drop" ? "var(--color-down)" : changeType === "increase" ? "var(--color-up)" : "var(--color-accent)";
       const polyline = xs.map((x, i) => `${x.toFixed(1)},${ys[i].toFixed(1)}`).join(" ");
-
-      // Build fill path (closed polygon under the line)
-      const fillPath = `M${xs[0].toFixed(1)},${H} ` +
-        xs.map((x, i) => `L${x.toFixed(1)},${ys[i].toFixed(1)}`).join(" ") +
-        ` L${xs[xs.length-1].toFixed(1)},${H} Z`;
-
-      const weekCount = points.length;
-
-      return `
-        <div class="sparkline-wrap">
-          <svg class="sparkline-svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
-            <defs>
-              <linearGradient id="sg${weekCount}" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="${lineColor}" stop-opacity="0.18"/>
-                <stop offset="100%" stop-color="${lineColor}" stop-opacity="0"/>
-              </linearGradient>
-            </defs>
-            <path d="${fillPath}" fill="url(#sg${weekCount})" />
-            <polyline
-              points="${polyline}"
-              fill="none"
-              stroke="${lineColor}"
-              stroke-width="1.5"
-              stroke-linejoin="round"
-              stroke-linecap="round"
-            />
-            <circle cx="${xs[xs.length-1].toFixed(1)}" cy="${ys[ys.length-1].toFixed(1)}" r="2.5" fill="${lineColor}" />
-          </svg>
-          <span class="sparkline-label">${weekCount}w</span>
-        </div>
-      `;
+      const fillPath = `M${xs[0].toFixed(1)},${H} ` + xs.map((x, i) => `L${x.toFixed(1)},${ys[i].toFixed(1)}`).join(" ") + ` L${xs[xs.length-1].toFixed(1)},${H} Z`;
+      const gid = "sg" + (++sparkGradId);
+      return `<div class="sparkline-wrap">
+        <svg class="sparkline-svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
+          <defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="${lineColor}" stop-opacity="0.18"/>
+            <stop offset="100%" stop-color="${lineColor}" stop-opacity="0"/>
+          </linearGradient></defs>
+          <path d="${fillPath}" fill="url(#${gid})" />
+          <polyline points="${polyline}" fill="none" stroke="${lineColor}" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
+          <circle cx="${xs[xs.length-1].toFixed(1)}" cy="${ys[ys.length-1].toFixed(1)}" r="2.5" fill="${lineColor}" />
+        </svg>
+        <span class="sparkline-label">${points.length}w</span>
+      </div>`;
+    }
+    function getHistoryKey(storeKey, handle, variant) {
+      return `${storeKey||""} |${handle||""} |${variant||""}`;
     }
 
-    function getHistoryKey(row) {
-      const store = row.store_key || row.storekey || "";
-      const handle = row.product_handle || "";
-      const variant = row.variant_name || row.variantname || "";
-      return `${store}|${handle}|${variant}`;
+    // ---- Store options ----
+    function populateStoreOptions(rows, ...selectIds) {
+      const stores = [...new Set(rows.map(r => r.store_key || r.storekey))].filter(Boolean).sort();
+      const opts = `<option value="all">All stores</option>` + stores.map(s => `<option value="${s}">${cleanStoreLabel(s)}</option>`).join("");
+      selectIds.forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = opts; });
     }
 
-    function renderStoreOptions() {
-      const stores = [...new Set(state.latestRows.map((row) => row.store_key || row.storekey))]
-        .filter(Boolean).sort();
-      storeFilter.innerHTML =
-        `<option value="all">All stores</option>` +
-        stores.map((store) => `<option value="${store}">${cleanStoreLabel(store)}</option>`).join("");
-    }
-
+    // ---- Metrics ----
     function renderMetrics() {
-      const stores = new Set(state.latestRows.map((row) => row.store_key || row.storekey)).size;
-      metricStores.textContent = stores || 0;
-      metricRows.textContent = state.latestRows.length.toLocaleString();
-      metricChanges.textContent = state.filteredRows.length.toLocaleString();
-      toolbarTrackedProducts.textContent = state.latestRows.length.toLocaleString();
-      toolbarStoresTracked.textContent = stores.toLocaleString();
-
-      state.totalPages = Math.max(1, Math.ceil(state.filteredRows.length / PAGE_SIZE));
-      if (state.page > state.totalPages) state.page = state.totalPages;
-
-      const start = (state.page - 1) * PAGE_SIZE;
-      renderTableBody(state.filteredRows.slice(start, start + PAGE_SIZE));
-
-      changesCountNote.textContent =
-        `${state.filteredRows.length.toLocaleString()} matching rows` +
-        (state.filteredRows.length > PAGE_SIZE ? ` · page ${state.page} of ${state.totalPages}` : "");
-      pageLabel.textContent = `Page ${state.page} of ${state.totalPages}`;
-      prevPageButton.disabled = state.page <= 1;
-      nextPageButton.disabled = state.page >= state.totalPages;
+      const stores = new Set(state.latestRows.map(r => r.store_key || r.storekey)).size;
+      document.getElementById("metricStores").textContent = stores || 0;
+      document.getElementById("metricRows").textContent = state.latestRows.length.toLocaleString();
+      document.getElementById("metricChanges").textContent = state.filteredRows.length.toLocaleString();
+      document.getElementById("toolbarTrackedProducts").textContent = state.latestRows.length.toLocaleString();
+      document.getElementById("toolbarStoresTracked").textContent = String(stores);
     }
 
+    // ---- Store Summary (sidebar) ----
     function renderStoreSummary() {
-      if (!state.latestRows.length) {
-        storeSummary.innerHTML = `<div class="loading-state">No snapshot rows available.</div>`;
-        return;
-      }
+      const el = document.getElementById("storeSummary");
+      if (!state.latestRows.length) { el.innerHTML = `<div class="loading-state">No snapshot rows available.</div>`; return; }
       const grouped = state.latestRows.reduce((acc, row) => {
         const key = row.store_key || row.storekey || "unknown";
         if (!acc[key]) acc[key] = { count: 0, latest: null };
-        acc[key].count += 1;
+        acc[key].count++;
         const dv = row.snapshot_at || row.recordedat || row.createdat || row.updatedat || null;
-        if (dv) {
-          const d = new Date(dv);
-          if (!acc[key].latest || d > acc[key].latest) acc[key].latest = d;
-        }
+        if (dv) { const d = new Date(dv); if (!acc[key].latest || d > acc[key].latest) acc[key].latest = d; }
         return acc;
       }, {});
-      storeSummary.innerHTML = Object.entries(grouped)
-        .sort(([a], [b]) => a.localeCompare(b))
-        .map(([store, info]) => `
-          <div class="status-row">
-            <div>
-              <span class="tag tag-neutral">Snapshot live</span>
-              <div><strong>${cleanStoreLabel(store)}</strong></div>
-              <div class="mini-note">${info.count.toLocaleString()} products monitored</div>
-            </div>
-            <div class="mini-note">${info.latest ? `Updated ${formatDate(info.latest)}` : ""}</div>
-          </div>`)
-        .join("");
+      el.innerHTML = Object.entries(grouped).sort(([a],[b]) => a.localeCompare(b)).map(([store, info]) => `
+        <div class="status-row">
+          <div><span class="tag tag-neutral">Live</span><div><strong>${cleanStoreLabel(store)}</strong></div><div class="mini-note">${info.count.toLocaleString()} products</div></div>
+          <div class="mini-note">${info.latest ? formatDate(info.latest) : ""}</div>
+        </div>`).join("");
     }
 
-    function renderLatestSnapshotCards() {
-      if (!state.latestRows.length) {
-        latestSnapshotCards.innerHTML = `<div class="loading-state">No current rows found in your latest snapshot.</div>`;
-        return;
-      }
-      const grouped = state.latestRows.reduce((acc, row) => {
-        const key = row.store_key || row.storekey || "unknown";
-        if (!acc[key]) acc[key] = { count: 0, latest: null };
-        acc[key].count += 1;
-        const dv = row.snapshot_at || row.recordedat || row.createdat || row.updatedat || null;
-        if (dv) {
-          const d = new Date(dv);
-          if (!acc[key].latest || d > acc[key].latest) acc[key].latest = d;
-        }
-        return acc;
-      }, {});
-      latestSnapshotCards.innerHTML = Object.entries(grouped)
-        .sort(([, a], [, b]) => b.count - a.count)
-        .map(([store, info]) => `
-          <div class="list-item">
-            <div>
-              <strong>${cleanStoreLabel(store)}</strong>
-              <div class="mini-note">${info.count.toLocaleString()} monitored products</div>
-            </div>
-            <div class="mini-note">${info.latest ? `Updated ${formatDate(info.latest)} · Live snapshot` : ""}</div>
-          </div>`)
-        .join("");
-    }
-
-    function renderTableBody(rows) {
-      if (!rows.length) {
-        changesBody.innerHTML = `<tr><td colspan="8" class="empty-state">No matching price changes found.</td></tr>`;
-        return;
-      }
-      changesBody.innerHTML = rows.map((row) => {
-        const store = cleanStoreLabel(row.store_key || row.storekey || row.store || row.storename);
-        const product = row.product_name || row.producttitle || row.title || row.productname || row.product_handle || "Untitled product";
-        const variant = row.variant_name || row.variantname || row.varianttitle || row.variant || "Default product";
-        const oldPriceRaw = row.prev_price ?? row.oldprice ?? row.previousprice ?? row.priceold ?? row.fromprice;
-        const newPriceRaw = row.new_price ?? row.newprice ?? row.currentprice ?? row.pricenew ?? row.toprice ?? row.price;
-        const oldPrice = Number(oldPriceRaw);
-        const newPrice = Number(newPriceRaw);
-        const changeType = inferChangeType({
-          oldprice: oldPriceRaw, previousprice: oldPriceRaw, priceold: oldPriceRaw, fromprice: oldPriceRaw,
-          newprice: newPriceRaw, currentprice: newPriceRaw, pricenew: newPriceRaw, toprice: newPriceRaw, price: newPriceRaw
-        });
-        const delta = !Number.isNaN(oldPrice) && !Number.isNaN(newPrice) ? newPrice - oldPrice : null;
-        const deltaClass = delta === null ? "" : delta < 0 ? "price-down" : delta > 0 ? "price-up" : "";
-        const changedAt = row.snapshot_at || row.changed_at || row.changedat || row.recordedat || row.createdat || row.snapshottime || row.date;
-
-        // Build sparkline from historyMap
-        const hKey = getHistoryKey(row);
-        const histPoints = state.historyMap[hKey] || [];
-        const sparkline = buildSparkline(histPoints, changeType);
-
-        return `
-          <tr>
-            <td>${store}</td>
-            <td class="product-cell"><strong>${product}</strong><span>${variant}</span></td>
-            <td>${changeTag(changeType)}</td>
-            <td class="price-old">${formatMoney(oldPriceRaw)}</td>
-            <td class="price-new ${changeType === "drop" ? "price-down" : changeType === "increase" ? "price-up" : ""}">${formatMoney(newPriceRaw)}</td>
-            <td class="${deltaClass}">${delta === null ? "" : formatMoney(delta)}</td>
-            <td class="sparkline-cell">${sparkline}</td>
-            <td>${formatDate(changedAt)}</td>
-          </tr>`;
-      }).join("");
-    }
-
-    function applyFilters() {
-      const selectedStore = storeFilter.value;
-      const selectedChange = changeFilter.value;
-      const searchTerm = searchInput.value.trim().toLowerCase();
-      state.filteredRows = state.changeRows.filter((row) => {
-        const storeKey = (row.store_key || row.storekey || row.store || row.storename || "").toLowerCase();
-        const product = (row.product_name || row.producttitle || row.title || row.productname || row.product_handle || "").toLowerCase();
-        const variant = (row.variant_name || row.variantname || row.varianttitle || row.variant || "").toLowerCase();
-        const type = inferChangeType({
-          oldprice: row.prev_price, previousprice: row.prev_price, priceold: row.prev_price, fromprice: row.prev_price,
-          newprice: row.new_price, currentprice: row.new_price, pricenew: row.new_price, toprice: row.new_price, price: row.new_price
-        });
-        const storeMatch = selectedStore === "all" || storeKey === selectedStore.toLowerCase();
-        const typeMatch = selectedChange === "all" || type === selectedChange;
-        const searchMatch = !searchTerm || product.includes(searchTerm) || variant.includes(searchTerm) || storeKey.includes(searchTerm);
-        return storeMatch && typeMatch && searchMatch;
+    // ---- Changes tab ----
+    function applyChangesFilters() {
+      const store = document.getElementById("storeFilter").value;
+      const type = document.getElementById("changeFilter").value;
+      const q = document.getElementById("searchInput").value.trim().toLowerCase();
+      state.filteredRows = state.changeRows.filter(row => {
+        const sk = (row.store_key || row.storekey || "").toLowerCase();
+        const prod = (row.product_name || row.producttitle || row.title || row.productname || row.product_handle || "").toLowerCase();
+        const vari = (row.variant_name || row.variantname || row.varianttitle || row.variant || "").toLowerCase();
+        const ct = inferChangeType(row.prev_price ?? row.oldprice ?? row.previousprice, row.new_price ?? row.newprice ?? row.currentprice ?? row.price);
+        return (store === "all" || sk === store.toLowerCase())
+          && (type === "all" || ct === type)
+          && (!q || prod.includes(q) || vari.includes(q) || sk.includes(q));
       });
       state.page = 1;
+      renderChangesTable();
       renderMetrics();
     }
+    function renderChangesTable() {
+      state.totalPages = Math.max(1, Math.ceil(state.filteredRows.length / PAGE_SIZE_CHANGES));
+      if (state.page > state.totalPages) state.page = state.totalPages;
+      const start = (state.page - 1) * PAGE_SIZE_CHANGES;
+      const rows = state.filteredRows.slice(start, start + PAGE_SIZE_CHANGES);
+      const body = document.getElementById("changesBody");
+      if (!rows.length) { body.innerHTML = `<tr><td colspan="8" class="empty-state">No matching price changes found.</td></tr>`; }
+      else {
+        body.innerHTML = rows.map(row => {
+          const store = cleanStoreLabel(row.store_key || row.storekey || row.store || row.storename);
+          const product = row.product_name || row.producttitle || row.title || row.productname || row.product_handle || "Untitled";
+          const variant = row.variant_name || row.variantname || row.varianttitle || row.variant || "Default";
+          const oldP = row.prev_price ?? row.oldprice ?? row.previousprice ?? row.priceold ?? row.fromprice;
+          const newP = row.new_price ?? row.newprice ?? row.currentprice ?? row.pricenew ?? row.toprice ?? row.price;
+          const ct = inferChangeType(oldP, newP);
+          const delta = !Number.isNaN(Number(oldP)) && !Number.isNaN(Number(newP)) ? Number(newP) - Number(oldP) : null;
+          const changedAt = row.snapshot_at || row.changed_at || row.changedat || row.recordedat || row.createdat || row.snapshottime || row.date;
+          const hKey = getHistoryKey(row.store_key || row.storekey, row.product_handle, row.variant_name || row.variantname);
+          const spark = buildSparkline(state.historyMap[hKey] || [], ct);
+          return `<tr>
+            <td>${store}</td>
+            <td class="product-cell"><strong>${product}</strong><span>${variant}</span></td>
+            <td>${changeTag(ct)}</td>
+            <td class="price-old">${formatMoney(oldP)}</td>
+            <td class="price-new ${ct==="drop"?"price-down":ct==="increase"?"price-up":""}">${formatMoney(newP)}</td>
+            <td class="${delta===null?"":delta<0?"price-down":delta>0?"price-up":""}">${delta===null?"":formatMoney(delta)}</td>
+            <td class="sparkline-cell">${spark}</td>
+            <td>${formatDate(changedAt)}</td>
+          </tr>`;
+        }).join("");
+      }
+      document.getElementById("changesCountNote").textContent = `${state.filteredRows.length.toLocaleString()} rows`;
+      document.getElementById("pageLabel").textContent = `Page ${state.page} of ${state.totalPages}`;
+      document.getElementById("prevPageButton").disabled = state.page <= 1;
+      document.getElementById("nextPageButton").disabled = state.page >= state.totalPages;
+    }
 
+    // ---- WoW tab ----
+    function buildWowRows() {
+      // Build WoW from latestRows + historyMap: compare latest price to price from ~7 days ago
+      const result = [];
+      for (const row of state.latestRows) {
+        const sk = row.store_key || row.storekey || "";
+        const handle = row.product_handle || "";
+        const variant = row.variant_name || row.variantname || "";
+        const hKey = getHistoryKey(sk, handle, variant);
+        const hist = state.historyMap[hKey] || [];
+        const currentPrice = Number(row.price || row.currentprice || row.pricenew || 0);
+        let prevPrice = null;
+        if (hist.length >= 2) {
+          // second-to-last = last week's benchmark
+          prevPrice = hist[hist.length - 2].price;
+        }
+        result.push({ row, sk, handle, variant, currentPrice, prevPrice, hist });
+      }
+      return result;
+    }
+    function applyWowFilters() {
+      const store = document.getElementById("wowStoreFilter").value;
+      const dir = document.getElementById("wowDirFilter").value;
+      const q = document.getElementById("wowSearchInput").value.trim().toLowerCase();
+      state.wowFilteredRows = state.wowRows.filter(w => {
+        const sk = w.sk.toLowerCase();
+        const prod = (w.row.product_name || w.row.producttitle || w.row.title || w.row.productname || w.row.product_handle || "").toLowerCase();
+        const vari = (w.row.variant_name || w.row.variantname || "").toLowerCase();
+        let direction = "flat";
+        if (w.prevPrice !== null && !Number.isNaN(w.prevPrice)) {
+          if (w.currentPrice < w.prevPrice) direction = "drop";
+          else if (w.currentPrice > w.prevPrice) direction = "increase";
+        }
+        return (store === "all" || sk === store.toLowerCase())
+          && (dir === "all" || direction === dir)
+          && (!q || prod.includes(q) || vari.includes(q) || sk.includes(q));
+      });
+      state.wowPage = 1;
+      renderWowTable();
+    }
+    function renderWowTable() {
+      state.wowTotalPages = Math.max(1, Math.ceil(state.wowFilteredRows.length / PAGE_SIZE_WOW));
+      if (state.wowPage > state.wowTotalPages) state.wowPage = state.wowTotalPages;
+      const start = (state.wowPage - 1) * PAGE_SIZE_WOW;
+      const rows = state.wowFilteredRows.slice(start, start + PAGE_SIZE_WOW);
+      const body = document.getElementById("wowBody");
+      if (!rows.length) {
+        body.innerHTML = `<tr><td colspan="7" class="empty-state">No week-over-week data yet — needs at least 2 weekly snapshots.</td></tr>`;
+      } else {
+        body.innerHTML = rows.map(w => {
+          const store = cleanStoreLabel(w.sk);
+          const product = w.row.product_name || w.row.producttitle || w.row.title || w.row.productname || w.row.product_handle || "Untitled";
+          const variant = w.row.variant_name || w.row.variantname || "Default";
+          const delta = w.prevPrice !== null && !Number.isNaN(w.prevPrice) ? w.currentPrice - w.prevPrice : null;
+          const pct = delta !== null && w.prevPrice ? ((delta / w.prevPrice) * 100).toFixed(1) : null;
+          let direction = "flat";
+          if (delta !== null) { if (delta < 0) direction = "drop"; else if (delta > 0) direction = "increase"; }
+          const spark = buildSparkline(w.hist, direction);
+          const deltaPill = delta === null
+            ? `<span class="wow-delta-pill flat">No prev data</span>`
+            : delta === 0
+            ? `<span class="wow-delta-pill flat">No change</span>`
+            : `<span class="wow-delta-pill ${direction === "drop" ? "down" : "up"}">${direction === "drop" ? "▼" : "▲"} ${formatMoney(Math.abs(delta))}</span>`;
+          return `<tr>
+            <td>${store}</td>
+            <td class="product-cell"><strong>${product}</strong><span>${variant}</span></td>
+            <td class="price-new">${formatMoney(w.currentPrice)}</td>
+            <td class="price-old">${w.prevPrice !== null ? formatMoney(w.prevPrice) : "—"}</td>
+            <td>${deltaPill}</td>
+            <td class="${direction==="drop"?"price-down":direction==="increase"?"price-up":""} ">${pct !== null ? (direction==="drop"?"-":direction==="increase"?"+":"")+Math.abs(pct)+"%" : "—"}</td>
+            <td class="sparkline-cell">${spark}</td>
+          </tr>`;
+        }).join("");
+      }
+      document.getElementById("wowCountNote").textContent = `${state.wowFilteredRows.length.toLocaleString()} rows`;
+      document.getElementById("wowPageLabel").textContent = `Page ${state.wowPage} of ${state.wowTotalPages}`;
+      document.getElementById("wowPrevPage").disabled = state.wowPage <= 1;
+      document.getElementById("wowNextPage").disabled = state.wowPage >= state.wowTotalPages;
+    }
+
+    // ---- Catalog tab ----
+    function applyCatalogFilters() {
+      const store = document.getElementById("catStoreFilter").value;
+      const sort = document.getElementById("catSortField").value;
+      const q = document.getElementById("catSearchInput").value.trim().toLowerCase();
+      let rows = state.latestRows.filter(row => {
+        const sk = (row.store_key || row.storekey || "").toLowerCase();
+        const prod = (row.product_name || row.producttitle || row.title || row.productname || row.product_handle || "").toLowerCase();
+        const vari = (row.variant_name || row.variantname || "").toLowerCase();
+        return (store === "all" || sk === store.toLowerCase()) && (!q || prod.includes(q) || vari.includes(q) || sk.includes(q));
+      });
+      if (sort === "price_asc") rows.sort((a,b) => Number(a.price||0) - Number(b.price||0));
+      else if (sort === "price_desc") rows.sort((a,b) => Number(b.price||0) - Number(a.price||0));
+      else if (sort === "product") rows.sort((a,b) => (a.product_name||a.product_handle||"" ).localeCompare(b.product_name||b.product_handle||""));
+      else rows.sort((a,b) => (a.store_key||a.storekey||"").localeCompare(b.store_key||b.storekey||""));
+      state.catFilteredRows = rows;
+      state.catPage = 1;
+      renderCatalogTable();
+    }
+    function renderCatalogTable() {
+      state.catTotalPages = Math.max(1, Math.ceil(state.catFilteredRows.length / PAGE_SIZE_CATALOG));
+      if (state.catPage > state.catTotalPages) state.catPage = state.catTotalPages;
+      const start = (state.catPage - 1) * PAGE_SIZE_CATALOG;
+      const rows = state.catFilteredRows.slice(start, start + PAGE_SIZE_CATALOG);
+      const body = document.getElementById("catalogBody");
+      if (!rows.length) { body.innerHTML = `<tr><td colspan="6" class="empty-state">No matching products found.</td></tr>`; }
+      else {
+        body.innerHTML = rows.map(row => {
+          const store = cleanStoreLabel(row.store_key || row.storekey || "");
+          const product = row.product_name || row.producttitle || row.title || row.productname || row.product_handle || "Untitled";
+          const variant = row.variant_name || row.variantname || row.varianttitle || "—";
+          const price = row.price || row.currentprice || row.pricenew || null;
+          const inStock = row.in_stock !== undefined ? (row.in_stock ? "✅" : "❌") : row.available !== undefined ? (row.available ? "✅" : "❌") : "—";
+          const seen = row.snapshot_at || row.recordedat || row.createdat || row.updatedat;
+          return `<tr>
+            <td>${store}</td>
+            <td class="product-cell"><strong>${product}</strong></td>
+            <td>${variant}</td>
+            <td class="price-new">${formatMoney(price)}</td>
+            <td>${inStock}</td>
+            <td class="mini-note">${formatDate(seen)}</td>
+          </tr>`;
+        }).join("");
+      }
+      document.getElementById("catCountNote").textContent = `${state.catFilteredRows.length.toLocaleString()} products`;
+      document.getElementById("catPageLabel").textContent = `Page ${state.catPage} of ${state.catTotalPages}`;
+      document.getElementById("catPrevPage").disabled = state.catPage <= 1;
+      document.getElementById("catNextPage").disabled = state.catPage >= state.catTotalPages;
+    }
+
+    // ---- Data loading ----
     async function loadLatestPrices() {
-      const { data, error } = await supabaseClient
-        .from("latest_product_prices")
-        .select("*")
-        .limit(5000);
+      const { data, error } = await supabaseClient.from("latest_product_prices").select("*").limit(5000);
       if (error) throw new Error(`latest_product_prices: ${error.message}`);
       state.latestRows = data || [];
-      renderStoreOptions();
+      populateStoreOptions(state.latestRows, "storeFilter", "wowStoreFilter", "catStoreFilter");
       renderStoreSummary();
-      renderLatestSnapshotCards();
       renderMetrics();
     }
-
     async function loadRecentChanges() {
-      const { data, error } = await supabaseClient
-        .from("product_price_changes")
-        .select("*")
-        .order("changedat", { ascending: false, nullsFirst: false })
-        .limit(500);
-      if (error) {
-        const fallback = await supabaseClient.from("product_price_changes").select("*").limit(500);
-        if (fallback.error) throw new Error(`product_price_changes: ${fallback.error.message}`);
-        state.changeRows = fallback.data || [];
-      } else {
-        state.changeRows = data || [];
-      }
+      let { data, error } = await supabaseClient.from("product_price_changes").select("*").order("changedat", { ascending: false, nullsFirst: false }).limit(500);
+      if (error) ({ data, error } = await supabaseClient.from("product_price_changes").select("*").limit(500));
+      if (error) throw new Error(`product_price_changes: ${error.message}`);
+      state.changeRows = data || [];
       state.filteredRows = [...state.changeRows];
       state.page = 1;
-      renderMetrics();
     }
-
     async function loadPriceHistory() {
-      const { data, error } = await supabaseClient
-        .from("product_price_history")
-        .select("store_key, product_handle, variant_name, price, snapshot_at")
-        .order("snapshot_at", { ascending: true })
-        .limit(10000);
-      if (error) {
-        console.warn("product_price_history not available:", error.message);
-        return;
-      }
-      // Build map keyed by store|handle|variant -> sorted array of {price, snapshot_at}
+      const { data, error } = await supabaseClient.from("product_price_history").select("store_key, product_handle, variant_name, price, snapshot_at").order("snapshot_at", { ascending: true }).limit(10000);
+      if (error) { console.warn("product_price_history not available:", error.message); return; }
       const map = {};
       for (const row of (data || [])) {
-        const key = `${row.store_key || ""}|${row.product_handle || ""}|${row.variant_name || ""}`;
+        const key = getHistoryKey(row.store_key, row.product_handle, row.variant_name);
         if (!map[key]) map[key] = [];
         map[key].push({ price: Number(row.price), snapshot_at: row.snapshot_at });
       }
       state.historyMap = map;
     }
-
     async function loadDashboard() {
+      const errorBox = document.getElementById("errorBox");
       errorBox.style.display = "none";
       try {
         await Promise.all([loadLatestPrices(), loadRecentChanges(), loadPriceHistory()]);
-        // Re-render table now that historyMap is populated
+        renderChangesTable();
+        // Build WoW rows from latestRows + historyMap
+        state.wowRows = buildWowRows();
+        state.wowFilteredRows = [...state.wowRows];
+        renderWowTable();
+        // Catalog
+        state.catFilteredRows = [...state.latestRows];
+        renderCatalogTable();
         renderMetrics();
-      } catch (error) {
-        console.error(error);
-        errorBox.textContent =
-          "Could not load live Supabase data.\n\nMost likely causes:\n1. RLS is not enabled or policies do not allow reads.\n2. The view column names differ from the expected ones.\n3. The publishable key does not have permission to read these views.\n\nTechnical detail: " + error.message;
+      } catch (err) {
+        console.error(err);
+        errorBox.textContent = "Could not load live Supabase data.\n\nMost likely causes:\n1. RLS policies do not allow reads.\n2. Column names differ from expected.\n3. Publishable key lacks permission.\n\nTechnical detail: " + err.message;
         errorBox.style.display = "block";
-        changesBody.innerHTML = `<tr><td colspan="8" class="empty-state">Unable to load recent changes.</td></tr>`;
-        latestSnapshotCards.innerHTML = `<div class="empty-state">Unable to load snapshot data.</div>`;
-        storeSummary.innerHTML = `<div class="empty-state">Unable to load store summary.</div>`;
+        document.getElementById("changesBody").innerHTML = `<tr><td colspan="8" class="empty-state">Unable to load.</td></tr>`;
+        document.getElementById("wowBody").innerHTML = `<tr><td colspan="7" class="empty-state">Unable to load.</td></tr>`;
+        document.getElementById("catalogBody").innerHTML = `<tr><td colspan="6" class="empty-state">Unable to load.</td></tr>`;
       }
     }
 
-    storeFilter.addEventListener("change", applyFilters);
-    changeFilter.addEventListener("change", applyFilters);
-    searchInput.addEventListener("input", applyFilters);
-    clearFilters.addEventListener("click", () => {
-      storeFilter.value = "all";
-      changeFilter.value = "all";
-      searchInput.value = "";
-      applyFilters();
+    // ---- Event listeners ----
+    // Tabs
+    document.querySelectorAll(".tab-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+        document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+        btn.classList.add("active");
+        document.getElementById("tab-" + btn.dataset.tab).classList.add("active");
+      });
     });
-    refreshButton.addEventListener("click", () => { state.page = 1; loadDashboard(); });
-    heroRefreshButton.addEventListener("click", () => { state.page = 1; loadDashboard(); });
-    prevPageButton.addEventListener("click", () => { if (state.page > 1) { state.page -= 1; renderMetrics(); } });
-    nextPageButton.addEventListener("click", () => { if (state.page < state.totalPages) { state.page += 1; renderMetrics(); } });
+    // Changes filters
+    document.getElementById("storeFilter").addEventListener("change", applyChangesFilters);
+    document.getElementById("changeFilter").addEventListener("change", applyChangesFilters);
+    document.getElementById("searchInput").addEventListener("input", applyChangesFilters);
+    document.getElementById("clearFilters").addEventListener("click", () => {
+      document.getElementById("storeFilter").value = "all";
+      document.getElementById("changeFilter").value = "all";
+      document.getElementById("searchInput").value = "";
+      applyChangesFilters();
+    });
+    document.getElementById("prevPageButton").addEventListener("click", () => { if (state.page > 1) { state.page--; renderChangesTable(); } });
+    document.getElementById("nextPageButton").addEventListener("click", () => { if (state.page < state.totalPages) { state.page++; renderChangesTable(); } });
+    // WoW filters
+    document.getElementById("wowStoreFilter").addEventListener("change", applyWowFilters);
+    document.getElementById("wowDirFilter").addEventListener("change", applyWowFilters);
+    document.getElementById("wowSearchInput").addEventListener("input", applyWowFilters);
+    document.getElementById("wowClearFilters").addEventListener("click", () => {
+      document.getElementById("wowStoreFilter").value = "all";
+      document.getElementById("wowDirFilter").value = "all";
+      document.getElementById("wowSearchInput").value = "";
+      applyWowFilters();
+    });
+    document.getElementById("wowPrevPage").addEventListener("click", () => { if (state.wowPage > 1) { state.wowPage--; renderWowTable(); } });
+    document.getElementById("wowNextPage").addEventListener("click", () => { if (state.wowPage < state.wowTotalPages) { state.wowPage++; renderWowTable(); } });
+    // Catalog filters
+    document.getElementById("catStoreFilter").addEventListener("change", applyCatalogFilters);
+    document.getElementById("catSortField").addEventListener("change", applyCatalogFilters);
+    document.getElementById("catSearchInput").addEventListener("input", applyCatalogFilters);
+    document.getElementById("catClearFilters").addEventListener("click", () => {
+      document.getElementById("catStoreFilter").value = "all";
+      document.getElementById("catSortField").value = "store";
+      document.getElementById("catSearchInput").value = "";
+      applyCatalogFilters();
+    });
+    document.getElementById("catPrevPage").addEventListener("click", () => { if (state.catPage > 1) { state.catPage--; renderCatalogTable(); } });
+    document.getElementById("catNextPage").addEventListener("click", () => { if (state.catPage < state.catTotalPages) { state.catPage++; renderCatalogTable(); } });
+    // Refresh
+    document.getElementById("refreshButton").addEventListener("click", loadDashboard);
+    document.getElementById("heroRefreshButton").addEventListener("click", loadDashboard);
 
+    // Theme toggle
     (function setupThemeToggle() {
       const button = document.querySelector("[data-theme-toggle]");
       const root = document.documentElement;
