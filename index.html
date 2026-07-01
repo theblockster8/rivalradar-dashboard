@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
-  <!-- v3: corrected table names -->
+  <!-- v4: force redeploy -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>RivalRadar Dashboard</title>
@@ -435,7 +435,6 @@
           <button class="tab-btn" data-tab="catalog" role="tab">📦 Full Catalog</button>
         </nav>
 
-        <!-- TAB: Recent Changes -->
         <div class="tab-panel active" id="tab-changes">
           <div class="filters">
             <select class="field" id="storeFilter"><option value="all">All stores</option></select>
@@ -476,7 +475,6 @@
           </div>
         </div>
 
-        <!-- TAB: Week over Week -->
         <div class="tab-panel" id="tab-wow">
           <div class="filters">
             <select class="field" id="wowStoreFilter"><option value="all">All stores</option></select>
@@ -518,7 +516,6 @@
           </div>
         </div>
 
-        <!-- TAB: Full Catalog -->
         <div class="tab-panel" id="tab-catalog">
           <div class="filters">
             <select class="field" id="catStoreFilter"><option value="all">All stores</option></select>
@@ -576,10 +573,10 @@
     const PAGE_SIZE_CATALOG = 500;
 
     const state = {
-      snapshots: [],       // product_snapshots rows
-      history: [],         // product_snapshot_history rows
-      historyMap: {},      // key -> sorted array of {price, snapshot_at}
-      changeRows: [],      // derived from history
+      snapshots: [],
+      history: [],
+      historyMap: {},
+      changeRows: [],
       filteredChanges: [],
       changePage: 1, changeTotalPages: 1,
       wowRows: [],
@@ -589,7 +586,6 @@
       catPage: 1, catTotalPages: 1,
     };
 
-    // ---- Helpers ----
     function fmt$(v) {
       const n = Number(v);
       if (v === null || v === undefined || v === '' || Number.isNaN(n)) return '—';
@@ -614,7 +610,6 @@
       return '<span class="tag tag-new">Changed</span>';
     }
 
-    // ---- Sparkline ----
     let _gid = 0;
     function sparkline(points, ct) {
       if (!points || points.length < 2) return '<span class="sparkline-no-data">Collecting…</span>';
@@ -641,14 +636,12 @@
       </div>`;
     }
 
-    // ---- Store options ----
     function setStoreOptions(rows, ...ids) {
       const stores = [...new Set(rows.map(r => r.store_key).filter(Boolean))].sort();
       const opts = '<option value="all">All stores</option>' + stores.map(s => `<option value="${s}">${cleanStore(s)}</option>`).join('');
       ids.forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = opts; });
     }
 
-    // ---- Build derived change rows from history ----
     function buildChangesFromHistory() {
       const changes = [];
       for (const [key, pts] of Object.entries(state.historyMap)) {
@@ -669,7 +662,6 @@
       return changes;
     }
 
-    // ---- Metrics ----
     function renderMetrics() {
       const stores = new Set(state.snapshots.map(r => r.store_key)).size;
       document.getElementById('metricStores').textContent = stores || 0;
@@ -679,7 +671,6 @@
       document.getElementById('toolbarStoresTracked').textContent = String(stores);
     }
 
-    // ---- Store Summary ----
     function renderStoreSummary() {
       const el = document.getElementById('storeSummary');
       if (!state.snapshots.length) { el.innerHTML = '<div class="loading-state">No data.</div>'; return; }
@@ -701,7 +692,6 @@
         </div>`).join('');
     }
 
-    // ---- Changes tab ----
     function applyChangesFilters() {
       const store = document.getElementById('storeFilter').value;
       const type = document.getElementById('changeFilter').value;
@@ -748,7 +738,6 @@
       document.getElementById('nextPageButton').disabled = state.changePage >= state.changeTotalPages;
     }
 
-    // ---- WoW tab ----
     function buildWowRows() {
       return state.snapshots.map(snap => {
         const hKey = rowKey(snap.store_key, snap.product_handle, snap.variant_name);
@@ -812,7 +801,6 @@
       document.getElementById('wowNextPage').disabled = state.wowPage >= state.wowTotalPages;
     }
 
-    // ---- Catalog tab ----
     function applyCatalogFilters() {
       const store = document.getElementById('catStoreFilter').value;
       const sort = document.getElementById('catSortField').value;
@@ -855,7 +843,6 @@
       document.getElementById('catNextPage').disabled = state.catPage >= state.catTotalPages;
     }
 
-    // ---- Data loading ----
     async function loadSnapshots() {
       const { data, error } = await sb.from('product_snapshots').select('*').limit(5000);
       if (error) throw new Error('product_snapshots: ' + error.message);
@@ -898,14 +885,11 @@
       } catch (err) {
         console.error(err);
         errorBox.textContent = 'Could not load data.\n\n' + err.message
-          + '\n\nMake sure you have run the RLS policies in Supabase SQL Editor:\n'
-          + 'CREATE POLICY "Allow public read" ON product_snapshots FOR SELECT USING (true);\n'
-          + 'CREATE POLICY "Allow public read" ON product_snapshot_history FOR SELECT USING (true);';
+          + '\n\nMake sure RLS policies are set in Supabase SQL Editor.';
         errorBox.style.display = 'block';
       }
     }
 
-    // ---- Events ----
     document.querySelectorAll('.tab-btn').forEach(btn =>
       btn.addEventListener('click', () => {
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
