@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
-  <!-- v2 -->
+  <!-- v3: corrected table names -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>RivalRadar Dashboard</title>
@@ -78,7 +78,6 @@
     a { color: inherit; text-decoration: none; }
     button, input, select { font: inherit; color: inherit; }
     button { cursor: pointer; }
-
     .nav {
       position: sticky; top: 0; z-index: 50;
       background: color-mix(in srgb, var(--color-bg) 92%, transparent);
@@ -118,8 +117,6 @@
       transform: translateY(-1px); box-shadow: var(--shadow-md);
       background: var(--color-primary-hover); border-color: var(--color-primary-hover);
     }
-
-    /* Hero */
     .page-hero { padding: var(--space-10) 0 var(--space-8); }
     .hero-grid { display: grid; grid-template-columns: 1.25fr 0.9fr; gap: var(--space-6); align-items: stretch; }
     .hero-panel, .summary-card, .surface-card {
@@ -184,8 +181,6 @@
     .tag-up { background: var(--color-up-bg); color: var(--color-up); }
     .tag-new { background: var(--color-new-bg); color: var(--color-new); }
     .tag-neutral { background: var(--color-surface-2); color: var(--color-text-muted); }
-
-    /* Dashboard section */
     .dashboard-section { padding: var(--space-3) 0 var(--space-12); }
     .toolbar-strip { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: var(--space-4); margin-bottom: var(--space-6); }
     .toolbar-card {
@@ -205,8 +200,6 @@
       gap: var(--space-4); margin-bottom: var(--space-6);
     }
     .section-title { font-size: var(--text-xl); letter-spacing: -0.03em; margin-bottom: var(--space-2); }
-
-    /* Tabs */
     .tabs {
       display: flex; gap: 0; border-bottom: 2px solid var(--color-divider);
       margin-bottom: var(--space-5);
@@ -221,8 +214,6 @@
     .tab-btn.active { color: var(--color-accent); border-bottom-color: var(--color-accent); }
     .tab-panel { display: none; }
     .tab-panel.active { display: block; }
-
-    /* Filters */
     .filters {
       display: grid; grid-template-columns: 180px 180px minmax(180px, 1fr) auto;
       gap: var(--space-3); margin-bottom: var(--space-5);
@@ -231,9 +222,7 @@
       min-height: 46px; width: 100%; border-radius: var(--radius-md);
       border: 1px solid var(--color-border); background: var(--color-bg); padding: 0 var(--space-4);
     }
-
-    /* Changes shell */
-    .changes-shell {
+    .changes-shell, .wow-shell, .catalog-shell {
       border-radius: var(--radius-xl); border: 1px solid var(--color-border);
       background: linear-gradient(180deg, color-mix(in srgb, var(--color-surface) 92%, var(--color-bg)), var(--color-surface));
       box-shadow: var(--shadow-sm), var(--shadow-glow); overflow: hidden;
@@ -267,8 +256,9 @@
       font-weight: 700; letter-spacing: -0.02em; color: var(--color-text);
     }
     .changes-shell-note { font-size: var(--text-xs); color: var(--color-text-faint); }
-    .table-shell { max-height: 480px; overflow: auto; }
-    table { width: 100%; border-collapse: collapse; min-width: 1060px; }
+    .table-shell { max-height: 520px; overflow: auto; }
+    .catalog-shell .table-shell, .wow-shell .table-shell { max-height: 600px; }
+    table { width: 100%; border-collapse: collapse; min-width: 900px; }
     th, td {
       text-align: left; padding: 0.85rem 1rem;
       border-bottom: 1px solid var(--color-divider); vertical-align: middle;
@@ -302,30 +292,11 @@
     .price-new { font-weight: 700; color: var(--color-text); }
     .price-down { color: var(--color-down); }
     .price-up { color: var(--color-up); }
-
-    /* Sparkline */
     .sparkline-cell { width: 120px; }
     .sparkline-wrap { display: flex; align-items: center; gap: 6px; }
     .sparkline-svg { display: block; overflow: visible; }
     .sparkline-no-data { font-size: var(--text-xs); color: var(--color-text-faint); font-style: italic; }
     .sparkline-label { font-size: 10px; color: var(--color-text-faint); white-space: nowrap; }
-
-    /* Catalog tab */
-    .catalog-shell {
-      border-radius: var(--radius-xl); border: 1px solid var(--color-border);
-      background: linear-gradient(180deg, color-mix(in srgb, var(--color-surface) 92%, var(--color-bg)), var(--color-surface));
-      box-shadow: var(--shadow-sm), var(--shadow-glow); overflow: hidden;
-    }
-    .catalog-shell .table-shell { max-height: 600px; }
-    .catalog-table { min-width: 780px; }
-
-    /* WoW tab */
-    .wow-shell {
-      border-radius: var(--radius-xl); border: 1px solid var(--color-border);
-      background: linear-gradient(180deg, color-mix(in srgb, var(--color-surface) 92%, var(--color-bg)), var(--color-surface));
-      box-shadow: var(--shadow-sm), var(--shadow-glow); overflow: hidden;
-    }
-    .wow-shell .table-shell { max-height: 600px; }
     .wow-delta-pill {
       display: inline-flex; align-items: center; gap: 4px;
       padding: 0.2rem 0.55rem; border-radius: var(--radius-full);
@@ -334,37 +305,19 @@
     .wow-delta-pill.down { background: var(--color-down-bg); color: var(--color-down); }
     .wow-delta-pill.up { background: var(--color-up-bg); color: var(--color-up); }
     .wow-delta-pill.flat { background: var(--color-surface-2); color: var(--color-text-faint); }
-
-    .surface-grid { display: grid; grid-template-columns: 1fr; gap: var(--space-6); margin-top: var(--space-8); }
-    .surface-card {
-      padding: var(--space-6);
-      background: linear-gradient(180deg, color-mix(in srgb, var(--color-surface) 88%, var(--color-bg)), var(--color-surface));
-    }
-    .list-stack { display: grid; gap: var(--space-3); margin-top: var(--space-4); }
-    .list-item {
-      display: flex; align-items: start; justify-content: space-between;
-      gap: var(--space-4); padding: var(--space-4); border-radius: var(--radius-lg);
-      background: var(--color-bg); border: 1px solid var(--color-border);
-      transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
-    }
-    .list-item:hover {
-      transform: translateY(-1px); box-shadow: var(--shadow-sm);
-      border-color: color-mix(in srgb, var(--color-accent) 18%, var(--color-border));
-    }
     .mini-note { font-size: var(--text-xs); color: var(--color-text-faint); }
     .empty-state, .loading-state { padding: var(--space-12); text-align: center; color: var(--color-text-muted); }
     .error-box {
       margin-top: var(--space-5); padding: var(--space-4); border-radius: var(--radius-lg);
       border: 1px solid var(--color-up); background: var(--color-up-bg); color: var(--color-up);
-      display: none; white-space: pre-wrap;
+      display: none; white-space: pre-wrap; font-size: var(--text-sm);
     }
     .footer {
       padding: var(--space-8) 0; border-top: 1px solid var(--color-divider);
       color: var(--color-text-faint); font-size: var(--text-xs);
     }
-    .hidden { display: none !important; }
     @media (max-width: 980px) {
-      .hero-grid, .surface-grid, .toolbar-strip { grid-template-columns: 1fr; }
+      .hero-grid, .toolbar-strip { grid-template-columns: 1fr; }
       .filters { grid-template-columns: 1fr 1fr; }
     }
     @media (max-width: 640px) {
@@ -404,7 +357,7 @@
         <div class="hero-panel">
           <div class="eyebrow">Live competitor feed</div>
           <h1 class="hero-title">See rival price movement the moment it matters.</h1>
-          <p class="hero-sub">Check which products changed price, where, and by how much without digging through exports or raw tables.</p>
+          <p class="hero-sub">Check which products changed price, where, and by how much — without digging through exports or raw tables.</p>
           <div class="hero-actions">
             <button class="primary-btn" id="heroRefreshButton">Refresh live data</button>
             <span class="hero-caption">Designed for founders and operators checking in a few times a day.</span>
@@ -413,21 +366,21 @@
             <div class="metric">
               <span class="metric-label">Stores monitored</span>
               <div class="metric-value" id="metricStores">—</div>
-              <div class="metric-note">Distinct stores in the latest snapshot</div>
+              <div class="metric-note">Distinct stores in snapshot</div>
             </div>
             <div class="metric">
               <span class="metric-label">Products tracked</span>
               <div class="metric-value" id="metricRows">—</div>
-              <div class="metric-note">Active products currently under watch</div>
+              <div class="metric-note">Active products under watch</div>
             </div>
             <div class="metric">
-              <span class="metric-label">Recent price changes</span>
+              <span class="metric-label">Price changes</span>
               <div class="metric-value" id="metricChanges">—</div>
-              <div class="metric-note">Updates included in this view</div>
+              <div class="metric-note">Detected from history</div>
             </div>
           </div>
           <div class="inline-statbar">
-            <div class="stat-pill"><span class="stat-dot"></span>Live data from your Supabase project</div>
+            <div class="stat-pill"><span class="stat-dot"></span>Live from Supabase</div>
             <div class="stat-pill"><span class="stat-dot"></span>Optimized for quick price checks</div>
           </div>
           <div class="error-box" id="errorBox"></div>
@@ -435,10 +388,10 @@
         <aside class="summary-card">
           <div>
             <h2 class="summary-title">Snapshot overview</h2>
-            <p>See how many products you're tracking per store and when each snapshot was last updated.</p>
+            <p>Products tracked per store with last snapshot time.</p>
           </div>
           <div class="status-stack" id="storeSummary">
-            <div class="loading-state">Loading live snapshot summary…</div>
+            <div class="loading-state">Loading…</div>
           </div>
         </aside>
       </div>
@@ -449,34 +402,33 @@
         <div class="section-head">
           <div>
             <h2 class="section-title">Price intelligence</h2>
-            <p>Switch tabs to explore recent price changes, week-over-week movement, or the full product catalog.</p>
+            <p>Switch tabs to explore recent changes, week-over-week movement, or the full catalog.</p>
           </div>
         </div>
 
         <div class="toolbar-strip">
           <div class="toolbar-card">
             <span class="toolbar-label">Snapshot window</span>
-            <div class="toolbar-value">Today's prices</div>
-            <p class="mini-note">Most recent snapshot for each product.</p>
+            <div class="toolbar-value">Latest prices</div>
+            <p class="mini-note">Most recent snapshot per product.</p>
           </div>
           <div class="toolbar-card">
-            <span class="toolbar-label">Change window</span>
-            <div class="toolbar-value">Week over week</div>
-            <p class="mini-note">Compares current price to weekly benchmark.</p>
+            <span class="toolbar-label">Change detection</span>
+            <div class="toolbar-value">From history</div>
+            <p class="mini-note">Derived from product_snapshot_history.</p>
           </div>
           <div class="toolbar-card">
             <span class="toolbar-label">Tracked products</span>
             <div class="toolbar-value" id="toolbarTrackedProducts">—</div>
-            <p class="mini-note">Total products in your snapshot.</p>
+            <p class="mini-note">Total in product_snapshots.</p>
           </div>
           <div class="toolbar-card">
             <span class="toolbar-label">Stores tracked</span>
             <div class="toolbar-value" id="toolbarStoresTracked">—</div>
-            <p class="mini-note">All stores included in this dashboard.</p>
+            <p class="mini-note">All stores in this dashboard.</p>
           </div>
         </div>
 
-        <!-- TABS -->
         <nav class="tabs" role="tablist">
           <button class="tab-btn active" data-tab="changes" role="tab">📉 Recent Changes</button>
           <button class="tab-btn" data-tab="wow" role="tab">📊 Week over Week</button>
@@ -486,26 +438,23 @@
         <!-- TAB: Recent Changes -->
         <div class="tab-panel active" id="tab-changes">
           <div class="filters">
-            <select class="field" id="storeFilter" aria-label="Select store">
-              <option value="all">All stores</option>
-            </select>
-            <select class="field" id="changeFilter" aria-label="Select change type">
+            <select class="field" id="storeFilter"><option value="all">All stores</option></select>
+            <select class="field" id="changeFilter">
               <option value="all">All change types</option>
               <option value="drop">Price drops</option>
               <option value="increase">Price increases</option>
-              <option value="other">Other changes</option>
             </select>
-            <input class="search" id="searchInput" type="search" placeholder="Search product or variant" aria-label="Search products" />
-            <button class="ghost-btn" id="clearFilters">Clear filters</button>
+            <input class="search" id="searchInput" type="search" placeholder="Search product or variant" />
+            <button class="ghost-btn" id="clearFilters">Clear</button>
           </div>
           <div class="changes-shell">
             <div class="changes-shell-header">
               <div>
-                <div class="changes-shell-title">Compact changes feed</div>
-                <div class="changes-shell-note">Week-over-week price movements with sparkline trend.</div>
+                <div class="changes-shell-title">Price changes feed</div>
+                <div class="changes-shell-note">Products where price changed between two consecutive snapshots.</div>
               </div>
               <div class="header-right">
-                <div class="mini-note" id="changesCountNote">Matching rows</div>
+                <div class="mini-note" id="changesCountNote">—</div>
                 <div class="pager">
                   <button class="pager-btn" id="prevPageButton">Prev</button>
                   <span id="pageLabel" class="pager-label">Page 1 of 1</span>
@@ -515,20 +464,12 @@
             </div>
             <div class="table-shell">
               <table>
-                <thead>
-                  <tr>
-                    <th>Store</th>
-                    <th>Product</th>
-                    <th>Change</th>
-                    <th>Prev price</th>
-                    <th>New price</th>
-                    <th>Delta</th>
-                    <th>12-week trend</th>
-                    <th>Changed at</th>
-                  </tr>
-                </thead>
+                <thead><tr>
+                  <th>Store</th><th>Product</th><th>Variant</th><th>Change</th>
+                  <th>Prev price</th><th>New price</th><th>Delta</th><th>Trend</th><th>Detected at</th>
+                </tr></thead>
                 <tbody id="changesBody">
-                  <tr><td colspan="8" class="loading-state">Loading recent changes…</td></tr>
+                  <tr><td colspan="9" class="loading-state">Loading…</td></tr>
                 </tbody>
               </table>
             </div>
@@ -538,26 +479,24 @@
         <!-- TAB: Week over Week -->
         <div class="tab-panel" id="tab-wow">
           <div class="filters">
-            <select class="field" id="wowStoreFilter" aria-label="Filter WoW by store">
-              <option value="all">All stores</option>
-            </select>
-            <select class="field" id="wowDirFilter" aria-label="Filter by direction">
+            <select class="field" id="wowStoreFilter"><option value="all">All stores</option></select>
+            <select class="field" id="wowDirFilter">
               <option value="all">All movements</option>
               <option value="drop">Price drops only</option>
               <option value="increase">Price increases only</option>
               <option value="flat">Flat / no change</option>
             </select>
-            <input class="search" id="wowSearchInput" type="search" placeholder="Search product or variant" aria-label="Search WoW" />
-            <button class="ghost-btn" id="wowClearFilters">Clear filters</button>
+            <input class="search" id="wowSearchInput" type="search" placeholder="Search product or variant" />
+            <button class="ghost-btn" id="wowClearFilters">Clear</button>
           </div>
           <div class="wow-shell">
             <div class="changes-shell-header">
               <div>
-                <div class="changes-shell-title">Week-over-week price movement</div>
-                <div class="changes-shell-note">Current price vs. same product one week ago. Sparkline shows 12-week trend.</div>
+                <div class="changes-shell-title">Week-over-week movement</div>
+                <div class="changes-shell-note">Current price vs. earliest snapshot in history. Trend shows all recorded prices.</div>
               </div>
               <div class="header-right">
-                <div class="mini-note" id="wowCountNote">Matching rows</div>
+                <div class="mini-note" id="wowCountNote">—</div>
                 <div class="pager">
                   <button class="pager-btn" id="wowPrevPage">Prev</button>
                   <span id="wowPageLabel" class="pager-label">Page 1 of 1</span>
@@ -566,20 +505,13 @@
               </div>
             </div>
             <div class="table-shell">
-              <table class="catalog-table">
-                <thead>
-                  <tr>
-                    <th>Store</th>
-                    <th>Product</th>
-                    <th>This week</th>
-                    <th>Last week</th>
-                    <th>WoW change</th>
-                    <th>WoW %</th>
-                    <th>Trend</th>
-                  </tr>
-                </thead>
+              <table>
+                <thead><tr>
+                  <th>Store</th><th>Product</th><th>Variant</th>
+                  <th>Current price</th><th>First recorded</th><th>Change</th><th>%</th><th>Trend</th>
+                </tr></thead>
                 <tbody id="wowBody">
-                  <tr><td colspan="7" class="loading-state">Loading week-over-week data…</td></tr>
+                  <tr><td colspan="8" class="loading-state">Loading…</td></tr>
                 </tbody>
               </table>
             </div>
@@ -589,26 +521,24 @@
         <!-- TAB: Full Catalog -->
         <div class="tab-panel" id="tab-catalog">
           <div class="filters">
-            <select class="field" id="catStoreFilter" aria-label="Filter catalog by store">
-              <option value="all">All stores</option>
-            </select>
-            <select class="field" id="catSortField" aria-label="Sort catalog">
+            <select class="field" id="catStoreFilter"><option value="all">All stores</option></select>
+            <select class="field" id="catSortField">
               <option value="store">Sort: Store A–Z</option>
               <option value="price_asc">Sort: Price low–high</option>
               <option value="price_desc">Sort: Price high–low</option>
               <option value="product">Sort: Product A–Z</option>
             </select>
-            <input class="search" id="catSearchInput" type="search" placeholder="Search product or variant" aria-label="Search catalog" />
-            <button class="ghost-btn" id="catClearFilters">Clear filters</button>
+            <input class="search" id="catSearchInput" type="search" placeholder="Search product or variant" />
+            <button class="ghost-btn" id="catClearFilters">Clear</button>
           </div>
           <div class="catalog-shell">
             <div class="changes-shell-header">
               <div>
                 <div class="changes-shell-title">Full product catalog</div>
-                <div class="changes-shell-note">All tracked products from the latest snapshot. 500 per page.</div>
+                <div class="changes-shell-note">All rows from product_snapshots. 500 per page.</div>
               </div>
               <div class="header-right">
-                <div class="mini-note" id="catCountNote">Loading…</div>
+                <div class="mini-note" id="catCountNote">—</div>
                 <div class="pager">
                   <button class="pager-btn" id="catPrevPage">Prev</button>
                   <span id="catPageLabel" class="pager-label">Page 1 of 1</span>
@@ -617,456 +547,419 @@
               </div>
             </div>
             <div class="table-shell">
-              <table class="catalog-table">
-                <thead>
-                  <tr>
-                    <th>Store</th>
-                    <th>Product</th>
-                    <th>Variant</th>
-                    <th>Price</th>
-                    <th>In stock</th>
-                    <th>Last seen</th>
-                  </tr>
-                </thead>
+              <table>
+                <thead><tr>
+                  <th>Store</th><th>Product</th><th>Variant</th>
+                  <th>Price</th><th>Compare at</th><th>Last seen</th>
+                </tr></thead>
                 <tbody id="catalogBody">
-                  <tr><td colspan="6" class="loading-state">Loading catalog…</td></tr>
+                  <tr><td colspan="6" class="loading-state">Loading…</td></tr>
                 </tbody>
               </table>
             </div>
           </div>
         </div>
-
       </div>
     </section>
   </main>
 
   <footer class="footer">
-    <div class="container">RivalRadar live dashboard — built for fast, low-noise competitor monitoring.</div>
+    <div class="container">RivalRadar — live competitor price monitoring.</div>
   </footer>
 
   <script>
     const SUPABASE_URL = "https://msmlwfnzeqndwkrkpipo.supabase.co";
-    const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_-xGGeAEyznCVT3efSmblvA_b92U2Crb";
-    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+    const SUPABASE_KEY = "sb_publishable_-xGGeAEyznCVT3efSmblvA_b92U2Crb";
+    const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    const PAGE_SIZE_CHANGES = 100;
+    const PAGE_SIZE = 100;
     const PAGE_SIZE_CATALOG = 500;
-    const PAGE_SIZE_WOW = 500;
 
     const state = {
-      latestRows: [],
-      changeRows: [],
-      filteredRows: [],
-      historyMap: {},
-      page: 1,
-      totalPages: 1,
-      catFilteredRows: [],
-      catPage: 1,
-      catTotalPages: 1,
+      snapshots: [],       // product_snapshots rows
+      history: [],         // product_snapshot_history rows
+      historyMap: {},      // key -> sorted array of {price, snapshot_at}
+      changeRows: [],      // derived from history
+      filteredChanges: [],
+      changePage: 1, changeTotalPages: 1,
       wowRows: [],
-      wowFilteredRows: [],
-      wowPage: 1,
-      wowTotalPages: 1,
+      filteredWow: [],
+      wowPage: 1, wowTotalPages: 1,
+      filteredCatalog: [],
+      catPage: 1, catTotalPages: 1,
     };
 
     // ---- Helpers ----
-    function formatMoney(value) {
-      if (value === null || value === undefined || value === "") return "";
-      const n = Number(value);
-      if (Number.isNaN(n)) return String(value);
-      return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(n);
+    function fmt$(v) {
+      const n = Number(v);
+      if (v === null || v === undefined || v === '' || Number.isNaN(n)) return '—';
+      return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(n);
     }
-    function formatDate(value) {
-      if (!value) return "";
-      const d = new Date(value);
-      if (Number.isNaN(d.getTime())) return value;
-      return new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" }).format(d);
+    function fmtDate(v) {
+      if (!v) return '';
+      const d = new Date(v);
+      if (Number.isNaN(d.getTime())) return v;
+      return new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' }).format(d);
     }
-    function cleanStoreLabel(storeKey) {
-      if (!storeKey) return "Unknown store";
-      let label = storeKey
-        .replace(/^[0-9a-f]{8}[-_\s]/, "")
-        .replace(/^[0-9a-f]{6,}[-_\s]/, "")
-        .replaceAll("_", " ")
-        .replace(/\b\w/g, (c) => c.toUpperCase())
-        .trim();
-      return label || storeKey.replaceAll("_", " ").replace(/\b\w/g, (c) => c.toUpperCase());
+    function cleanStore(k) {
+      if (!k) return 'Unknown';
+      return k.replace(/^[0-9a-f]{6,}[-_\s]/, '').replaceAll('_', ' ').replace(/\b\w/g, c => c.toUpperCase()).trim() || k;
     }
-    function inferChangeType(oldPriceRaw, newPriceRaw) {
-      const o = Number(oldPriceRaw), n = Number(newPriceRaw);
-      if (!Number.isNaN(o) && !Number.isNaN(n)) {
-        if (n < o) return "drop";
-        if (n > o) return "increase";
-      }
-      return "other";
+    function rowKey(store_key, product_handle, variant_name) {
+      return `${store_key||''}||${product_handle||''}||${variant_name||''}`;
     }
-    function changeTag(changeType) {
-      if (changeType === "drop") return `<span class="tag tag-down">Price drop</span>`;
-      if (changeType === "increase") return `<span class="tag tag-up">Price rise</span>`;
-      return `<span class="tag tag-new">Changed</span>`;
+    function changeTag(ct) {
+      if (ct === 'drop') return '<span class="tag tag-down">Drop</span>';
+      if (ct === 'increase') return '<span class="tag tag-up">Rise</span>';
+      return '<span class="tag tag-new">Changed</span>';
     }
 
     // ---- Sparkline ----
-    let sparkGradId = 0;
-    function buildSparkline(points, changeType) {
-      if (!points || points.length < 2) return `<span class="sparkline-no-data">Collecting…</span>`;
-      const W = 80, H = 28, PAD = 2;
+    let _gid = 0;
+    function sparkline(points, ct) {
+      if (!points || points.length < 2) return '<span class="sparkline-no-data">Collecting…</span>';
+      const W = 80, H = 28, P = 2;
       const prices = points.map(p => p.price);
-      const minP = Math.min(...prices), maxP = Math.max(...prices);
-      const range = maxP - minP || 1;
-      const xs = points.map((_, i) => PAD + (i / (points.length - 1)) * (W - PAD * 2));
-      const ys = prices.map(p => H - PAD - ((p - minP) / range) * (H - PAD * 2));
-      const lineColor = changeType === "drop" ? "var(--color-down)" : changeType === "increase" ? "var(--color-up)" : "var(--color-accent)";
-      const polyline = xs.map((x, i) => `${x.toFixed(1)},${ys[i].toFixed(1)}`).join(" ");
-      const fillPath = `M${xs[0].toFixed(1)},${H} ` + xs.map((x, i) => `L${x.toFixed(1)},${ys[i].toFixed(1)}`).join(" ") + ` L${xs[xs.length-1].toFixed(1)},${H} Z`;
-      const gid = "sg" + (++sparkGradId);
+      const mn = Math.min(...prices), mx = Math.max(...prices), rng = mx - mn || 1;
+      const xs = points.map((_, i) => P + (i / (points.length - 1)) * (W - P * 2));
+      const ys = prices.map(p => H - P - ((p - mn) / rng) * (H - P * 2));
+      const col = ct === 'drop' ? 'var(--color-down)' : ct === 'increase' ? 'var(--color-up)' : 'var(--color-accent)';
+      const poly = xs.map((x, i) => `${x.toFixed(1)},${ys[i].toFixed(1)}`).join(' ');
+      const fill = `M${xs[0].toFixed(1)},${H} ` + xs.map((x,i) => `L${x.toFixed(1)},${ys[i].toFixed(1)}`).join(' ') + ` L${xs[xs.length-1].toFixed(1)},${H} Z`;
+      const gid = 'sg' + (++_gid);
       return `<div class="sparkline-wrap">
         <svg class="sparkline-svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
           <defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="${lineColor}" stop-opacity="0.18"/>
-            <stop offset="100%" stop-color="${lineColor}" stop-opacity="0"/>
+            <stop offset="0%" stop-color="${col}" stop-opacity="0.18"/>
+            <stop offset="100%" stop-color="${col}" stop-opacity="0"/>
           </linearGradient></defs>
-          <path d="${fillPath}" fill="url(#${gid})" />
-          <polyline points="${polyline}" fill="none" stroke="${lineColor}" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
-          <circle cx="${xs[xs.length-1].toFixed(1)}" cy="${ys[ys.length-1].toFixed(1)}" r="2.5" fill="${lineColor}" />
+          <path d="${fill}" fill="url(#${gid})"/>
+          <polyline points="${poly}" fill="none" stroke="${col}" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
+          <circle cx="${xs[xs.length-1].toFixed(1)}" cy="${ys[ys.length-1].toFixed(1)}" r="2.5" fill="${col}"/>
         </svg>
-        <span class="sparkline-label">${points.length}w</span>
+        <span class="sparkline-label">${points.length}pt</span>
       </div>`;
-    }
-    function getHistoryKey(storeKey, handle, variant) {
-      return `${storeKey||""} |${handle||""} |${variant||""}`;
     }
 
     // ---- Store options ----
-    function populateStoreOptions(rows, ...selectIds) {
-      const stores = [...new Set(rows.map(r => r.store_key || r.storekey))].filter(Boolean).sort();
-      const opts = `<option value="all">All stores</option>` + stores.map(s => `<option value="${s}">${cleanStoreLabel(s)}</option>`).join("");
-      selectIds.forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = opts; });
+    function setStoreOptions(rows, ...ids) {
+      const stores = [...new Set(rows.map(r => r.store_key).filter(Boolean))].sort();
+      const opts = '<option value="all">All stores</option>' + stores.map(s => `<option value="${s}">${cleanStore(s)}</option>`).join('');
+      ids.forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = opts; });
+    }
+
+    // ---- Build derived change rows from history ----
+    function buildChangesFromHistory() {
+      const changes = [];
+      for (const [key, pts] of Object.entries(state.historyMap)) {
+        if (pts.length < 2) continue;
+        for (let i = 1; i < pts.length; i++) {
+          const prev = pts[i - 1], curr = pts[i];
+          if (Number(prev.price) !== Number(curr.price)) {
+            const [store_key, product_handle, variant_name] = key.split('||');
+            const ct = Number(curr.price) < Number(prev.price) ? 'drop' : 'increase';
+            changes.push({ store_key, product_handle, variant_name,
+              product_name: curr.product_name || prev.product_name || '',
+              prev_price: prev.price, new_price: curr.price,
+              snapshot_at: curr.snapshot_at, change_type: ct });
+          }
+        }
+      }
+      changes.sort((a, b) => new Date(b.snapshot_at) - new Date(a.snapshot_at));
+      return changes;
     }
 
     // ---- Metrics ----
     function renderMetrics() {
-      const stores = new Set(state.latestRows.map(r => r.store_key || r.storekey)).size;
-      document.getElementById("metricStores").textContent = stores || 0;
-      document.getElementById("metricRows").textContent = state.latestRows.length.toLocaleString();
-      document.getElementById("metricChanges").textContent = state.filteredRows.length.toLocaleString();
-      document.getElementById("toolbarTrackedProducts").textContent = state.latestRows.length.toLocaleString();
-      document.getElementById("toolbarStoresTracked").textContent = String(stores);
+      const stores = new Set(state.snapshots.map(r => r.store_key)).size;
+      document.getElementById('metricStores').textContent = stores || 0;
+      document.getElementById('metricRows').textContent = state.snapshots.length.toLocaleString();
+      document.getElementById('metricChanges').textContent = state.changeRows.length.toLocaleString();
+      document.getElementById('toolbarTrackedProducts').textContent = state.snapshots.length.toLocaleString();
+      document.getElementById('toolbarStoresTracked').textContent = String(stores);
     }
 
-    // ---- Store Summary (sidebar) ----
+    // ---- Store Summary ----
     function renderStoreSummary() {
-      const el = document.getElementById("storeSummary");
-      if (!state.latestRows.length) { el.innerHTML = `<div class="loading-state">No snapshot rows available.</div>`; return; }
-      const grouped = state.latestRows.reduce((acc, row) => {
-        const key = row.store_key || row.storekey || "unknown";
-        if (!acc[key]) acc[key] = { count: 0, latest: null };
-        acc[key].count++;
-        const dv = row.snapshot_at || row.recordedat || row.createdat || row.updatedat || null;
-        if (dv) { const d = new Date(dv); if (!acc[key].latest || d > acc[key].latest) acc[key].latest = d; }
+      const el = document.getElementById('storeSummary');
+      if (!state.snapshots.length) { el.innerHTML = '<div class="loading-state">No data.</div>'; return; }
+      const grouped = state.snapshots.reduce((acc, r) => {
+        const k = r.store_key || 'unknown';
+        if (!acc[k]) acc[k] = { count: 0, latest: null };
+        acc[k].count++;
+        const d = r.created_at ? new Date(r.created_at) : null;
+        if (d && (!acc[k].latest || d > acc[k].latest)) acc[k].latest = d;
         return acc;
       }, {});
-      el.innerHTML = Object.entries(grouped).sort(([a],[b]) => a.localeCompare(b)).map(([store, info]) => `
-        <div class="status-row">
-          <div><span class="tag tag-neutral">Live</span><div><strong>${cleanStoreLabel(store)}</strong></div><div class="mini-note">${info.count.toLocaleString()} products</div></div>
-          <div class="mini-note">${info.latest ? formatDate(info.latest) : ""}</div>
-        </div>`).join("");
+      el.innerHTML = Object.entries(grouped).sort(([a],[b]) => a.localeCompare(b)).map(([store, info]) =>
+        `<div class="status-row">
+          <div><span class="tag tag-neutral">Live</span>
+            <div><strong>${cleanStore(store)}</strong></div>
+            <div class="mini-note">${info.count.toLocaleString()} products</div>
+          </div>
+          <div class="mini-note">${info.latest ? fmtDate(info.latest) : ''}</div>
+        </div>`).join('');
     }
 
     // ---- Changes tab ----
     function applyChangesFilters() {
-      const store = document.getElementById("storeFilter").value;
-      const type = document.getElementById("changeFilter").value;
-      const q = document.getElementById("searchInput").value.trim().toLowerCase();
-      state.filteredRows = state.changeRows.filter(row => {
-        const sk = (row.store_key || row.storekey || "").toLowerCase();
-        const prod = (row.product_name || row.producttitle || row.title || row.productname || row.product_handle || "").toLowerCase();
-        const vari = (row.variant_name || row.variantname || row.varianttitle || row.variant || "").toLowerCase();
-        const ct = inferChangeType(row.prev_price ?? row.oldprice ?? row.previousprice, row.new_price ?? row.newprice ?? row.currentprice ?? row.price);
-        return (store === "all" || sk === store.toLowerCase())
-          && (type === "all" || ct === type)
+      const store = document.getElementById('storeFilter').value;
+      const type = document.getElementById('changeFilter').value;
+      const q = document.getElementById('searchInput').value.trim().toLowerCase();
+      state.filteredChanges = state.changeRows.filter(r => {
+        const sk = (r.store_key || '').toLowerCase();
+        const prod = (r.product_name || r.product_handle || '').toLowerCase();
+        const vari = (r.variant_name || '').toLowerCase();
+        return (store === 'all' || sk === store.toLowerCase())
+          && (type === 'all' || r.change_type === type)
           && (!q || prod.includes(q) || vari.includes(q) || sk.includes(q));
       });
-      state.page = 1;
+      state.changePage = 1;
       renderChangesTable();
       renderMetrics();
     }
     function renderChangesTable() {
-      state.totalPages = Math.max(1, Math.ceil(state.filteredRows.length / PAGE_SIZE_CHANGES));
-      if (state.page > state.totalPages) state.page = state.totalPages;
-      const start = (state.page - 1) * PAGE_SIZE_CHANGES;
-      const rows = state.filteredRows.slice(start, start + PAGE_SIZE_CHANGES);
-      const body = document.getElementById("changesBody");
-      if (!rows.length) { body.innerHTML = `<tr><td colspan="8" class="empty-state">No matching price changes found.</td></tr>`; }
-      else {
-        body.innerHTML = rows.map(row => {
-          const store = cleanStoreLabel(row.store_key || row.storekey || row.store || row.storename);
-          const product = row.product_name || row.producttitle || row.title || row.productname || row.product_handle || "Untitled";
-          const variant = row.variant_name || row.variantname || row.varianttitle || row.variant || "Default";
-          const oldP = row.prev_price ?? row.oldprice ?? row.previousprice ?? row.priceold ?? row.fromprice;
-          const newP = row.new_price ?? row.newprice ?? row.currentprice ?? row.pricenew ?? row.toprice ?? row.price;
-          const ct = inferChangeType(oldP, newP);
-          const delta = !Number.isNaN(Number(oldP)) && !Number.isNaN(Number(newP)) ? Number(newP) - Number(oldP) : null;
-          const changedAt = row.snapshot_at || row.changed_at || row.changedat || row.recordedat || row.createdat || row.snapshottime || row.date;
-          const hKey = getHistoryKey(row.store_key || row.storekey, row.product_handle, row.variant_name || row.variantname);
-          const spark = buildSparkline(state.historyMap[hKey] || [], ct);
+      state.changeTotalPages = Math.max(1, Math.ceil(state.filteredChanges.length / PAGE_SIZE));
+      const rows = state.filteredChanges.slice((state.changePage - 1) * PAGE_SIZE, state.changePage * PAGE_SIZE);
+      const body = document.getElementById('changesBody');
+      if (!rows.length) {
+        body.innerHTML = '<tr><td colspan="9" class="empty-state">No price changes detected yet.</td></tr>';
+      } else {
+        body.innerHTML = rows.map(r => {
+          const delta = Number(r.new_price) - Number(r.prev_price);
+          const hKey = rowKey(r.store_key, r.product_handle, r.variant_name);
+          const spark = sparkline(state.historyMap[hKey] || [], r.change_type);
           return `<tr>
-            <td>${store}</td>
-            <td class="product-cell"><strong>${product}</strong><span>${variant}</span></td>
-            <td>${changeTag(ct)}</td>
-            <td class="price-old">${formatMoney(oldP)}</td>
-            <td class="price-new ${ct==="drop"?"price-down":ct==="increase"?"price-up":""}">${formatMoney(newP)}</td>
-            <td class="${delta===null?"":delta<0?"price-down":delta>0?"price-up":""}">${delta===null?"":formatMoney(delta)}</td>
+            <td><span class="store-chip">${cleanStore(r.store_key)}</span></td>
+            <td class="product-cell"><strong>${r.product_name || r.product_handle || 'Untitled'}</strong></td>
+            <td>${r.variant_name || '—'}</td>
+            <td>${changeTag(r.change_type)}</td>
+            <td class="price-old">${fmt$(r.prev_price)}</td>
+            <td class="price-new ${r.change_type==='drop'?'price-down':r.change_type==='increase'?'price-up':''}">${fmt$(r.new_price)}</td>
+            <td class="${delta<0?'price-down':delta>0?'price-up':''}">${fmt$(delta)}</td>
             <td class="sparkline-cell">${spark}</td>
-            <td>${formatDate(changedAt)}</td>
+            <td class="mini-note">${fmtDate(r.snapshot_at)}</td>
           </tr>`;
-        }).join("");
+        }).join('');
       }
-      document.getElementById("changesCountNote").textContent = `${state.filteredRows.length.toLocaleString()} rows`;
-      document.getElementById("pageLabel").textContent = `Page ${state.page} of ${state.totalPages}`;
-      document.getElementById("prevPageButton").disabled = state.page <= 1;
-      document.getElementById("nextPageButton").disabled = state.page >= state.totalPages;
+      document.getElementById('changesCountNote').textContent = `${state.filteredChanges.length.toLocaleString()} changes`;
+      document.getElementById('pageLabel').textContent = `Page ${state.changePage} of ${state.changeTotalPages}`;
+      document.getElementById('prevPageButton').disabled = state.changePage <= 1;
+      document.getElementById('nextPageButton').disabled = state.changePage >= state.changeTotalPages;
     }
 
     // ---- WoW tab ----
     function buildWowRows() {
-      const result = [];
-      for (const row of state.latestRows) {
-        const sk = row.store_key || row.storekey || "";
-        const handle = row.product_handle || "";
-        const variant = row.variant_name || row.variantname || "";
-        const hKey = getHistoryKey(sk, handle, variant);
+      return state.snapshots.map(snap => {
+        const hKey = rowKey(snap.store_key, snap.product_handle, snap.variant_name);
         const hist = state.historyMap[hKey] || [];
-        const currentPrice = Number(row.price || row.currentprice || row.pricenew || 0);
-        let prevPrice = null;
-        if (hist.length >= 2) {
-          prevPrice = hist[hist.length - 2].price;
-        }
-        result.push({ row, sk, handle, variant, currentPrice, prevPrice, hist });
-      }
-      return result;
+        const currentPrice = Number(snap.price);
+        const firstPrice = hist.length >= 1 ? Number(hist[0].price) : null;
+        return { snap, hist, currentPrice, firstPrice };
+      });
     }
     function applyWowFilters() {
-      const store = document.getElementById("wowStoreFilter").value;
-      const dir = document.getElementById("wowDirFilter").value;
-      const q = document.getElementById("wowSearchInput").value.trim().toLowerCase();
-      state.wowFilteredRows = state.wowRows.filter(w => {
-        const sk = w.sk.toLowerCase();
-        const prod = (w.row.product_name || w.row.producttitle || w.row.title || w.row.productname || w.row.product_handle || "").toLowerCase();
-        const vari = (w.row.variant_name || w.row.variantname || "").toLowerCase();
-        let direction = "flat";
-        if (w.prevPrice !== null && !Number.isNaN(w.prevPrice)) {
-          if (w.currentPrice < w.prevPrice) direction = "drop";
-          else if (w.currentPrice > w.prevPrice) direction = "increase";
+      const store = document.getElementById('wowStoreFilter').value;
+      const dir = document.getElementById('wowDirFilter').value;
+      const q = document.getElementById('wowSearchInput').value.trim().toLowerCase();
+      state.filteredWow = state.wowRows.filter(w => {
+        const sk = (w.snap.store_key || '').toLowerCase();
+        const prod = (w.snap.product_name || w.snap.product_handle || '').toLowerCase();
+        const vari = (w.snap.variant_name || '').toLowerCase();
+        let direction = 'flat';
+        if (w.firstPrice !== null) {
+          if (w.currentPrice < w.firstPrice) direction = 'drop';
+          else if (w.currentPrice > w.firstPrice) direction = 'increase';
         }
-        return (store === "all" || sk === store.toLowerCase())
-          && (dir === "all" || direction === dir)
+        return (store === 'all' || sk === store.toLowerCase())
+          && (dir === 'all' || direction === dir)
           && (!q || prod.includes(q) || vari.includes(q) || sk.includes(q));
       });
       state.wowPage = 1;
       renderWowTable();
     }
     function renderWowTable() {
-      state.wowTotalPages = Math.max(1, Math.ceil(state.wowFilteredRows.length / PAGE_SIZE_WOW));
-      if (state.wowPage > state.wowTotalPages) state.wowPage = state.wowTotalPages;
-      const start = (state.wowPage - 1) * PAGE_SIZE_WOW;
-      const rows = state.wowFilteredRows.slice(start, start + PAGE_SIZE_WOW);
-      const body = document.getElementById("wowBody");
+      state.wowTotalPages = Math.max(1, Math.ceil(state.filteredWow.length / PAGE_SIZE));
+      const rows = state.filteredWow.slice((state.wowPage - 1) * PAGE_SIZE, state.wowPage * PAGE_SIZE);
+      const body = document.getElementById('wowBody');
       if (!rows.length) {
-        body.innerHTML = `<tr><td colspan="7" class="empty-state">No week-over-week data yet — needs at least 2 weekly snapshots.</td></tr>`;
+        body.innerHTML = '<tr><td colspan="8" class="empty-state">No data yet.</td></tr>';
       } else {
         body.innerHTML = rows.map(w => {
-          const store = cleanStoreLabel(w.sk);
-          const product = w.row.product_name || w.row.producttitle || w.row.title || w.row.productname || w.row.product_handle || "Untitled";
-          const variant = w.row.variant_name || w.row.variantname || "Default";
-          const delta = w.prevPrice !== null && !Number.isNaN(w.prevPrice) ? w.currentPrice - w.prevPrice : null;
-          const pct = delta !== null && w.prevPrice ? ((delta / w.prevPrice) * 100).toFixed(1) : null;
-          let direction = "flat";
-          if (delta !== null) { if (delta < 0) direction = "drop"; else if (delta > 0) direction = "increase"; }
-          const spark = buildSparkline(w.hist, direction);
-          const deltaPill = delta === null
-            ? `<span class="wow-delta-pill flat">No prev data</span>`
-            : delta === 0
-            ? `<span class="wow-delta-pill flat">No change</span>`
-            : `<span class="wow-delta-pill ${direction === "drop" ? "down" : "up"}">${direction === "drop" ? "▼" : "▲"} ${formatMoney(Math.abs(delta))}</span>`;
+          const delta = w.firstPrice !== null ? w.currentPrice - w.firstPrice : null;
+          const pct = delta !== null && w.firstPrice ? ((delta / w.firstPrice) * 100).toFixed(1) : null;
+          let direction = 'flat';
+          if (delta !== null) { if (delta < 0) direction = 'drop'; else if (delta > 0) direction = 'increase'; }
+          const spark = sparkline(w.hist, direction);
+          const pill = delta === null ? '<span class="wow-delta-pill flat">No history</span>'
+            : delta === 0 ? '<span class="wow-delta-pill flat">No change</span>'
+            : `<span class="wow-delta-pill ${direction==='drop'?'down':'up'}">${direction==='drop'?'▼':'▲'} ${fmt$(Math.abs(delta))}</span>`;
           return `<tr>
-            <td>${store}</td>
-            <td class="product-cell"><strong>${product}</strong><span>${variant}</span></td>
-            <td class="price-new">${formatMoney(w.currentPrice)}</td>
-            <td class="price-old">${w.prevPrice !== null ? formatMoney(w.prevPrice) : "—"}</td>
-            <td>${deltaPill}</td>
-            <td class="${direction==="drop"?"price-down":direction==="increase"?"price-up":""} ">${pct !== null ? (direction==="drop"?"-":direction==="increase"?"+":"")+Math.abs(pct)+"%" : "—"}</td>
+            <td><span class="store-chip">${cleanStore(w.snap.store_key)}</span></td>
+            <td class="product-cell"><strong>${w.snap.product_name || w.snap.product_handle || 'Untitled'}</strong></td>
+            <td>${w.snap.variant_name || '—'}</td>
+            <td class="price-new">${fmt$(w.currentPrice)}</td>
+            <td class="price-old">${w.firstPrice !== null ? fmt$(w.firstPrice) : '—'}</td>
+            <td>${pill}</td>
+            <td class="${direction==='drop'?'price-down':direction==='increase'?'price-up':''}">${pct !== null ? (direction==='drop'?'-':direction==='increase'?'+':'')+Math.abs(pct)+'%' : '—'}</td>
             <td class="sparkline-cell">${spark}</td>
           </tr>`;
-        }).join("");
+        }).join('');
       }
-      document.getElementById("wowCountNote").textContent = `${state.wowFilteredRows.length.toLocaleString()} rows`;
-      document.getElementById("wowPageLabel").textContent = `Page ${state.wowPage} of ${state.wowTotalPages}`;
-      document.getElementById("wowPrevPage").disabled = state.wowPage <= 1;
-      document.getElementById("wowNextPage").disabled = state.wowPage >= state.wowTotalPages;
+      document.getElementById('wowCountNote').textContent = `${state.filteredWow.length.toLocaleString()} products`;
+      document.getElementById('wowPageLabel').textContent = `Page ${state.wowPage} of ${state.wowTotalPages}`;
+      document.getElementById('wowPrevPage').disabled = state.wowPage <= 1;
+      document.getElementById('wowNextPage').disabled = state.wowPage >= state.wowTotalPages;
     }
 
     // ---- Catalog tab ----
     function applyCatalogFilters() {
-      const store = document.getElementById("catStoreFilter").value;
-      const sort = document.getElementById("catSortField").value;
-      const q = document.getElementById("catSearchInput").value.trim().toLowerCase();
-      let rows = state.latestRows.filter(row => {
-        const sk = (row.store_key || row.storekey || "").toLowerCase();
-        const prod = (row.product_name || row.producttitle || row.title || row.productname || row.product_handle || "").toLowerCase();
-        const vari = (row.variant_name || row.variantname || "").toLowerCase();
-        return (store === "all" || sk === store.toLowerCase()) && (!q || prod.includes(q) || vari.includes(q) || sk.includes(q));
+      const store = document.getElementById('catStoreFilter').value;
+      const sort = document.getElementById('catSortField').value;
+      const q = document.getElementById('catSearchInput').value.trim().toLowerCase();
+      let rows = state.snapshots.filter(r => {
+        const sk = (r.store_key || '').toLowerCase();
+        const prod = (r.product_name || r.product_handle || '').toLowerCase();
+        const vari = (r.variant_name || '').toLowerCase();
+        return (store === 'all' || sk === store.toLowerCase())
+          && (!q || prod.includes(q) || vari.includes(q) || sk.includes(q));
       });
-      if (sort === "price_asc") rows.sort((a,b) => Number(a.price||0) - Number(b.price||0));
-      else if (sort === "price_desc") rows.sort((a,b) => Number(b.price||0) - Number(a.price||0));
-      else if (sort === "product") rows.sort((a,b) => (a.product_name||a.product_handle||"" ).localeCompare(b.product_name||b.product_handle||""));
-      else rows.sort((a,b) => (a.store_key||a.storekey||"").localeCompare(b.store_key||b.storekey||""));
-      state.catFilteredRows = rows;
+      if (sort === 'price_asc') rows.sort((a,b) => Number(a.price||0) - Number(b.price||0));
+      else if (sort === 'price_desc') rows.sort((a,b) => Number(b.price||0) - Number(a.price||0));
+      else if (sort === 'product') rows.sort((a,b) => (a.product_name||a.product_handle||'').localeCompare(b.product_name||b.product_handle||''));
+      else rows.sort((a,b) => (a.store_key||'').localeCompare(b.store_key||''));
+      state.filteredCatalog = rows;
       state.catPage = 1;
       renderCatalogTable();
     }
     function renderCatalogTable() {
-      state.catTotalPages = Math.max(1, Math.ceil(state.catFilteredRows.length / PAGE_SIZE_CATALOG));
-      if (state.catPage > state.catTotalPages) state.catPage = state.catTotalPages;
-      const start = (state.catPage - 1) * PAGE_SIZE_CATALOG;
-      const rows = state.catFilteredRows.slice(start, start + PAGE_SIZE_CATALOG);
-      const body = document.getElementById("catalogBody");
-      if (!rows.length) { body.innerHTML = `<tr><td colspan="6" class="empty-state">No matching products found.</td></tr>`; }
-      else {
-        body.innerHTML = rows.map(row => {
-          const store = cleanStoreLabel(row.store_key || row.storekey || "");
-          const product = row.product_name || row.producttitle || row.title || row.productname || row.product_handle || "Untitled";
-          const variant = row.variant_name || row.variantname || row.varianttitle || "—";
-          const price = row.price || row.currentprice || row.pricenew || null;
-          const inStock = row.in_stock !== undefined ? (row.in_stock ? "✅" : "❌") : row.available !== undefined ? (row.available ? "✅" : "❌") : "—";
-          const seen = row.snapshot_at || row.recordedat || row.createdat || row.updatedat;
-          return `<tr>
-            <td>${store}</td>
-            <td class="product-cell"><strong>${product}</strong></td>
-            <td>${variant}</td>
-            <td class="price-new">${formatMoney(price)}</td>
-            <td>${inStock}</td>
-            <td class="mini-note">${formatDate(seen)}</td>
-          </tr>`;
-        }).join("");
+      state.catTotalPages = Math.max(1, Math.ceil(state.filteredCatalog.length / PAGE_SIZE_CATALOG));
+      const rows = state.filteredCatalog.slice((state.catPage - 1) * PAGE_SIZE_CATALOG, state.catPage * PAGE_SIZE_CATALOG);
+      const body = document.getElementById('catalogBody');
+      if (!rows.length) {
+        body.innerHTML = '<tr><td colspan="6" class="empty-state">No products found.</td></tr>';
+      } else {
+        body.innerHTML = rows.map(r =>
+          `<tr>
+            <td><span class="store-chip">${cleanStore(r.store_key)}</span></td>
+            <td class="product-cell"><strong>${r.product_name || r.product_handle || 'Untitled'}</strong></td>
+            <td>${r.variant_name || '—'}</td>
+            <td class="price-new">${fmt$(r.price)}</td>
+            <td class="price-old">${fmt$(r.compare_at_price)}</td>
+            <td class="mini-note">${fmtDate(r.created_at)}</td>
+          </tr>`).join('');
       }
-      document.getElementById("catCountNote").textContent = `${state.catFilteredRows.length.toLocaleString()} products`;
-      document.getElementById("catPageLabel").textContent = `Page ${state.catPage} of ${state.catTotalPages}`;
-      document.getElementById("catPrevPage").disabled = state.catPage <= 1;
-      document.getElementById("catNextPage").disabled = state.catPage >= state.catTotalPages;
+      document.getElementById('catCountNote').textContent = `${state.filteredCatalog.length.toLocaleString()} products`;
+      document.getElementById('catPageLabel').textContent = `Page ${state.catPage} of ${state.catTotalPages}`;
+      document.getElementById('catPrevPage').disabled = state.catPage <= 1;
+      document.getElementById('catNextPage').disabled = state.catPage >= state.catTotalPages;
     }
 
     // ---- Data loading ----
-    async function loadLatestPrices() {
-      const { data, error } = await supabaseClient.from("latest_product_prices").select("*").limit(5000);
-      if (error) throw new Error(`latest_product_prices: ${error.message}`);
-      state.latestRows = data || [];
-      populateStoreOptions(state.latestRows, "storeFilter", "wowStoreFilter", "catStoreFilter");
-      renderStoreSummary();
-      renderMetrics();
+    async function loadSnapshots() {
+      const { data, error } = await sb.from('product_snapshots').select('*').limit(5000);
+      if (error) throw new Error('product_snapshots: ' + error.message);
+      state.snapshots = data || [];
     }
-    async function loadRecentChanges() {
-      let { data, error } = await supabaseClient.from("product_price_changes").select("*").order("changedat", { ascending: false, nullsFirst: false }).limit(500);
-      if (error) ({ data, error } = await supabaseClient.from("product_price_changes").select("*").limit(500));
-      if (error) throw new Error(`product_price_changes: ${error.message}`);
-      state.changeRows = data || [];
-      state.filteredRows = [...state.changeRows];
-      state.page = 1;
-    }
-    async function loadPriceHistory() {
-      const { data, error } = await supabaseClient.from("product_price_history").select("store_key, product_handle, variant_name, price, snapshot_at").order("snapshot_at", { ascending: true }).limit(10000);
-      if (error) { console.warn("product_price_history not available:", error.message); return; }
+    async function loadHistory() {
+      const { data, error } = await sb
+        .from('product_snapshot_history')
+        .select('store_key, product_handle, product_name, variant_name, price, snapshot_at')
+        .order('snapshot_at', { ascending: true })
+        .limit(10000);
+      if (error) throw new Error('product_snapshot_history: ' + error.message);
       const map = {};
       for (const row of (data || [])) {
-        const key = getHistoryKey(row.store_key, row.product_handle, row.variant_name);
+        const key = rowKey(row.store_key, row.product_handle, row.variant_name);
         if (!map[key]) map[key] = [];
-        map[key].push({ price: Number(row.price), snapshot_at: row.snapshot_at });
+        map[key].push({ price: Number(row.price), snapshot_at: row.snapshot_at, product_name: row.product_name });
       }
       state.historyMap = map;
     }
     async function loadDashboard() {
-      const errorBox = document.getElementById("errorBox");
-      errorBox.style.display = "none";
+      const errorBox = document.getElementById('errorBox');
+      errorBox.style.display = 'none';
+      ['changesBody','wowBody','catalogBody'].forEach(id => {
+        document.getElementById(id).innerHTML = `<tr><td colspan="9" class="loading-state">Loading…</td></tr>`;
+      });
       try {
-        await Promise.all([loadLatestPrices(), loadRecentChanges(), loadPriceHistory()]);
-        renderChangesTable();
+        await Promise.all([loadSnapshots(), loadHistory()]);
+        setStoreOptions(state.snapshots, 'storeFilter', 'wowStoreFilter', 'catStoreFilter');
+        state.changeRows = buildChangesFromHistory();
+        state.filteredChanges = [...state.changeRows];
         state.wowRows = buildWowRows();
-        state.wowFilteredRows = [...state.wowRows];
+        state.filteredWow = [...state.wowRows];
+        state.filteredCatalog = [...state.snapshots];
+        renderStoreSummary();
+        renderChangesTable();
         renderWowTable();
-        state.catFilteredRows = [...state.latestRows];
         renderCatalogTable();
         renderMetrics();
       } catch (err) {
         console.error(err);
-        errorBox.textContent = "Could not load live Supabase data.\n\nMost likely causes:\n1. RLS policies do not allow reads.\n2. Column names differ from expected.\n3. Publishable key lacks permission.\n\nTechnical detail: " + err.message;
-        errorBox.style.display = "block";
-        document.getElementById("changesBody").innerHTML = `<tr><td colspan="8" class="empty-state">Unable to load.</td></tr>`;
-        document.getElementById("wowBody").innerHTML = `<tr><td colspan="7" class="empty-state">Unable to load.</td></tr>`;
-        document.getElementById("catalogBody").innerHTML = `<tr><td colspan="6" class="empty-state">Unable to load.</td></tr>`;
+        errorBox.textContent = 'Could not load data.\n\n' + err.message
+          + '\n\nMake sure you have run the RLS policies in Supabase SQL Editor:\n'
+          + 'CREATE POLICY "Allow public read" ON product_snapshots FOR SELECT USING (true);\n'
+          + 'CREATE POLICY "Allow public read" ON product_snapshot_history FOR SELECT USING (true);';
+        errorBox.style.display = 'block';
       }
     }
 
-    // ---- Event listeners ----
-    document.querySelectorAll(".tab-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
-        document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-        document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
-        btn.classList.add("active");
-        document.getElementById("tab-" + btn.dataset.tab).classList.add("active");
-      });
-    });
-    document.getElementById("storeFilter").addEventListener("change", applyChangesFilters);
-    document.getElementById("changeFilter").addEventListener("change", applyChangesFilters);
-    document.getElementById("searchInput").addEventListener("input", applyChangesFilters);
-    document.getElementById("clearFilters").addEventListener("click", () => {
-      document.getElementById("storeFilter").value = "all";
-      document.getElementById("changeFilter").value = "all";
-      document.getElementById("searchInput").value = "";
+    // ---- Events ----
+    document.querySelectorAll('.tab-btn').forEach(btn =>
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+      })
+    );
+    document.getElementById('storeFilter').addEventListener('change', applyChangesFilters);
+    document.getElementById('changeFilter').addEventListener('change', applyChangesFilters);
+    document.getElementById('searchInput').addEventListener('input', applyChangesFilters);
+    document.getElementById('clearFilters').addEventListener('click', () => {
+      ['storeFilter','changeFilter'].forEach(id => document.getElementById(id).value = 'all');
+      document.getElementById('searchInput').value = '';
       applyChangesFilters();
     });
-    document.getElementById("prevPageButton").addEventListener("click", () => { if (state.page > 1) { state.page--; renderChangesTable(); } });
-    document.getElementById("nextPageButton").addEventListener("click", () => { if (state.page < state.totalPages) { state.page++; renderChangesTable(); } });
-    document.getElementById("wowStoreFilter").addEventListener("change", applyWowFilters);
-    document.getElementById("wowDirFilter").addEventListener("change", applyWowFilters);
-    document.getElementById("wowSearchInput").addEventListener("input", applyWowFilters);
-    document.getElementById("wowClearFilters").addEventListener("click", () => {
-      document.getElementById("wowStoreFilter").value = "all";
-      document.getElementById("wowDirFilter").value = "all";
-      document.getElementById("wowSearchInput").value = "";
+    document.getElementById('prevPageButton').addEventListener('click', () => { if (state.changePage > 1) { state.changePage--; renderChangesTable(); } });
+    document.getElementById('nextPageButton').addEventListener('click', () => { if (state.changePage < state.changeTotalPages) { state.changePage++; renderChangesTable(); } });
+    document.getElementById('wowStoreFilter').addEventListener('change', applyWowFilters);
+    document.getElementById('wowDirFilter').addEventListener('change', applyWowFilters);
+    document.getElementById('wowSearchInput').addEventListener('input', applyWowFilters);
+    document.getElementById('wowClearFilters').addEventListener('click', () => {
+      ['wowStoreFilter','wowDirFilter'].forEach(id => document.getElementById(id).value = 'all');
+      document.getElementById('wowSearchInput').value = '';
       applyWowFilters();
     });
-    document.getElementById("wowPrevPage").addEventListener("click", () => { if (state.wowPage > 1) { state.wowPage--; renderWowTable(); } });
-    document.getElementById("wowNextPage").addEventListener("click", () => { if (state.wowPage < state.wowTotalPages) { state.wowPage++; renderWowTable(); } });
-    document.getElementById("catStoreFilter").addEventListener("change", applyCatalogFilters);
-    document.getElementById("catSortField").addEventListener("change", applyCatalogFilters);
-    document.getElementById("catSearchInput").addEventListener("input", applyCatalogFilters);
-    document.getElementById("catClearFilters").addEventListener("click", () => {
-      document.getElementById("catStoreFilter").value = "all";
-      document.getElementById("catSortField").value = "store";
-      document.getElementById("catSearchInput").value = "";
+    document.getElementById('wowPrevPage').addEventListener('click', () => { if (state.wowPage > 1) { state.wowPage--; renderWowTable(); } });
+    document.getElementById('wowNextPage').addEventListener('click', () => { if (state.wowPage < state.wowTotalPages) { state.wowPage++; renderWowTable(); } });
+    document.getElementById('catStoreFilter').addEventListener('change', applyCatalogFilters);
+    document.getElementById('catSortField').addEventListener('change', applyCatalogFilters);
+    document.getElementById('catSearchInput').addEventListener('input', applyCatalogFilters);
+    document.getElementById('catClearFilters').addEventListener('click', () => {
+      document.getElementById('catStoreFilter').value = 'all';
+      document.getElementById('catSortField').value = 'store';
+      document.getElementById('catSearchInput').value = '';
       applyCatalogFilters();
     });
-    document.getElementById("catPrevPage").addEventListener("click", () => { if (state.catPage > 1) { state.catPage--; renderCatalogTable(); } });
-    document.getElementById("catNextPage").addEventListener("click", () => { if (state.catPage < state.catTotalPages) { state.catPage++; renderCatalogTable(); } });
-    document.getElementById("refreshButton").addEventListener("click", loadDashboard);
-    document.getElementById("heroRefreshButton").addEventListener("click", loadDashboard);
+    document.getElementById('catPrevPage').addEventListener('click', () => { if (state.catPage > 1) { state.catPage--; renderCatalogTable(); } });
+    document.getElementById('catNextPage').addEventListener('click', () => { if (state.catPage < state.catTotalPages) { state.catPage++; renderCatalogTable(); } });
+    document.getElementById('refreshButton').addEventListener('click', loadDashboard);
+    document.getElementById('heroRefreshButton').addEventListener('click', loadDashboard);
 
-    (function setupThemeToggle() {
-      const button = document.querySelector("[data-theme-toggle]");
+    (function setupTheme() {
+      const btn = document.querySelector('[data-theme-toggle]');
       const root = document.documentElement;
-      let theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-      root.setAttribute("data-theme", theme);
-      function renderIcon(mode) {
-        button.innerHTML = mode === "dark"
-          ? `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>`
-          : `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
+      let theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      root.setAttribute('data-theme', theme);
+      function icon(m) {
+        btn.innerHTML = m === 'dark'
+          ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>'
+          : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>';
       }
-      renderIcon(theme);
-      button.addEventListener("click", () => {
-        theme = theme === "dark" ? "light" : "dark";
-        root.setAttribute("data-theme", theme);
-        renderIcon(theme);
-      });
+      icon(theme);
+      btn.addEventListener('click', () => { theme = theme === 'dark' ? 'light' : 'dark'; root.setAttribute('data-theme', theme); icon(theme); });
     })();
 
     loadDashboard();
