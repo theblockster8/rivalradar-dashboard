@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
-  <!-- v4: force redeploy -->
+  <!-- v5: fix store name prefix + sparkline -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>RivalRadar Dashboard</title>
@@ -599,7 +599,14 @@
     }
     function cleanStore(k) {
       if (!k) return 'Unknown';
-      return k.replace(/^[0-9a-f]{6,}[-_\s]/, '').replaceAll('_', ' ').replace(/\b\w/g, c => c.toUpperCase()).trim() || k;
+      // Strip leading hex UUID prefix: 8 hex chars followed by any separator (space, dash, underscore)
+      let name = k.replace(/^[0-9a-f]{8}[\s_-]+/i, '');
+      // Also handle longer hex prefixes just in case
+      name = name.replace(/^[0-9a-f]{6,}[\s_-]+/i, '');
+      // Replace remaining underscores/dashes with spaces and title-case
+      name = name.replaceAll('_', ' ').replaceAll('-', ' ');
+      name = name.replace(/\b\w/g, c => c.toUpperCase()).trim();
+      return name || k;
     }
     function rowKey(store_key, product_handle, variant_name) {
       return `${store_key||''}||${product_handle||''}||${variant_name||''}`;
@@ -614,13 +621,13 @@
     function sparkline(points, ct) {
       if (!points || points.length < 2) return '<span class="sparkline-no-data">Collecting…</span>';
       const W = 80, H = 28, P = 2;
-      const prices = points.map(p => p.price);
+      const prices = points.map(p => Number(p.price));
       const mn = Math.min(...prices), mx = Math.max(...prices), rng = mx - mn || 1;
       const xs = points.map((_, i) => P + (i / (points.length - 1)) * (W - P * 2));
       const ys = prices.map(p => H - P - ((p - mn) / rng) * (H - P * 2));
       const col = ct === 'drop' ? 'var(--color-down)' : ct === 'increase' ? 'var(--color-up)' : 'var(--color-accent)';
       const poly = xs.map((x, i) => `${x.toFixed(1)},${ys[i].toFixed(1)}`).join(' ');
-      const fill = `M${xs[0].toFixed(1)},${H} ` + xs.map((x,i) => `L${x.toFixed(1)},${ys[i].toFixed(1)}`).join(' ') + ` L${xs[xs.length-1].toFixed(1)},${H} Z`;
+      const fillPath = `M${xs[0].toFixed(1)},${H} ` + xs.map((x, i) => `L${x.toFixed(1)},${ys[i].toFixed(1)}`).join(' ') + ` L${xs[xs.length-1].toFixed(1)},${H} Z`;
       const gid = 'sg' + (++_gid);
       return `<div class="sparkline-wrap">
         <svg class="sparkline-svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
@@ -628,7 +635,7 @@
             <stop offset="0%" stop-color="${col}" stop-opacity="0.18"/>
             <stop offset="100%" stop-color="${col}" stop-opacity="0"/>
           </linearGradient></defs>
-          <path d="${fill}" fill="url(#${gid})"/>
+          <path d="${fillPath}" fill="url(#${gid})"/>
           <polyline points="${poly}" fill="none" stroke="${col}" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
           <circle cx="${xs[xs.length-1].toFixed(1)}" cy="${ys[ys.length-1].toFixed(1)}" r="2.5" fill="${col}"/>
         </svg>
