@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
-  <!-- v7: anonymised store names, pulsing live badge, Competitor columns, alias-aware WoW search -->
+  <!-- v8: fix logo redirect + refresh button loading state -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>RivalRadar Dashboard</title>
@@ -82,7 +82,6 @@
     button, input, select { font: inherit; color: inherit; }
     button { cursor: pointer; }
 
-    /* ── Live badge ── */
     @keyframes livePulse {
       0%,100% { box-shadow: 0 0 0 0 rgba(34,197,94,0.55); }
       50%      { box-shadow: 0 0 0 6px rgba(34,197,94,0); }
@@ -117,6 +116,7 @@
     .logo {
       display: flex; align-items: center; gap: var(--space-2);
       font-family: var(--font-display); font-weight: 800; letter-spacing: -0.03em;
+      color: var(--color-text); text-decoration: none;
     }
     .nav-actions { display: flex; align-items: center; gap: var(--space-3); }
     .theme-toggle, .ghost-btn {
@@ -129,6 +129,7 @@
       align-items: center; justify-content: center;
     }
     .theme-toggle:hover, .ghost-btn:hover { background: var(--color-surface); color: var(--color-text); }
+    .ghost-btn:disabled { opacity: 0.5; cursor: not-allowed; }
     .primary-btn {
       display: inline-flex; align-items: center; justify-content: center;
       gap: var(--space-2); min-height: 46px; padding: 0 var(--space-5);
@@ -140,6 +141,7 @@
       transform: translateY(-1px); box-shadow: var(--shadow-md);
       background: var(--color-primary-hover); border-color: var(--color-primary-hover);
     }
+    .primary-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
     .page-hero { padding: var(--space-10) 0 var(--space-8); }
     .hero-grid { display: grid; grid-template-columns: 1.25fr 0.9fr; gap: var(--space-6); align-items: stretch; }
     .hero-panel, .summary-card, .surface-card {
@@ -357,7 +359,7 @@
 <body>
   <header class="nav">
     <div class="nav-inner">
-      <a href="#" class="logo" aria-label="RivalRadar home">
+      <a href="https://www.rival-radar.online/" class="logo" aria-label="RivalRadar home">
         <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
           <circle cx="16" cy="16" r="3" fill="var(--color-primary)"/>
           <circle cx="16" cy="16" r="7" stroke="var(--color-primary)" stroke-width="1.5" stroke-dasharray="3 2" fill="none" opacity="0.6"/>
@@ -368,7 +370,7 @@
         <span>RivalRadar</span>
       </a>
       <div class="nav-actions">
-        <button class="ghost-btn" id="refreshButton">Refresh data</button>
+        <button class="ghost-btn" id="refreshButton">🔄 Refresh data</button>
         <button class="theme-toggle" data-theme-toggle aria-label="Toggle dark mode">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
         </button>
@@ -384,7 +386,7 @@
           <h1 class="hero-title">See rival price movement the moment it matters.</h1>
           <p class="hero-sub">Check which products changed price, where, and by how much — without digging through exports or raw tables.</p>
           <div class="hero-actions">
-            <button class="primary-btn" id="heroRefreshButton">Refresh live data</button>
+            <button class="primary-btn" id="heroRefreshButton">🔄 Refresh live data</button>
             <span class="hero-caption">Designed for founders and operators checking in a few times a day.</span>
           </div>
           <div class="hero-meta">
@@ -598,7 +600,7 @@
   </main>
 
   <footer class="footer">
-    <div class="container">RivalRadar — live competitor price monitoring.</div>
+    <div class="container">RivalRadar — live competitor price monitoring. <a href="https://www.rival-radar.online/" style="text-decoration:underline;opacity:0.6;">Back to site →</a></div>
   </footer>
 
   <script>
@@ -610,9 +612,8 @@
     const PAGE_SIZE_CATALOG = 500;
     const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
-    // ── Competitor anonymisation ─────────────────────────────────────────────
-    let storeAliasMap = {};   // raw key → "Competitor A (Live Feed)"
-    let storeAliasKeys = {};  // alias  → raw key
+    let storeAliasMap = {};
+    let storeAliasKeys = {};
 
     function buildAliasMap(storeKeys) {
       storeAliasMap = {}; storeAliasKeys = {};
@@ -626,7 +627,6 @@
     function anonStore(rawKey) {
       return storeAliasMap[rawKey] || 'Competitor ? (Live Feed)';
     }
-    // ─────────────────────────────────────────────────────────────────────────
 
     const state = {
       snapshots: [],
@@ -641,6 +641,18 @@
       filteredCatalog: [],
       catPage: 1, catTotalPages: 1,
     };
+
+    function setRefreshLoading(loading) {
+      const navBtn = document.getElementById('refreshButton');
+      const heroBtn = document.getElementById('heroRefreshButton');
+      if (loading) {
+        navBtn.disabled = true;  navBtn.textContent = '⏳ Loading…';
+        heroBtn.disabled = true; heroBtn.textContent = '⏳ Loading…';
+      } else {
+        navBtn.disabled = false;  navBtn.textContent = '🔄 Refresh data';
+        heroBtn.disabled = false; heroBtn.textContent = '🔄 Refresh live data';
+      }
+    }
 
     function fmt$(v) {
       const n = Number(v);
@@ -915,7 +927,9 @@
       }
       state.historyMap = map;
     }
+
     async function loadDashboard() {
+      setRefreshLoading(true);
       const errorBox = document.getElementById('errorBox');
       errorBox.style.display = 'none';
       ['changesBody','wowBody','catalogBody'].forEach(id => {
@@ -923,12 +937,9 @@
       });
       try {
         await Promise.all([loadSnapshots(), loadHistory()]);
-
-        // Build alias map from all distinct store keys
         const storeKeys = [...new Set(state.snapshots.map(r => r.store_key).filter(Boolean))].sort();
         buildAliasMap(storeKeys);
         setStoreOptions(storeKeys, 'storeFilter', 'wowStoreFilter', 'catStoreFilter');
-
         state.changeRows = buildChangesFromHistory();
         state.filteredChanges = [...state.changeRows];
         state.wowRows = buildWowRows();
@@ -944,6 +955,8 @@
         errorBox.textContent = 'Could not load data.\n\n' + err.message
           + '\n\nMake sure RLS policies are set in Supabase SQL Editor.';
         errorBox.style.display = 'block';
+      } finally {
+        setRefreshLoading(false);
       }
     }
 
