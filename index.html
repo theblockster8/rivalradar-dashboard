@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
-  <!-- v6: fix anon key so product_snapshots RLS works -->
+  <!-- v7: anonymised store names, pulsing live badge, Competitor columns, alias-aware WoW search -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>RivalRadar Dashboard</title>
@@ -31,6 +31,8 @@
       --color-up-bg: #fef2f2;
       --color-new: #7c3aed;
       --color-new-bg: #f5f3ff;
+      --color-live: #22c55e;
+      --color-live-bg: #f0fdf4;
       --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem; --space-4: 1rem;
       --space-5: 1.25rem; --space-6: 1.5rem; --space-8: 2rem; --space-10: 2.5rem;
       --space-12: 3rem; --space-16: 4rem;
@@ -61,6 +63,7 @@
       --color-accent: #3b82f6; --color-accent-hover: #2563eb; --color-accent-light: #1e293b;
       --color-down: #22c55e; --color-down-bg: #052e16; --color-up: #f87171; --color-up-bg: #2d0a0a;
       --color-new: #a78bfa; --color-new-bg: #1e1030;
+      --color-live: #4ade80; --color-live-bg: #052e16;
       --shadow-sm: 0 1px 3px rgba(0,0,0,0.3); --shadow-md: 0 4px 16px rgba(0,0,0,0.4);
       --shadow-lg: 0 16px 48px rgba(0,0,0,0.5); --shadow-glow: 0 18px 40px rgba(59,130,246,0.12);
     }
@@ -78,6 +81,26 @@
     a { color: inherit; text-decoration: none; }
     button, input, select { font: inherit; color: inherit; }
     button { cursor: pointer; }
+
+    /* ── Live badge ── */
+    @keyframes livePulse {
+      0%,100% { box-shadow: 0 0 0 0 rgba(34,197,94,0.55); }
+      50%      { box-shadow: 0 0 0 6px rgba(34,197,94,0); }
+    }
+    .live-badge {
+      display: inline-flex; align-items: center; gap: 0.45rem;
+      padding: 0.25rem 0.65rem; border-radius: var(--radius-full);
+      background: var(--color-live-bg);
+      border: 1px solid color-mix(in srgb, var(--color-live) 35%, transparent);
+      font-size: 0.72rem; font-family: var(--font-display); font-weight: 700;
+      color: var(--color-live); white-space: nowrap; letter-spacing: 0.02em;
+    }
+    .live-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--color-live); flex-shrink: 0;
+      animation: livePulse 1.8s ease-in-out infinite;
+    }
+
     .nav {
       position: sticky; top: 0; z-index: 50;
       background: color-mix(in srgb, var(--color-bg) 92%, transparent);
@@ -232,7 +255,9 @@
       gap: var(--space-3); padding: var(--space-4) var(--space-5);
       border-bottom: 1px solid var(--color-divider);
       background: color-mix(in srgb, var(--color-surface) 84%, var(--color-bg));
+      flex-wrap: wrap;
     }
+    .changes-shell-header-left { display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap; }
     .header-right { display: flex; align-items: center; gap: var(--space-4); }
     .pager {
       display: inline-flex; align-items: center; gap: var(--space-2);
@@ -364,9 +389,9 @@
           </div>
           <div class="hero-meta">
             <div class="metric">
-              <span class="metric-label">Stores monitored</span>
+              <span class="metric-label">Competitors monitored</span>
               <div class="metric-value" id="metricStores">—</div>
-              <div class="metric-note">Distinct stores in snapshot</div>
+              <div class="metric-note">Distinct competitors in snapshot</div>
             </div>
             <div class="metric">
               <span class="metric-label">Products tracked</span>
@@ -388,7 +413,7 @@
         <aside class="summary-card">
           <div>
             <h2 class="summary-title">Snapshot overview</h2>
-            <p>Products tracked per store with last snapshot time.</p>
+            <p>Products tracked per competitor with last snapshot time.</p>
           </div>
           <div class="status-stack" id="storeSummary">
             <div class="loading-state">Loading…</div>
@@ -423,9 +448,9 @@
             <p class="mini-note">Total in product_snapshots.</p>
           </div>
           <div class="toolbar-card">
-            <span class="toolbar-label">Stores tracked</span>
+            <span class="toolbar-label">Competitors tracked</span>
             <div class="toolbar-value" id="toolbarStoresTracked">—</div>
-            <p class="mini-note">All stores in this dashboard.</p>
+            <p class="mini-note">All competitors in this dashboard.</p>
           </div>
         </div>
 
@@ -435,9 +460,10 @@
           <button class="tab-btn" data-tab="catalog" role="tab">📦 Full Catalog</button>
         </nav>
 
+        <!-- RECENT CHANGES -->
         <div class="tab-panel active" id="tab-changes">
           <div class="filters">
-            <select class="field" id="storeFilter"><option value="all">All stores</option></select>
+            <select class="field" id="storeFilter"><option value="all">All competitors</option></select>
             <select class="field" id="changeFilter">
               <option value="all">All change types</option>
               <option value="drop">Price drops</option>
@@ -448,9 +474,12 @@
           </div>
           <div class="changes-shell">
             <div class="changes-shell-header">
-              <div>
-                <div class="changes-shell-title">Price changes feed</div>
-                <div class="changes-shell-note">Products where price changed between two consecutive snapshots.</div>
+              <div class="changes-shell-header-left">
+                <div>
+                  <div class="changes-shell-title">Price changes feed</div>
+                  <div class="changes-shell-note">Products where price changed between two consecutive snapshots.</div>
+                </div>
+                <span class="live-badge"><span class="live-dot"></span>Connected to Live Web Scrapers (Updating Daily)</span>
               </div>
               <div class="header-right">
                 <div class="mini-note" id="changesCountNote">—</div>
@@ -464,7 +493,7 @@
             <div class="table-shell">
               <table>
                 <thead><tr>
-                  <th>Store</th><th>Product</th><th>Variant</th><th>Change</th>
+                  <th>Competitor</th><th>Product</th><th>Variant</th><th>Change</th>
                   <th>Prev price</th><th>New price</th><th>Delta</th><th>Trend</th><th>Detected at</th>
                 </tr></thead>
                 <tbody id="changesBody">
@@ -475,9 +504,10 @@
           </div>
         </div>
 
+        <!-- WEEK OVER WEEK -->
         <div class="tab-panel" id="tab-wow">
           <div class="filters">
-            <select class="field" id="wowStoreFilter"><option value="all">All stores</option></select>
+            <select class="field" id="wowStoreFilter"><option value="all">All competitors</option></select>
             <select class="field" id="wowDirFilter">
               <option value="all">All movements</option>
               <option value="drop">Price drops only</option>
@@ -489,9 +519,12 @@
           </div>
           <div class="wow-shell">
             <div class="changes-shell-header">
-              <div>
-                <div class="changes-shell-title">Week-over-week movement</div>
-                <div class="changes-shell-note">Current price vs. earliest snapshot in history. Trend shows all recorded prices.</div>
+              <div class="changes-shell-header-left">
+                <div>
+                  <div class="changes-shell-title">Week-over-week movement</div>
+                  <div class="changes-shell-note">Current price vs. earliest snapshot in history. Trend shows all recorded prices.</div>
+                </div>
+                <span class="live-badge"><span class="live-dot"></span>Connected to Live Web Scrapers (Updating Daily)</span>
               </div>
               <div class="header-right">
                 <div class="mini-note" id="wowCountNote">—</div>
@@ -505,7 +538,7 @@
             <div class="table-shell">
               <table>
                 <thead><tr>
-                  <th>Store</th><th>Product</th><th>Variant</th>
+                  <th>Competitor</th><th>Product</th><th>Variant</th>
                   <th>Current price</th><th>First recorded</th><th>Change</th><th>%</th><th>Trend</th>
                 </tr></thead>
                 <tbody id="wowBody">
@@ -516,11 +549,12 @@
           </div>
         </div>
 
+        <!-- FULL CATALOG -->
         <div class="tab-panel" id="tab-catalog">
           <div class="filters">
-            <select class="field" id="catStoreFilter"><option value="all">All stores</option></select>
+            <select class="field" id="catStoreFilter"><option value="all">All competitors</option></select>
             <select class="field" id="catSortField">
-              <option value="store">Sort: Store A–Z</option>
+              <option value="store">Sort: Competitor A–Z</option>
               <option value="price_asc">Sort: Price low–high</option>
               <option value="price_desc">Sort: Price high–low</option>
               <option value="product">Sort: Product A–Z</option>
@@ -530,9 +564,12 @@
           </div>
           <div class="catalog-shell">
             <div class="changes-shell-header">
-              <div>
-                <div class="changes-shell-title">Full product catalog</div>
-                <div class="changes-shell-note">All rows from product_snapshots. 500 per page.</div>
+              <div class="changes-shell-header-left">
+                <div>
+                  <div class="changes-shell-title">Full product catalog</div>
+                  <div class="changes-shell-note">All rows from product_snapshots. 500 per page.</div>
+                </div>
+                <span class="live-badge"><span class="live-dot"></span>Connected to Live Web Scrapers (Updating Daily)</span>
               </div>
               <div class="header-right">
                 <div class="mini-note" id="catCountNote">—</div>
@@ -546,7 +583,7 @@
             <div class="table-shell">
               <table>
                 <thead><tr>
-                  <th>Store</th><th>Product</th><th>Variant</th>
+                  <th>Competitor</th><th>Product</th><th>Variant</th>
                   <th>Price</th><th>Compare at</th><th>Last seen</th>
                 </tr></thead>
                 <tbody id="catalogBody">
@@ -571,6 +608,25 @@
 
     const PAGE_SIZE = 100;
     const PAGE_SIZE_CATALOG = 500;
+    const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+    // ── Competitor anonymisation ─────────────────────────────────────────────
+    let storeAliasMap = {};   // raw key → "Competitor A (Live Feed)"
+    let storeAliasKeys = {};  // alias  → raw key
+
+    function buildAliasMap(storeKeys) {
+      storeAliasMap = {}; storeAliasKeys = {};
+      [...storeKeys].sort().forEach((k, i) => {
+        const letter = LETTERS[i] || String(i + 1);
+        const alias = `Competitor ${letter} (Live Feed)`;
+        storeAliasMap[k] = alias;
+        storeAliasKeys[alias] = k;
+      });
+    }
+    function anonStore(rawKey) {
+      return storeAliasMap[rawKey] || 'Competitor ? (Live Feed)';
+    }
+    // ─────────────────────────────────────────────────────────────────────────
 
     const state = {
       snapshots: [],
@@ -596,14 +652,6 @@
       const d = new Date(v);
       if (Number.isNaN(d.getTime())) return v;
       return new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' }).format(d);
-    }
-    function cleanStore(k) {
-      if (!k) return 'Unknown';
-      let name = k.replace(/^[0-9a-f]{8}[\s_-]+/i, '');
-      name = name.replace(/^[0-9a-f]{6,}[\s_-]+/i, '');
-      name = name.replaceAll('_', ' ').replaceAll('-', ' ');
-      name = name.replace(/\b\w/g, c => c.toUpperCase()).trim();
-      return name || k;
     }
     function rowKey(store_key, product_handle, variant_name) {
       return `${store_key||''}||${product_handle||''}||${variant_name||''}`;
@@ -640,9 +688,9 @@
       </div>`;
     }
 
-    function setStoreOptions(rows, ...ids) {
-      const stores = [...new Set(rows.map(r => r.store_key).filter(Boolean))].sort();
-      const opts = '<option value="all">All stores</option>' + stores.map(s => `<option value="${s}">${cleanStore(s)}</option>`).join('');
+    function setStoreOptions(storeKeys, ...ids) {
+      const opts = '<option value="all">All competitors</option>' +
+        storeKeys.map(s => `<option value="${s}">${anonStore(s)}</option>`).join('');
       ids.forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = opts; });
     }
 
@@ -689,7 +737,7 @@
       el.innerHTML = Object.entries(grouped).sort(([a],[b]) => a.localeCompare(b)).map(([store, info]) =>
         `<div class="status-row">
           <div><span class="tag tag-neutral">Live</span>
-            <div><strong>${cleanStore(store)}</strong></div>
+            <div><strong>${anonStore(store)}</strong></div>
             <div class="mini-note">${info.count.toLocaleString()} products</div>
           </div>
           <div class="mini-note">${info.latest ? fmtDate(info.latest) : ''}</div>
@@ -701,12 +749,12 @@
       const type = document.getElementById('changeFilter').value;
       const q = document.getElementById('searchInput').value.trim().toLowerCase();
       state.filteredChanges = state.changeRows.filter(r => {
-        const sk = (r.store_key || '').toLowerCase();
         const prod = (r.product_name || r.product_handle || '').toLowerCase();
         const vari = (r.variant_name || '').toLowerCase();
-        return (store === 'all' || sk === store.toLowerCase())
+        const alias = anonStore(r.store_key || '').toLowerCase();
+        return (store === 'all' || r.store_key === store)
           && (type === 'all' || r.change_type === type)
-          && (!q || prod.includes(q) || vari.includes(q) || sk.includes(q));
+          && (!q || prod.includes(q) || vari.includes(q) || alias.includes(q));
       });
       state.changePage = 1;
       renderChangesTable();
@@ -724,7 +772,7 @@
           const hKey = rowKey(r.store_key, r.product_handle, r.variant_name);
           const spark = sparkline(state.historyMap[hKey] || [], r.change_type);
           return `<tr>
-            <td><span class="store-chip">${cleanStore(r.store_key)}</span></td>
+            <td><span class="store-chip">${anonStore(r.store_key)}</span></td>
             <td class="product-cell"><strong>${r.product_name || r.product_handle || 'Untitled'}</strong></td>
             <td>${r.variant_name || '—'}</td>
             <td>${changeTag(r.change_type)}</td>
@@ -756,17 +804,17 @@
       const dir = document.getElementById('wowDirFilter').value;
       const q = document.getElementById('wowSearchInput').value.trim().toLowerCase();
       state.filteredWow = state.wowRows.filter(w => {
-        const sk = (w.snap.store_key || '').toLowerCase();
         const prod = (w.snap.product_name || w.snap.product_handle || '').toLowerCase();
         const vari = (w.snap.variant_name || '').toLowerCase();
+        const alias = anonStore(w.snap.store_key || '').toLowerCase();
         let direction = 'flat';
         if (w.firstPrice !== null) {
           if (w.currentPrice < w.firstPrice) direction = 'drop';
           else if (w.currentPrice > w.firstPrice) direction = 'increase';
         }
-        return (store === 'all' || sk === store.toLowerCase())
+        return (store === 'all' || w.snap.store_key === store)
           && (dir === 'all' || direction === dir)
-          && (!q || prod.includes(q) || vari.includes(q) || sk.includes(q));
+          && (!q || prod.includes(q) || vari.includes(q) || alias.includes(q));
       });
       state.wowPage = 1;
       renderWowTable();
@@ -788,7 +836,7 @@
             : delta === 0 ? '<span class="wow-delta-pill flat">No change</span>'
             : `<span class="wow-delta-pill ${direction==='drop'?'down':'up'}">${direction==='drop'?'▼':'▲'} ${fmt$(Math.abs(delta))}</span>`;
           return `<tr>
-            <td><span class="store-chip">${cleanStore(w.snap.store_key)}</span></td>
+            <td><span class="store-chip">${anonStore(w.snap.store_key)}</span></td>
             <td class="product-cell"><strong>${w.snap.product_name || w.snap.product_handle || 'Untitled'}</strong></td>
             <td>${w.snap.variant_name || '—'}</td>
             <td class="price-new">${fmt$(w.currentPrice)}</td>
@@ -810,16 +858,16 @@
       const sort = document.getElementById('catSortField').value;
       const q = document.getElementById('catSearchInput').value.trim().toLowerCase();
       let rows = state.snapshots.filter(r => {
-        const sk = (r.store_key || '').toLowerCase();
         const prod = (r.product_name || r.product_handle || '').toLowerCase();
         const vari = (r.variant_name || '').toLowerCase();
-        return (store === 'all' || sk === store.toLowerCase())
-          && (!q || prod.includes(q) || vari.includes(q) || sk.includes(q));
+        const alias = anonStore(r.store_key || '').toLowerCase();
+        return (store === 'all' || r.store_key === store)
+          && (!q || prod.includes(q) || vari.includes(q) || alias.includes(q));
       });
       if (sort === 'price_asc') rows.sort((a,b) => Number(a.price||0) - Number(b.price||0));
       else if (sort === 'price_desc') rows.sort((a,b) => Number(b.price||0) - Number(a.price||0));
       else if (sort === 'product') rows.sort((a,b) => (a.product_name||a.product_handle||'').localeCompare(b.product_name||b.product_handle||''));
-      else rows.sort((a,b) => (a.store_key||'').localeCompare(b.store_key||''));
+      else rows.sort((a,b) => anonStore(a.store_key||'').localeCompare(anonStore(b.store_key||'')));
       state.filteredCatalog = rows;
       state.catPage = 1;
       renderCatalogTable();
@@ -833,7 +881,7 @@
       } else {
         body.innerHTML = rows.map(r =>
           `<tr>
-            <td><span class="store-chip">${cleanStore(r.store_key)}</span></td>
+            <td><span class="store-chip">${anonStore(r.store_key)}</span></td>
             <td class="product-cell"><strong>${r.product_name || r.product_handle || 'Untitled'}</strong></td>
             <td>${r.variant_name || '—'}</td>
             <td class="price-new">${fmt$(r.price)}</td>
@@ -875,7 +923,12 @@
       });
       try {
         await Promise.all([loadSnapshots(), loadHistory()]);
-        setStoreOptions(state.snapshots, 'storeFilter', 'wowStoreFilter', 'catStoreFilter');
+
+        // Build alias map from all distinct store keys
+        const storeKeys = [...new Set(state.snapshots.map(r => r.store_key).filter(Boolean))].sort();
+        buildAliasMap(storeKeys);
+        setStoreOptions(storeKeys, 'storeFilter', 'wowStoreFilter', 'catStoreFilter');
+
         state.changeRows = buildChangesFromHistory();
         state.filteredChanges = [...state.changeRows];
         state.wowRows = buildWowRows();
